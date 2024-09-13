@@ -1,6 +1,6 @@
 package com.example.demo.Service;
 
-import com.example.demo.DTO.RequestRespone;
+import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
 import com.example.demo.Repo.UserRepo;
 import com.example.demo.DTO.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +27,8 @@ public class UserManagement {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public RequestRespone Signup(RequestRespone SignupRequest){
-        RequestRespone resp = new RequestRespone();
+    public ReqResUser Signup(ReqResUser SignupRequest){
+        ReqResUser resp = new ReqResUser();
 
         try{
             UserModel user = new UserModel();
@@ -50,8 +50,8 @@ public class UserManagement {
         return resp;
     }
 
-    public  RequestRespone Login(RequestRespone LoginRequest){
-        RequestRespone resp = new RequestRespone();
+    public ReqResUser Login(ReqResUser LoginRequest){
+        ReqResUser resp = new ReqResUser();
 
         try {
             authenticationManager
@@ -71,9 +71,9 @@ public class UserManagement {
         return resp;
     }
 
-    public RequestRespone Delete(int id)
+    public ReqResUser Delete(int id)
     {
-        RequestRespone resp = new RequestRespone();
+        ReqResUser resp = new ReqResUser();
         try{
             Optional<UserModel> user = userRepo.findById(id);
             if(user.isPresent()){

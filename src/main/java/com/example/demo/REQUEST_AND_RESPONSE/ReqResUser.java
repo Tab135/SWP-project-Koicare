@@ -1,5 +1,6 @@
-package com.example.demo.DTO;
+package com.example.demo.REQUEST_AND_RESPONSE;
 
+import com.example.demo.DTO.UserModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -9,7 +10,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class RequestRespone {
+public class ReqResUser {
 
     private int statusCode;
     private String error;
