@@ -5,7 +5,7 @@ import Homepage from "./pages/user/homepage";
 import { Route, Routes } from "react-router-dom";
 import MasterLayout from "./theme/masterLayout/masterlayout";
 import Login from "./pages/user/loginpage/login";
-
+import ForgotPassword from './pages/user/loginpage/ForgotPassword/ForgotPassword';
 
 const renderUserRouter =()=>{
     const userRouter =[
@@ -19,7 +19,12 @@ const renderUserRouter =()=>{
             Component: Login,
             useLayout: false
         },
-    ]
+        {
+                    path: ROUTERS.USER.FORGOT_PASSWORD,  // Add the Forgot Password route
+                    Component: ForgotPassword,
+                    useLayout: false
+        },
+    ];
     return(
         <Routes>
         {userRouter.map((item, key) => (
