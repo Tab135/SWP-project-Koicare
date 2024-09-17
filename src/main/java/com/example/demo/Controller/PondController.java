@@ -1,7 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DTO.PondModel;
-import com.example.demo.DTO.PondRequest;
+import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
 import com.example.demo.Service.PondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ public class PondController {
 @Autowired
     private PondService pService;
 @PostMapping("/createPond/{userId}")
-PondModel createP(@PathVariable int userId, @RequestBody PondRequest pond){
+PondModel createP(@PathVariable int userId, @RequestBody ResReqPond pond){
     return pService.createP(pond, userId);
 }
 
@@ -31,7 +31,7 @@ List<PondModel> getPonds(@PathVariable int userId){
 }
 
 @PutMapping("/pond/{userId}/{pondId}/update")
-PondModel updatePond(@PathVariable  int userId, @PathVariable int pondId, @RequestBody PondRequest pond){
+PondModel updatePond(@PathVariable  int userId, @PathVariable int pondId, @RequestBody ResReqPond pond){
 return pService.updatePond(userId, pondId, pond);
 }
 

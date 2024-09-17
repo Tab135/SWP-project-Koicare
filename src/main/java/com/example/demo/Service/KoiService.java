@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.DTO.KoiFishModel;
-import com.example.demo.DTO.KoiRequest;
+import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.DTO.PondModel;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Repo.PondRepo;
@@ -17,7 +17,7 @@ public class KoiService {
 @Autowired
     private PondRepo pondR;
 
-public KoiFishModel addKoi(KoiRequest request, int pondId){
+public KoiFishModel addKoi(ResReqKoi request, int pondId){
     KoiFishModel koi = new KoiFishModel();
 
     koi.setKoiName(request.getKoiName());
@@ -64,7 +64,7 @@ public void deleteKoi(int koiId, int pondId){
     return null;
   }
 
-  public KoiFishModel updateKoi(int pondId, int koiId, KoiRequest request){
+  public KoiFishModel updateKoi(int pondId, int koiId, ResReqKoi request){
         KoiFishModel koi = getKoi(pondId, koiId);
         if(request.getKoiName() !=null){
             koi.setKoiName(request.getKoiName());

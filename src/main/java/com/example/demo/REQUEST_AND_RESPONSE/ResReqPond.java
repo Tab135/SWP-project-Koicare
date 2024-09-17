@@ -1,5 +1,6 @@
-package com.example.demo.DTO;
+package com.example.demo.REQUEST_AND_RESPONSE;
 
+import com.example.demo.DTO.KoiFishModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -9,7 +10,7 @@ import java.util.List;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class PondRequest {
+public class ResReqPond {
     private String pondName;
     private String picture;
     private Double depth;
@@ -120,7 +121,7 @@ public class PondRequest {
         this.koiList = koiList;
     }
 
-    public PondRequest(Integer skimmers, String pondName, String picture, Double depth, Double volume, Integer pumpingCapacity, Integer drain, String location, String waterSource, String maintenanceSchedule, int userId, List<KoiFishModel> koiList) {
+    public ResReqPond(Integer skimmers, String pondName, String picture, Double depth, Double volume, Integer pumpingCapacity, Integer drain, String location, String waterSource, String maintenanceSchedule, int userId, List<KoiFishModel> koiList) {
         this.skimmers = skimmers;
         this.pondName = pondName;
         this.picture = picture;
@@ -135,6 +136,6 @@ public class PondRequest {
         this.koiList = koiList;
     }
 
-    public PondRequest() {
+    public ResReqPond() {
     }
 }

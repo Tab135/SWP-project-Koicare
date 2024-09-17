@@ -1,7 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.DTO.PondModel;
-import com.example.demo.DTO.PondRequest;
+import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
 import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ public class PondService {
     private PondRepo pondR;
     private UserRepo userR;
 
-    public PondModel createP(PondRequest request, int userId) {
+    public PondModel createP(ResReqPond request, int userId) {
 
         PondModel pondModel = new PondModel();
         try {
@@ -61,7 +61,7 @@ public class PondService {
         pondR.deleteById(pondId);
     }
 
-    public PondModel updatePond(int userId, int pondId, PondRequest request){
+    public PondModel updatePond(int userId, int pondId, ResReqPond request){
         PondModel pond = getPond(pondId, userId);
         if(request.getPondName() !=null) {
             pond.setPondName(request.getPondName());//
