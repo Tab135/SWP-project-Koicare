@@ -1,4 +1,3 @@
-
 import { ROUTERS } from "./utis/router";
 
 import Homepage from "./pages/user/homepage";
@@ -6,12 +5,14 @@ import { Route, Routes } from "react-router-dom";
 import MasterLayout from "./theme/masterLayout/masterlayout";
 import Login from "./pages/user/loginpage/login";
 import ForgotPassword from './pages/user/loginpage/ForgotPassword/ForgotPassword';
+import EnterOtp from './pages/user/loginpage/EnterOtp/EnterOtp';
+import ResetPassword from './pages/user/loginpage/ResetPassword/ResetPassword';
 
-const renderUserRouter =()=>{
-    const userRouter =[
+const renderUserRouter = () => {
+    const userRouter = [
         {
             path: ROUTERS.USER.HOME,
-            Component:  Homepage,
+            Component: Homepage,
             useLayout: true
         },
         {
@@ -20,34 +21,44 @@ const renderUserRouter =()=>{
             useLayout: false
         },
         {
-                    path: ROUTERS.USER.FORGOT_PASSWORD,  // Add the Forgot Password route
-                    Component: ForgotPassword,
-                    useLayout: false
+            path: ROUTERS.USER.FORGOT_PASSWORD,
+            Component: ForgotPassword,
+            useLayout: false
         },
+        {
+            path: ROUTERS.USER.SEND_OTP,
+            Component: EnterOtp,
+            useLayout: false
+        },
+        {
+            path: ROUTERS.USER.RESET_PASSWORD,
+            Component: ResetPassword,
+            useLayout: false
+        }
     ];
-    return(
+
+    return (
         <Routes>
-        {userRouter.map((item, key) => (
-          <Route
-            key={key}
-            path={item.path}
-            element={
-              item.useLayout ? (
-                <MasterLayout>
-                  <item.Component />
-                </MasterLayout>
-              ) : (
-                <item.Component />
-              )
-            }
-          />
-        ))}
-      </Routes>
-    )
+            {userRouter.map((item, key) => (
+                <Route
+                    key={key}
+                    path={item.path}
+                    element={
+                        item.useLayout ? (
+                            <MasterLayout>
+                                <item.Component />
+                            </MasterLayout>
+                        ) : (
+                            <item.Component />
+                        )
+                    }
+                />
+            ))}
+        </Routes>
+    );
 }
 
-
-const RouterControl = () =>{
+const RouterControl = () => {
     return renderUserRouter();
 };
 

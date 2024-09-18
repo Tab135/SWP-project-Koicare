@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import './LoginRegister.css';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { memo } from 'react';
@@ -9,13 +9,16 @@ const LoginRegister = () => {
 
     const [action, setAction] = useState('');
     const [userDetails, setUserDetails] = useState({ email: '', password: '', username: '' });
+    const [errorMessage, setErrorMessage] = useState('');
 
     const registerLink = () => {
         setAction(' active');
+        setErrorMessage('');
     };
 
     const loginLink = () => {
         setAction('');
+        setErrorMessage('');
     };
 
     const handleInputChange = (e) => {
@@ -33,11 +36,33 @@ const LoginRegister = () => {
                 email: userDetails.email,
                 password: userDetails.password
             });
-            console.log('Login successful:', response.data);
-        }catch (error) {
-            console.error('Login error:', error.response.data);
+            if (response.data.statusCode === 200) {
+                console.log('Login successful:', response.data);
+                setErrorMessage('');
+            } else {
+                console.error('Login failed with status code:', response.data);
+                setErrorMessage('Wrong email or password.');
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Login error:', error.response.data);
+                setErrorMessage('Wrong email or password.');
+            } else {
+                console.error('Error during login:', error.message);
+                setErrorMessage('An error has occurred. Please try again later.');
+            }
         }
     };
+
+    useEffect(() => {
+        if (errorMessage) {
+            const timer = setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [errorMessage]);
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
@@ -47,14 +72,23 @@ const LoginRegister = () => {
                 password: userDetails.password,
                 email: userDetails.email
             });
-            console.log('Registration successful:', response.data);
+            if (response.status === 200) {
+                console.log('Registration successful:', response.data);
+                window.location.reload();
+            } else {
+                console.error('Registration failed with status code:', response.status);
+            }
         } catch (error) {
-            console.error('Registration error:', error.response.data);
+            if (error.response) {
+                console.error('Registration error:', error.response.data);
+            } else {
+                console.error('Error during registration:', error.message);
+            }
         }
     };
 
     return (
-        <body className='bodyLogin'>
+        <div className='bodyLogin'>
             <div className={`wrapper${action}`}>
                 <div className="form-box login">
                     <form onSubmit={handleLoginSubmit}>
@@ -68,7 +102,7 @@ const LoginRegister = () => {
                                 onChange={handleInputChange}
                                 required
                             />
-                            <FaEnvelope className='icon' />  {}
+                            <FaEnvelope className='icon' />
                         </div>
                         <div className="input-box">
                             <input
@@ -86,6 +120,9 @@ const LoginRegister = () => {
                             <label><input type='checkbox' />Remember</label>
                             <Link to="/forgot-password">Forgot Password?</Link>
                         </div>
+
+                        {/* Hiển thị thông báo lỗi khi đăng nhập thất bại */}
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
                         <button type="submit">Login</button>
 
@@ -148,7 +185,7 @@ const LoginRegister = () => {
                     </form>
                 </div>
             </div>
-        </body>
+        </div>
     );
 };
 
