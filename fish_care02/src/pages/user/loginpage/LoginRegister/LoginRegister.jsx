@@ -3,7 +3,7 @@ import './LoginRegister.css';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { memo } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'; // Import Axios for API calls
+import axios from 'axios';
 
 const LoginRegister = () => {
 
@@ -30,10 +30,11 @@ const LoginRegister = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:8080/auth/login', {
+                email: userDetails.email,
                 password: userDetails.password
             });
             console.log('Login successful:', response.data);
-        } catch (error) {
+        }catch (error) {
             console.error('Login error:', error.response.data);
         }
     };
@@ -47,7 +48,6 @@ const LoginRegister = () => {
                 email: userDetails.email
             });
             console.log('Registration successful:', response.data);
-            // Handle successful registration
         } catch (error) {
             console.error('Registration error:', error.response.data);
         }
@@ -68,7 +68,7 @@ const LoginRegister = () => {
                                 onChange={handleInputChange}
                                 required
                             />
-                            <FaEnvelope className='icon' />  {/* Changed to FaEnvelope */}
+                            <FaEnvelope className='icon' />  {}
                         </div>
                         <div className="input-box">
                             <input
