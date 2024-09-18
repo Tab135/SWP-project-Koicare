@@ -36,6 +36,10 @@
     display: flex;
     justify-content: end;
     div{
-        padding: 0 5px;
+        a{
+            text-decoration: none;
+            color: white;
+        }        
+        color: white;
     }
 }
