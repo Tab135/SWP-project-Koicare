@@ -1,7 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DTO.KoiFishModel;
-import com.example.demo.DTO.KoiRequest;
+import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.Service.KoiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.List;
     @Autowired
     private KoiService kService;
     @PostMapping("/{userId}/{pondId}/addKoi")
-    KoiFishModel addKoi(@PathVariable int pondId, @RequestBody KoiRequest request){
+    KoiFishModel addKoi(@PathVariable int pondId, @RequestBody ResReqKoi request){
         return kService.addKoi(request, pondId);
     }
 
@@ -30,7 +30,7 @@ List<KoiFishModel> listKoi(@PathVariable int pondId){
     }
 
     @PutMapping("/{userId}/{pondId}/{koiId}")
-    KoiFishModel updateKoi(@PathVariable int userId, @PathVariable int pondId, @PathVariable int koiId, @RequestBody KoiRequest request){
+    KoiFishModel updateKoi(@PathVariable int userId, @PathVariable int pondId, @PathVariable int koiId, @RequestBody ResReqKoi request){
         return kService.updateKoi(pondId, koiId, request);
     }
 

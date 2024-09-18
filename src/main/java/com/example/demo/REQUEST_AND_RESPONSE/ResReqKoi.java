@@ -1,4 +1,4 @@
-package com.example.demo.DTO;
+package com.example.demo.REQUEST_AND_RESPONSE;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KoiRequest {
+public class ResReqKoi {
     private String koiName;
     private Integer age;
     private Double length;
@@ -128,7 +128,7 @@ public class KoiRequest {
         this.image = image;
     }
 
-    public KoiRequest(LocalDate lastMedicalCheck, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, String healthStatus, String feedingSchedule, String image) {
+    public ResReqKoi(LocalDate lastMedicalCheck, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, String healthStatus, String feedingSchedule, String image) {
         this.lastMedicalCheck = lastMedicalCheck;
         this.koiName = koiName;
         this.age = age;
@@ -144,6 +144,6 @@ public class KoiRequest {
         this.image = image;
     }
 
-    public KoiRequest() {
+    public ResReqKoi() {
     }
 }
