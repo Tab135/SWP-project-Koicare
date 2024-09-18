@@ -35,7 +35,7 @@ public class UserManagement {
             user.setEmail(SignupRequest.getEmail());
             user.setPassword(passwordEncoder.encode(SignupRequest.getPassword()));
             user.setName(SignupRequest.getName());
-            user.setRole(SignupRequest.getRole());
+            user.setRole("USER");
             UserModel result = userRepo.save(user);
 
             if(result.getId() > 0){
