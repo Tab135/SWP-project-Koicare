@@ -22,7 +22,7 @@ public class CategoryController {
     }
 
     @PostMapping("/auth/updateCate/{cateId}")
-    public ResponseEntity<CategoryModel> updateCate(@PathVariable int cateId , @RequestBody CategoryModel detail){
-        return ResponseEntity.ok(cateM.UpdateById(cateId,detail));
+    public ResponseEntity<ReqResCATE> updateCate(@PathVariable int cateId , @RequestBody CategoryModel detail){
+        return ResponseEntity.ok(cateM.updateById(cateId,detail));
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class ReqResCATE {
     private int statusCode;
     private String error;
-    private String name;
+    private String categoryName;
     private String message;
     private CategoryModel cateM;
     private List<CategoryModel> cateList;
@@ -34,12 +34,12 @@ public class ReqResCATE {
         this.error = error;
     }
 
-    public String getName() {
-        return name;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getMessage() {

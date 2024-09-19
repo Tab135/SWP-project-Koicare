@@ -9,19 +9,25 @@ import jakarta.persistence.*;
 public class CategoryModel {
     @Id
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
-    private int cateid;
+    @Column(name = "category_id") // Explicit column naming in snake_case
+    private int categoryId; // camelCase in Java
 
-    private String name;
+    @Column(name = "category_name", nullable = false, length = 100) // Adding constraints
+    private String categoryName;
 
-    public String getName() {
-        return name;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public int getCateid() {
-        return cateid;
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }
