@@ -28,7 +28,8 @@ public class UserModel implements UserDetails {
 
         return List.of(new SimpleGrantedAuthority(role));
     }
-
+    @OneToOne(mappedBy = "user")
+    private ForgotPassword forgotPassword;
     @Override
     public String getUsername() {
         return email;

@@ -87,4 +87,42 @@ public class UserManagement {
         }
         return resp;
     }
+    public ReqResUser checkEmail(String email){
+        ReqResUser resp = new ReqResUser();
+        try{
+            boolean check = userRepo.existsByEmail(email);
+            if (check){
+                resp.setStatusCode(200);
+                resp.setMessage("Found Email");
+            }
+            else {
+                resp.setStatusCode(404);
+                resp.setMessage("No Email found");
+            }
+        }catch(Exception e){
+            resp.setStatusCode(500);
+            resp.setMessage("Server Error");
+        }
+        return resp;
+    }
+    public ReqResUser changePassword(String password, String email) {
+        ReqResUser resp = new ReqResUser();
+        try {
+            String encodedPassword = passwordEncoder.encode(password);
+            int rowsAffected = userRepo.updatePassword(email, encodedPassword);
+
+            if (rowsAffected > 0) {
+                resp.setMessage("Password updated successfully");
+                resp.setStatusCode(202);
+            } else {
+                resp.setMessage("Failed to update password, user not found");
+                resp.setStatusCode(404);
+            }
+        } catch (Exception e) {
+            resp.setMessage("An error occurred: " + e.getMessage());
+            resp.setStatusCode(500);
+        }
+
+        return resp;
+    }
 }
