@@ -2,7 +2,6 @@ import { memo, useState } from "react";
 import { ROUTERS } from "../../utis/router";
 import { Outlet,Link } from "react-router-dom";
 import "./header.css"
-import Button from 'react-bootstrap/Button';
 import { FaUserAlt } from "react-icons/fa";
 import { RiLoginBoxFill } from "react-icons/ri";
 const Header = () => {
@@ -47,8 +46,8 @@ const Header = () => {
                 </div>
                 <div className="col-xl-3 col-lg-3">
                     <div className="header_login">
-                            <div className="login_logo"><Link to={ROUTERS.USER.LOGIN}><RiLoginBoxFill /></Link></div>
-                            <div className="user_login">
+                            <div ><Link to={ROUTERS.USER.LOGIN}><RiLoginBoxFill /></Link></div>
+                            <div>
                                     <FaUserAlt />
                             </div>        
                     </div>

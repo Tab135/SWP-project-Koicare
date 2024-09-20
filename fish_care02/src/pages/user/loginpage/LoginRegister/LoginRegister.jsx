@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import './LoginRegister.css';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { memo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const LoginRegister = () => {
@@ -10,7 +10,7 @@ const LoginRegister = () => {
     const [action, setAction] = useState('');
     const [userDetails, setUserDetails] = useState({ email: '', password: '', username: '' });
     const [errorMessage, setErrorMessage] = useState('');
-
+    const navigate = useNavigate(); 
     const registerLink = () => {
         setAction(' active');
         setErrorMessage('');
@@ -38,6 +38,9 @@ const LoginRegister = () => {
             });
             if (response.data.statusCode === 200) {
                 console.log('Login successful:', response.data);
+                const {token} = response.data;
+                localStorage.setItem("token",token);
+                navigate("/");
                 setErrorMessage('');
             } else {
                 console.error('Login failed with status code:', response.data);

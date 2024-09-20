@@ -1,12 +1,14 @@
 import { ROUTERS } from "./utis/router";
 
 import Homepage from "./pages/user/homepage";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes} from "react-router-dom";
 import MasterLayout from "./theme/masterLayout/masterlayout";
 import Login from "./pages/user/loginpage/login";
 import ForgotPassword from './pages/user/loginpage/ForgotPassword/ForgotPassword';
 import EnterOtp from './pages/user/loginpage/EnterOtp/EnterOtp';
 import ResetPassword from './pages/user/loginpage/ResetPassword/ResetPassword';
+import PrivateRoute  from "./component/private-route";
+import { Children } from "react";
 
 const renderUserRouter = () => {
     const userRouter = [
@@ -27,17 +29,30 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.SEND_OTP,
-            Component: EnterOtp,
-            useLayout: false
+            Component: PrivateRoute,
+            children: [
+                {
+                    path: ROUTERS.USER.SEND_OTP,
+                    Component: EnterOtp
+                }
+            ],
+            useLayout: false,
         },
         {
             path: ROUTERS.USER.RESET_PASSWORD,
-            Component: ResetPassword,
-            useLayout: false
+            Component: PrivateRoute,
+            children: [
+                {
+                    path: ROUTERS.USER.SEND_OTP,
+                    Component: ResetPassword
+                }
+            ],
+            useLayout: false,
         }
     ];
-
+    
     return (
+        
         <Routes>
             {userRouter.map((item, key) => (
                 <Route
@@ -55,8 +70,9 @@ const renderUserRouter = () => {
                 />
             ))}
         </Routes>
-    );
+);
 }
+
 
 const RouterControl = () => {
     return renderUserRouter();
