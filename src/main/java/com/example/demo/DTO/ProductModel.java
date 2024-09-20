@@ -34,20 +34,31 @@ public class ProductModel {
 
     private double productRating;
 
+    private long amount;
+
 
     public ProductModel() {
     }
 
-    public ProductModel(int id, double productRating, int stockQuantity, String productImage, String description, float price, String productName, CategoryModel category, int shopId) {
+    public ProductModel(int id, long amount, double productRating, int stockQuantity, String productImage, String description, float price, String productName, int shopId, CategoryModel category) {
         this.id = id;
+        this.amount = amount;
         this.productRating = productRating;
         this.stockQuantity = stockQuantity;
         this.productImage = productImage;
         this.description = description;
         this.price = price;
         this.productName = productName;
-        this.category = category;
         this.shopId = shopId;
+        this.category = category;
+    }
+
+    public long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
     }
 
     public long getId() {

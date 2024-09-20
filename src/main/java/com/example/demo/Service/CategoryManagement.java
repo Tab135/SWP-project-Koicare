@@ -6,8 +6,11 @@ import com.example.demo.Repo.CategoryRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -89,5 +92,19 @@ public class CategoryManagement {
             req.setStatusCode(500);
         }
         return req;
+    }
+
+    public List<CategoryModel> showCate(CategoryModel category)
+    {
+        try {
+            List<CategoryModel> cm = cateReposity.findAll(Sort.by(Sort.Direction.ASC, "categoryId"));
+            if (cm.isEmpty()) {
+                return new ArrayList<>();
+            } else {
+                return cm;
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

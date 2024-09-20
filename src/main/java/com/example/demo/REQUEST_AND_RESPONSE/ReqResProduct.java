@@ -17,7 +17,8 @@ public class ReqResProduct {
     private float price; // CamelCase for consistency
     private String description;
     private int categoryId; // CamelCase for consistency
-    private int stockQuantity; // CamelCase for consistency
+    private int stockQuantity;
+    private long amount;// CamelCase for consistency
     private String message;
     private ProductModel productM;
     private List<ProductModel> productList;
@@ -52,6 +53,14 @@ public class ReqResProduct {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public long getAmount() {
+        return amount;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
     }
 
     public int getStockQuantity() {

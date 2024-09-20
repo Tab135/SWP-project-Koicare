@@ -8,8 +8,11 @@ import com.example.demo.Repo.ProductRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 @Service
 public class ProductManagement {
@@ -22,7 +25,7 @@ public class ProductManagement {
 
         try {
             // Validate input
-            if (addPro.getName() == null || addPro.getPrice() <= 0 || addPro.getStockQuantity() <= 0 || addPro.getCategoryId() <= 0) {
+            if (addPro.getName() == null || addPro.getPrice() <= 0 || addPro.getStockQuantity() <= 0 || addPro.getCategoryId() <= 0 || addPro.getAmount() <= 0) {
                 req.setMessage("Invalid product data");
                 req.setStatusCode(400); // Bad Request
                 return req;
@@ -43,6 +46,7 @@ public class ProductManagement {
             pm.setDescription(addPro.getDescription());
             pm.setCategory(cm.get());  // Set the CategoryModel object
             pm.setStockQuantity(addPro.getStockQuantity());
+            pm.setAmount(addPro.getAmount());
 
             // Save the product to the repository
             proRepository.save(pm);
@@ -79,9 +83,6 @@ public class ProductManagement {
         }
         return req;
     }
-
-
-
     @Transactional
     public ReqResProduct updatePro(int id, ProductModel detail) {
         ReqResProduct req = new ReqResProduct();
@@ -110,6 +111,10 @@ public class ProductManagement {
             if (detail.getStockQuantity() > 0) {
                 newProduct.setStockQuantity(detail.getStockQuantity());
             }
+            if(detail.getAmount() > 0)
+            {
+                newProduct.setAmount(detail.getAmount());
+            }
 
             // Update category only if it's provided in the request
             if (detail.getCategory() != null && detail.getCategory().getCategoryId() > 0) {
@@ -135,6 +140,23 @@ public class ProductManagement {
         }
 
         return req;
+    }
+    public List<ProductModel> showProduct(ProductModel model)
+    {
+
+        try{
+            List<ProductModel> list = proRepository.findAll(Sort.by(Sort.DEFAULT_DIRECTION, "id"));
+            if(list.isEmpty())
+            {
+                return new ArrayList<>();
+            }
+            return list;
+
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
 
