@@ -1,11 +1,14 @@
 package com.example.demo.REQUEST_AND_RESPONSE;
 
+import com.example.demo.DTO.KoiFishModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
+
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -19,10 +22,15 @@ public class ResReqKoi {
     private String origin;
     private BigDecimal price;
     private Integer pondId;
-    private String healthStatus;
+    private int userId;
     private LocalDate lastMedicalCheck;
     private String feedingSchedule;
     private String image;
+    private int statusCode;
+    private String error;
+    private String message;
+    private KoiFishModel koi;
+    private List<KoiFishModel> koiList;
 
     public Integer getPondId() {
         return pondId;
@@ -96,12 +104,12 @@ public class ResReqKoi {
         this.price = price;
     }
 
-    public String getHealthStatus() {
-        return healthStatus;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setHealthStatus(String healthStatus) {
-        this.healthStatus = healthStatus;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public LocalDate getLastMedicalCheck() {
@@ -128,7 +136,47 @@ public class ResReqKoi {
         this.image = image;
     }
 
-    public ResReqKoi(LocalDate lastMedicalCheck, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, String healthStatus, String feedingSchedule, String image) {
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public KoiFishModel getKoi() {
+        return koi;
+    }
+
+    public void setKoi(KoiFishModel koi) {
+        this.koi = koi;
+    }
+
+    public List<KoiFishModel> getKoiList() {
+        return koiList;
+    }
+
+    public void setKoiList(List<KoiFishModel> koiList) {
+        this.koiList = koiList;
+    }
+
+    public ResReqKoi(LocalDate lastMedicalCheck, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, int userId, String feedingSchedule, String image, int statusCode, String error, String message, KoiFishModel koi, List<KoiFishModel> koiList) {
         this.lastMedicalCheck = lastMedicalCheck;
         this.koiName = koiName;
         this.age = age;
@@ -139,9 +187,14 @@ public class ResReqKoi {
         this.origin = origin;
         this.price = price;
         this.pondId = pondId;
-        this.healthStatus = healthStatus;
+        this.userId = userId;
         this.feedingSchedule = feedingSchedule;
         this.image = image;
+        this.statusCode = statusCode;
+        this.error = error;
+        this.message = message;
+        this.koi = koi;
+        this.koiList = koiList;
     }
 
     public ResReqKoi() {

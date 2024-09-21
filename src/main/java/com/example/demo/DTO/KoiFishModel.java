@@ -1,21 +1,20 @@
 package com.example.demo.DTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "Koi_fish")
 @Data
 public class KoiFishModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="Koi_fish_Id")
     private int koiId;
-
+    @Column(name = "name")
     private String koiName;
     private int age;
     private double length;
@@ -24,38 +23,20 @@ public class KoiFishModel {
     private String variety;
     private String origin;
     private BigDecimal price;
+    @Column(name ="pond_id")
     private int pondId;
-    private String healthStatus;
+    @Column(name = "user_id")
+    private int userId;
     private LocalDate lastMedicalCheck;
     private String feedingSchedule;
     private String image;
 
-    public KoiFishModel(LocalDate lastMedicalCheck, int koiId, String koiName, int age, double length, double weight, String sex, String variety, String origin, BigDecimal price, int pondId, String healthStatus, String feedingSchedule, String image) {
-        this.lastMedicalCheck = lastMedicalCheck;
-        this.koiId = koiId;
-        this.koiName = koiName;
-        this.age = age;
-        this.length = length;
-        this.weight = weight;
-        this.sex = sex;
-        this.variety = variety;
-        this.origin = origin;
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
         this.price = price;
-        this.pondId = pondId;
-        this.healthStatus = healthStatus;
-        this.feedingSchedule = feedingSchedule;
-        this.image = image;
-    }
-
-    public KoiFishModel() {
-    }
-
-    public String getOrigin() {
-        return origin;
-    }
-
-    public void setOrigin(String origin) {
-        this.origin = origin;
     }
 
     public int getKoiId() {
@@ -114,12 +95,12 @@ public class KoiFishModel {
         this.variety = variety;
     }
 
-    public BigDecimal getPrice() {
-        return price;
+    public String getOrigin() {
+        return origin;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public int getPondId() {
@@ -130,12 +111,12 @@ public class KoiFishModel {
         this.pondId = pondId;
     }
 
-    public String getHealthStatus() {
-        return healthStatus;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setHealthStatus(String healthStatus) {
-        this.healthStatus = healthStatus;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public LocalDate getLastMedicalCheck() {
@@ -160,5 +141,25 @@ public class KoiFishModel {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public KoiFishModel(LocalDate lastMedicalCheck, int koiId, String koiName, int age, double length, double weight, String sex, String variety, String origin, BigDecimal price, int pondId, int userId, String feedingSchedule, String image) {
+        this.lastMedicalCheck = lastMedicalCheck;
+        this.koiId = koiId;
+        this.koiName = koiName;
+        this.age = age;
+        this.length = length;
+        this.weight = weight;
+        this.sex = sex;
+        this.variety = variety;
+        this.origin = origin;
+        this.price = price;
+        this.pondId = pondId;
+        this.userId = userId;
+        this.feedingSchedule = feedingSchedule;
+        this.image = image;
+    }
+
+    public KoiFishModel() {
     }
 }

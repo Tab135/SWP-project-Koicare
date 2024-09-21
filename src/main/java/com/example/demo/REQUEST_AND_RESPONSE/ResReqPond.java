@@ -1,6 +1,7 @@
 package com.example.demo.REQUEST_AND_RESPONSE;
 
 import com.example.demo.DTO.KoiFishModel;
+import com.example.demo.DTO.PondModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -20,17 +21,16 @@ public class ResReqPond {
     private Integer skimmers;
     private String location;
     private String waterSource;
-    private String maintenanceSchedule;
+
     private int userId;
     private List<KoiFishModel> koiList;
+    private int statusCode;
+    private String error;
+    private String message;
+    private PondModel pond;
+    private List<PondModel> pondList;
 
-    public Integer getPumpingCapacity() {
-        return pumpingCapacity;
-    }
 
-    public void setPumpingCapacity(Integer pumpingCapacity) {
-        this.pumpingCapacity = pumpingCapacity;
-    }
 
     public String getPondName() {
         return pondName;
@@ -64,6 +64,13 @@ public class ResReqPond {
         this.volume = volume;
     }
 
+    public Integer getPumpingCapacity() {
+        return pumpingCapacity;
+    }
+
+    public void setPumpingCapacity(Integer pumpingCapacity) {
+        this.pumpingCapacity = pumpingCapacity;
+    }
 
     public Integer getDrain() {
         return drain;
@@ -97,14 +104,6 @@ public class ResReqPond {
         this.waterSource = waterSource;
     }
 
-    public String getMaintenanceSchedule() {
-        return maintenanceSchedule;
-    }
-
-    public void setMaintenanceSchedule(String maintenanceSchedule) {
-        this.maintenanceSchedule = maintenanceSchedule;
-    }
-
     public int getUserId() {
         return userId;
     }
@@ -121,19 +120,63 @@ public class ResReqPond {
         this.koiList = koiList;
     }
 
-    public ResReqPond(Integer skimmers, String pondName, String picture, Double depth, Double volume, Integer pumpingCapacity, Integer drain, String location, String waterSource, String maintenanceSchedule, int userId, List<KoiFishModel> koiList) {
-        this.skimmers = skimmers;
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public PondModel getPond() {
+        return pond;
+    }
+
+    public void setPond(PondModel pond) {
+        this.pond = pond;
+    }
+
+    public List<PondModel> getPondList() {
+        return pondList;
+    }
+
+    public void setPondList(List<PondModel> pondList) {
+        this.pondList = pondList;
+    }
+
+    public ResReqPond(int statusCode, String pondName, String picture, Double depth, Double volume, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource, int userId, List<KoiFishModel> koiList, String error, String message, PondModel pond, List<PondModel> pondList) {
+        this.statusCode = statusCode;
         this.pondName = pondName;
         this.picture = picture;
         this.depth = depth;
         this.volume = volume;
         this.pumpingCapacity = pumpingCapacity;
         this.drain = drain;
+        this.skimmers = skimmers;
         this.location = location;
         this.waterSource = waterSource;
-        this.maintenanceSchedule = maintenanceSchedule;
         this.userId = userId;
         this.koiList = koiList;
+        this.error = error;
+        this.message = message;
+        this.pond = pond;
+        this.pondList = pondList;
     }
 
     public ResReqPond() {

@@ -1,37 +1,40 @@
 package com.example.demo.DTO;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "Pond")
 @Data
 public class PondModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Pond_Id")
     private int Id;
-
+    @Column(name = "name")
     private String pondName;
+    @Column (columnDefinition = "TEXT")
     private String picture;
     private double depth;
     private double volume;
+    @Column(name = "number_of_fish")
     private int numberOfFish;
+    @Column(name = "pumping_capacity")
     private int pumpingCapacity;
     private int drain;
     private int skimmers;
     private int userId;
+    @Column (columnDefinition = "TEXT")
     private String location;
+    @Column(name = "water_source")
     private String waterSource;
-    private String maintenanceSchedule;
 
-    public int getUserId() {
-        return userId;
+    public int getPumpingCapacity() {
+        return pumpingCapacity;
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
+    public void setPumpingCapacity(int pumpingCapacity) {
+        this.pumpingCapacity = pumpingCapacity;
     }
 
     public int getId() {
@@ -82,14 +85,6 @@ public class PondModel {
         this.numberOfFish = numberOfFish;
     }
 
-    public int getPumpingCapacity() {
-        return pumpingCapacity;
-    }
-
-    public void setPumpingCapacity(int pumpingCapacity) {
-        this.pumpingCapacity = pumpingCapacity;
-    }
-
     public int getDrain() {
         return drain;
     }
@@ -104,6 +99,14 @@ public class PondModel {
 
     public void setSkimmers(int skimmers) {
         this.skimmers = skimmers;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getLocation() {
@@ -122,16 +125,8 @@ public class PondModel {
         this.waterSource = waterSource;
     }
 
-    public String getMaintenanceSchedule() {
-        return maintenanceSchedule;
-    }
-
-    public void setMaintenanceSchedule(String maintenanceSchedule) {
-        this.maintenanceSchedule = maintenanceSchedule;
-    }
-
-    public PondModel(String location, int id, String pondName, String picture, double depth, double volume, int numberOfFish, int pumpingCapacity, int drain, int skimmers, int userId, String waterSource, String maintenanceSchedule) {
-        this.location = location;
+    public PondModel(int skimmers, int id, String pondName, String picture, double depth, double volume, int numberOfFish, int pumpingCapacity, int drain, int userId, String location, String waterSource) {
+        this.skimmers = skimmers;
         Id = id;
         this.pondName = pondName;
         this.picture = picture;
@@ -140,10 +135,9 @@ public class PondModel {
         this.numberOfFish = numberOfFish;
         this.pumpingCapacity = pumpingCapacity;
         this.drain = drain;
-        this.skimmers = skimmers;
         this.userId = userId;
+        this.location = location;
         this.waterSource = waterSource;
-        this.maintenanceSchedule = maintenanceSchedule;
     }
 
     public PondModel() {

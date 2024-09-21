@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface PondRepo extends JpaRepository<PondModel, Integer> {
     Optional<PondModel> findById(int id);
     List<PondModel> findAllByUserId(int userId);
+    //boolean existsByPondName(String pondName);
 }

@@ -15,45 +15,81 @@ public class PondService {
     private PondRepo pondR;
     private UserRepo userR;
 
-    public PondModel createP(ResReqPond request, int userId) {
+    public ResReqPond createP(ResReqPond request, int userId) {
+        ResReqPond res = new ResReqPond();
+        List<PondModel> pList = getPondsByUserId(userId).getPondList();
+        for(PondModel list: pList) {
+            if (list.getPondName().equals(request.getPondName())) {
+                res.setError("Pond existed");
+                res.setStatusCode(409);
+                return res;
 
-        PondModel pondModel = new PondModel();
+            }
+        }
         try {
+            PondModel pondModel = new PondModel();
             pondModel.setUserId(userId);
             pondModel.setPondName(request.getPondName());
             pondModel.setPicture(request.getPicture());
             pondModel.setDepth(request.getDepth());
             pondModel.setVolume(request.getVolume());
             pondModel.setPumpingCapacity(request.getPumpingCapacity());
-
-
             pondModel.setDrain(request.getDrain());
             pondModel.setSkimmers(request.getSkimmers());
             pondModel.setLocation(request.getLocation());
             pondModel.setWaterSource(request.getWaterSource());
-            pondModel.setMaintenanceSchedule(request.getMaintenanceSchedule());
 
+            PondModel result = pondR.save(pondModel);
+            if(result.getId() >0){
+                res.setMessage("Pond created successfully");
+                res.setStatusCode(200);
+                res.setPond(result);
+            }
         } catch (Exception ex) {
-            ex.printStackTrace();
+            res.setStatusCode(500);
+            res.setError(ex.getMessage());
+
         }
 
-        return pondR.save(pondModel);
+        return res;
     }
 
     //
-    public List<PondModel> getPondsByUserId(int userId) {
+    public ResReqPond getPondsByUserId(int userId) {
+        ResReqPond res = new ResReqPond();
+        List<PondModel> pondList = pondR.findAllByUserId(userId);
+        if(pondList.isEmpty()){
+            res.setUserId(userId);
+            res.setStatusCode(404);
+            res.setMessage("Pond's list is empty");
 
-       return pondR.findAllByUserId(userId);
+        }else{
+            res.setUserId(userId);
+            res.setStatusCode(200);
+            res.setMessage("List");
+            res.setPondList(pondList);
+        }
+        return res;
     }
 
-    public PondModel getPond(int pondId, int userId) {
-        List<PondModel> pList = getPondsByUserId(userId);
+    public ResReqPond getPond(int pondId, int userId) {
+        List<PondModel> pList = getPondsByUserId(userId).getPondList();
+        ResReqPond res = new ResReqPond();
+        boolean existed = false;
         for(PondModel list: pList){
             if(list.getId() ==pondId){
-                return list;
+                res.setStatusCode(200);
+                res.setMessage("Found pond");
+                res.setPond(list);
+                existed = true;
+
             }
         }
-        return null;
+        if(!existed){
+            res.setStatusCode(404);
+            res.setError("Pond not exist");
+        }
+        return res;
     }
 
 
@@ -61,40 +97,65 @@ public class PondService {
         pondR.deleteById(pondId);
     }
 
-    public PondModel updatePond(int userId, int pondId, ResReqPond request){
-        PondModel pond = getPond(pondId, userId);
-        if(request.getPondName() !=null) {
-            pond.setPondName(request.getPondName());//
+    public ResReqPond updatePond(int userId, int pondId, ResReqPond request){
+        ResReqPond res = getPond(pondId, userId);
+        PondModel pond = res.getPond();
+        ResReqPond pList = getPondsByUserId(userId);
+        for(PondModel list: pList.getPondList()){
+            if(list.getPondName().equals(request.getPondName())){
+                ResReqPond result = new ResReqPond();
+                result.setStatusCode(409);
+                result.setError("Pond existed");
+                return result;
+            }
         }
-        if(request.getPicture() !=null) {
-            pond.setPicture(request.getPicture());
-        }
-        if(request.getDepth() !=null) {
-            pond.setDepth(request.getDepth());
-        }
-        if(request.getVolume() !=null) {
-            pond.setVolume(request.getVolume());
-        }
+    try {
+        if (res.getStatusCode() == 200) {
+            if (request.getPondName() != null) {
+                pond.setPondName(request.getPondName());//
+            }
+            if (request.getPicture() != null) {
+                pond.setPicture(request.getPicture());
+            }
+            if (request.getDepth() != null) {
+                pond.setDepth(request.getDepth());
+            }
+            if (request.getVolume() != null) {
+                pond.setVolume(request.getVolume());
+            }
 
-        if(request.getPumpingCapacity() !=null) {
-            pond.setPumpingCapacity(request.getPumpingCapacity());
+            if (request.getPumpingCapacity() != null) {
+                pond.setPumpingCapacity(request.getPumpingCapacity());
+            }
+            if (request.getDrain() != null) {
+                pond.setDrain(request.getDrain());
+            }
+            if (request.getSkimmers() != null) {
+                pond.setSkimmers(request.getSkimmers());
+            }
+            if (request.getLocation() != null) {
+                pond.setLocation(request.getLocation());
+            }
+            if (request.getWaterSource() != null) {
+                pond.setWaterSource(request.getWaterSource());
+            }
+
+
+            pondR.save(pond);
+            res.setStatusCode(200);
+            res.setMessage("Updated successfully");
+            res.setPond(pond);
+            return res;
+        } else {
+            return res;
         }
-        if(request.getDrain() !=null) {
-            pond.setDrain(request.getDrain());
-        }
-        if(request.getSkimmers() !=null) {
-            pond.setSkimmers(request.getSkimmers());
-        }
-        if(request.getLocation() !=null){
-            pond.setLocation(request.getLocation());
-        }
-        if(request.getWaterSource() !=null){
-            pond.setWaterSource(request.getWaterSource());
-        }
-        if(request.getMaintenanceSchedule() !=null){
-            pond.setMaintenanceSchedule(request.getMaintenanceSchedule());
-        }
-        return pondR.save(pond);
+    }catch (Exception ex){
+       res.setStatusCode(500);
+       res.setError("Error in PondService: "+ex.getMessage());
+    }
+        return res;
+
+
 
     }
 

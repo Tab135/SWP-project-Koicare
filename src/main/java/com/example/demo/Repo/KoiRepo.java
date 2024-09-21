@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface KoiRepo extends JpaRepository<KoiFishModel, Integer> {
     List<KoiFishModel> findAllByPondId(int pondId);
+    boolean existsByKoiName(String koiName);
+
 }
