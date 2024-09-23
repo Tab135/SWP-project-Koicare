@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import './LoginRegister.css';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
 
 const LoginRegister = () => {
 
     const [action, setAction] = useState('');
     const [userDetails, setUserDetails] = useState({ email: '', password: '', username: '' });
     const [errorMessage, setErrorMessage] = useState('');
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
+
     const registerLink = () => {
         setAction(' active');
         setErrorMessage('');
@@ -38,8 +40,8 @@ const LoginRegister = () => {
             });
             if (response.data.statusCode === 200) {
                 console.log('Login successful:', response.data);
-                const {token} = response.data;
-                localStorage.setItem("token",token);
+                const { token } = response.data;
+                localStorage.setItem("token", token);
                 navigate("/");
                 setErrorMessage('');
             } else {
@@ -56,16 +58,6 @@ const LoginRegister = () => {
             }
         }
     };
-
-    useEffect(() => {
-        if (errorMessage) {
-            const timer = setTimeout(() => {
-                setErrorMessage('');
-            }, 5000);
-
-            return () => clearTimeout(timer);
-        }
-    }, [errorMessage]);
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
@@ -89,6 +81,23 @@ const LoginRegister = () => {
             }
         }
     };
+
+    const handleGoogleSuccess = async (response) => {
+        const { credential } = response;
+        try {
+            const googleResponse = await axios.post('http://localhost:8080/oauth2/authorization/google', { token: credential });
+            console.log('Google login success:', googleResponse.data);
+            localStorage.setItem('token', googleResponse.data.token);
+            navigate('/');
+        } catch (error) {
+            console.error('Google login error:', error.message);
+        }
+    };
+
+    const handleGoogleFailure = (error) => {
+        console.error('Google login failed:', error);
+    };
+
 
     return (
         <div className='bodyLogin'>
@@ -124,10 +133,19 @@ const LoginRegister = () => {
                             <Link to="/forgot-password">Forgot Password?</Link>
                         </div>
 
-                        {/* Hiển thị thông báo lỗi khi đăng nhập thất bại */}
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
 
                         <button type="submit">Login</button>
+
+                        <div className="social-login">
+                            <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+                                <GoogleLogin
+                                    onSuccess={handleGoogleSuccess}
+                                    onError={handleGoogleFailure}
+                                />
+                            </GoogleOAuthProvider>
+
+                        </div>
 
                         <div className="register-link">
                             <p>Don't have an account?
