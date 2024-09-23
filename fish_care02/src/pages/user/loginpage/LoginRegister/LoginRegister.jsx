@@ -82,23 +82,12 @@ const LoginRegister = () => {
         }
     };
 
-    const handleGoogleSuccess = async (response) => {
-        const { credential } = response;
-        try {
-            const googleResponse = await axios.post('http://localhost:8080/oauth2/authorization/google', { token: credential });
-            console.log('Google login success:', googleResponse.data);
-            localStorage.setItem('token', googleResponse.data.token);
-            navigate('/');
-        } catch (error) {
-            console.error('Google login error:', error.message);
-        }
+
+
+    const handleGoogleLogin = () => {
+        // Redirect to the backend service for Google OAuth2 authorization
+        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
     };
-
-    const handleGoogleFailure = (error) => {
-        console.error('Google login failed:', error);
-    };
-
-
     return (
         <div className='bodyLogin'>
             <div className={`wrapper${action}`}>
@@ -138,15 +127,11 @@ const LoginRegister = () => {
                         <button type="submit">Login</button>
 
                         <div className="social-login">
-                            <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
-                                <GoogleLogin
-                                    onSuccess={handleGoogleSuccess}
-                                    onError={handleGoogleFailure}
-                                />
-                            </GoogleOAuthProvider>
 
+                                      <button onClick={handleGoogleLogin}>
+                                          Login with Google
+                                      </button>
                         </div>
-
                         <div className="register-link">
                             <p>Don't have an account?
                                 <a href="#" onClick={registerLink}>Register</a>
