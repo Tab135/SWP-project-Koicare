@@ -22,7 +22,7 @@ public class UserController {
         return ResponseEntity.ok(userManagement.Login(login));
     }
 
-    @DeleteMapping("/auth/delete/{userId}")
+    @DeleteMapping("/admin/delete/{userId}")
     public ResponseEntity<ReqResUser> deleteUser(@PathVariable int userId) {
         return ResponseEntity.ok(userManagement.Delete(userId));
     }

@@ -1,6 +1,8 @@
 package com.example.demo.Service;
 
+import com.example.demo.DTO.RoleModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
+import com.example.demo.Repo.RoleRepo;
 import com.example.demo.Repo.UserRepo;
 import com.example.demo.DTO.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,8 @@ public class UserManagement {
 
     @Autowired
     private UserRepo userRepo;
-
+    @Autowired
+    private  RoleRepo roleRepo;
     @Autowired
     private JWTUtils jwtUtils;
 
@@ -31,11 +34,12 @@ public class UserManagement {
         ReqResUser resp = new ReqResUser();
 
         try{
+            RoleModel userRole = roleRepo.findByName("USER");
             UserModel user = new UserModel();
             user.setEmail(SignupRequest.getEmail());
             user.setPassword(passwordEncoder.encode(SignupRequest.getPassword()));
             user.setName(SignupRequest.getName());
-            user.setRole("USER");
+            user.setRole(userRole);
             UserModel result = userRepo.save(user);
 
             if(result.getId() > 0){

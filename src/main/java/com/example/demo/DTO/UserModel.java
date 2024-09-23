@@ -2,6 +2,7 @@ package com.example.demo.DTO;
 import java.util.*;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,12 +22,15 @@ public class UserModel implements UserDetails {
     private String email;
     private String name;
     private String password;
-    private String role;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id")
+    private RoleModel role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
-        return List.of(new SimpleGrantedAuthority(role));
+        return List.of(new SimpleGrantedAuthority(role.getName()));
     }
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
@@ -87,11 +91,11 @@ public class UserModel implements UserDetails {
         this.password = password;
     }
 
-    public String getRole() {
+    public RoleModel getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(RoleModel role) {
         this.role = role;
     }
 }

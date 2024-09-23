@@ -20,6 +20,7 @@ public class ForgotPasswordService {
 
     private final UserRepo userRepo;
     private final EmailService emailService;
+
     private final ForgotPassRepo forgotPassRepo;
     private final UserManagement userManagement;
 
@@ -34,6 +35,9 @@ public class ForgotPasswordService {
     public void sendOtp(String email) {
         UserModel user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Please provide a valid email"));
+
+        Optional<ForgotPassword> existingOtp = forgotPassRepo.findByUser(user);
+        existingOtp.ifPresent(otp -> forgotPassRepo.deleteById(otp.getFPid()));
         int otp = OtpGen();
         MailDTO mailDTO = MailDTO.builder()
                 .to(email)
