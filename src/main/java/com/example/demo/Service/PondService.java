@@ -18,12 +18,14 @@ public class PondService {
     public ResReqPond createP(ResReqPond request, int userId) {
         ResReqPond res = new ResReqPond();
         List<PondModel> pList = getPondsByUserId(userId).getPondList();
-        for(PondModel list: pList) {
-            if (list.getPondName().equals(request.getPondName())) {
-                res.setError("Pond existed");
-                res.setStatusCode(409);
-                return res;
+        if(pList !=null) {
+            for (PondModel list : pList) {
+                if (list.getPondName().equals(request.getPondName())) {
+                    res.setError("Pond existed");
+                    res.setStatusCode(409);
+                    return res;
 
+                }
             }
         }
         try {
