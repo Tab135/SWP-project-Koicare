@@ -63,7 +63,7 @@ const LoginRegister = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:8080/auth/signup', {
-                username: userDetails.username,
+                name: userDetails.username,
                 password: userDetails.password,
                 email: userDetails.email
             });

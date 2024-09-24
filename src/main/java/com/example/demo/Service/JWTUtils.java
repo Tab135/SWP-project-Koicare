@@ -24,9 +24,10 @@ public class JWTUtils {
         this.Key = new SecretKeySpec(keyBytes,"HmacSHA256");
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails,int userId) {
 
         return Jwts.builder()
+                .claim("userId", userId)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + Expiration_Time ))
@@ -46,6 +47,9 @@ public class JWTUtils {
 
     public String extractUsername(String token){
         return extractClaims(token, Claims::getSubject);
+    }
+    public int extractUserId(String token) {
+        return extractClaims(token, claims -> claims.get("userId", Integer.class));
     }
     private <T> T extractClaims(String token, Function<Claims,T> claimsTFunction){
         return claimsTFunction.apply(Jwts.parser().verifyWith(Key).build().parseSignedClaims(token).getPayload());
