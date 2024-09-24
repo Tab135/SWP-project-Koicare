@@ -23,8 +23,7 @@ public class ResReqKoi {
     private BigDecimal price;
     private Integer pondId;
     private int userId;
-    private LocalDate lastMedicalCheck;
-    private String feedingSchedule;
+
     private String image;
     private int statusCode;
     private String error;
@@ -112,21 +111,7 @@ public class ResReqKoi {
         this.userId = userId;
     }
 
-    public LocalDate getLastMedicalCheck() {
-        return lastMedicalCheck;
-    }
 
-    public void setLastMedicalCheck(LocalDate lastMedicalCheck) {
-        this.lastMedicalCheck = lastMedicalCheck;
-    }
-
-    public String getFeedingSchedule() {
-        return feedingSchedule;
-    }
-
-    public void setFeedingSchedule(String feedingSchedule) {
-        this.feedingSchedule = feedingSchedule;
-    }
 
     public String getImage() {
         return image;
@@ -176,8 +161,8 @@ public class ResReqKoi {
         this.koiList = koiList;
     }
 
-    public ResReqKoi(LocalDate lastMedicalCheck, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, int userId, String feedingSchedule, String image, int statusCode, String error, String message, KoiFishModel koi, List<KoiFishModel> koiList) {
-        this.lastMedicalCheck = lastMedicalCheck;
+    public ResReqKoi(String error, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, int userId, String image, int statusCode, String message, KoiFishModel koi, List<KoiFishModel> koiList) {
+        this.error = error;
         this.koiName = koiName;
         this.age = age;
         this.length = length;
@@ -188,10 +173,8 @@ public class ResReqKoi {
         this.price = price;
         this.pondId = pondId;
         this.userId = userId;
-        this.feedingSchedule = feedingSchedule;
         this.image = image;
         this.statusCode = statusCode;
-        this.error = error;
         this.message = message;
         this.koi = koi;
         this.koiList = koiList;

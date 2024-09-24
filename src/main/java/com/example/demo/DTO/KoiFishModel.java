@@ -27,8 +27,7 @@ public class KoiFishModel {
     private int pondId;
     @Column(name = "user_id")
     private int userId;
-    private LocalDate lastMedicalCheck;
-    private String feedingSchedule;
+
     private String image;
 
     public BigDecimal getPrice() {
@@ -119,21 +118,7 @@ public class KoiFishModel {
         this.userId = userId;
     }
 
-    public LocalDate getLastMedicalCheck() {
-        return lastMedicalCheck;
-    }
 
-    public void setLastMedicalCheck(LocalDate lastMedicalCheck) {
-        this.lastMedicalCheck = lastMedicalCheck;
-    }
-
-    public String getFeedingSchedule() {
-        return feedingSchedule;
-    }
-
-    public void setFeedingSchedule(String feedingSchedule) {
-        this.feedingSchedule = feedingSchedule;
-    }
 
     public String getImage() {
         return image;
@@ -143,8 +128,8 @@ public class KoiFishModel {
         this.image = image;
     }
 
-    public KoiFishModel(LocalDate lastMedicalCheck, int koiId, String koiName, int age, double length, double weight, String sex, String variety, String origin, BigDecimal price, int pondId, int userId, String feedingSchedule, String image) {
-        this.lastMedicalCheck = lastMedicalCheck;
+    public KoiFishModel(String origin, int koiId, String koiName, int age, double length, double weight, String sex, String variety, BigDecimal price, int pondId, int userId, String image) {
+        this.origin = origin;
         this.koiId = koiId;
         this.koiName = koiName;
         this.age = age;
@@ -152,11 +137,9 @@ public class KoiFishModel {
         this.weight = weight;
         this.sex = sex;
         this.variety = variety;
-        this.origin = origin;
         this.price = price;
         this.pondId = pondId;
         this.userId = userId;
-        this.feedingSchedule = feedingSchedule;
         this.image = image;
     }
 

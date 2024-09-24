@@ -55,8 +55,7 @@ public ResReqKoi addKoi(ResReqKoi request, int pondId, int userId){
     pondR.save(pondModel);
 
 
-    koi.setLastMedicalCheck(request.getLastMedicalCheck());
-    koi.setFeedingSchedule(request.getFeedingSchedule());
+
     koi.setImage(request.getImage());
 
     KoiFishModel result = koiR.save(koi);
@@ -159,12 +158,7 @@ public void deleteKoi(int koiId, int pondId){
                     koi.setPondId(request.getPondId());
                 }
 
-                if (request.getLastMedicalCheck() != null) {
-                    koi.setLastMedicalCheck(request.getLastMedicalCheck());
-                }
-                if (request.getFeedingSchedule() != null) {
-                    koi.setFeedingSchedule(request.getFeedingSchedule());
-                }
+
                 if (request.getImage() != null) {
                     koi.setImage(request.getImage());
                 }
