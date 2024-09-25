@@ -20,17 +20,10 @@ public class PondController {
 
 @Autowired
     private JWTUtils jwt;
-@PostMapping("/createPond")
-ResponseEntity<ResReqPond> createP(@RequestHeader ("Authorization") String token, @RequestBody ResReqPond pond) {
-    int userId = jwt.extractUserId(token);
+@PostMapping("/createPond/")
+ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token, @RequestBody ResReqPond pond) {
+    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
     return ResponseEntity.ok(pService.createP(pond,userId));
-}
-
-@PostMapping("/createPond/{userId}")
-ResponseEntity<ResReqPond> createP(@PathVariable int userId, @RequestBody ResReqPond pond){
-
-
-    return ResponseEntity.ok(pService.createP(pond, userId));
 }
 
 
