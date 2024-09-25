@@ -1,12 +1,11 @@
 import { ROUTERS } from "./utis/router";
-
 import Homepage from "./pages/user/homepage";
-import { Route, Routes} from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import MasterLayout from "./theme/masterLayout/masterlayout";
 import Login from "./pages/user/loginpage/login";
 import ForgotPassword from './pages/user/loginpage/ForgotPassword/ForgotPassword';
-import PrivateRoute  from "./component/private-route";
-import { Children } from "react";
+import AddKoiPondPage from './pages/user/PondPage/AddKoiPondPage/AddKoiPondPage';
+import ListKoiPondPage from './pages/user/PondPage/ListKoiPondPage/ListKoiPondPage';
 
 const renderUserRouter = () => {
     const userRouter = [
@@ -25,10 +24,19 @@ const renderUserRouter = () => {
             Component: ForgotPassword,
             useLayout: false
         },
+        {
+            path: ROUTERS.USER.ADD_POND,
+            Component: AddKoiPondPage,
+            useLayout: true
+        },
+        {
+            path: ROUTERS.USER.LIST_PONDS,
+            Component: ListKoiPondPage,
+            useLayout: true
+        }
     ];
-    
+
     return (
-        
         <Routes>
             {userRouter.map((item, key) => (
                 <Route
@@ -46,9 +54,8 @@ const renderUserRouter = () => {
                 />
             ))}
         </Routes>
-);
-}
-
+    );
+};
 
 const RouterControl = () => {
     return renderUserRouter();

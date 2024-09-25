@@ -16,7 +16,7 @@
     "react-multi-carousel": "^2.8.5",
     "react-multi-select-component": "^4.3.4",
     "react-scripts": "^5.0.1",
-    "sass-loader": "^16.0.1",
+    "sass-loader": "^16.0.2",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -47,6 +47,6 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "react-router-dom": "^6.26.2",
     "resolve-url-loader": "^5.0.0",
-    "sass": "^1.79.1"
+    "sass": "^1.79.3"
   }
 }
