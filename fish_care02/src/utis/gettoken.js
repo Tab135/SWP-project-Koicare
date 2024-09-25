@@ -7,7 +7,7 @@ export const getUsernameFromToken = (token) => {
     try {
       const decodedToken = jwtDecode(token);
       console.log("Thông tin trong token:", decodedToken);
-      return decodedToken.userId; 
+      return decodedToken.sub; 
     } catch (error) {
       console.error("Token is invalid:", error);
       return null;

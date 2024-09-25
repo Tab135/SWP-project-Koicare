@@ -5,26 +5,47 @@ import "./header.scss"
 import logo from "../../assets/image/logo.jpg"
 import React, { useEffect} from 'react';
 import { getUsernameFromToken } from '../../utis/gettoken';
-const Header = () => {
-    
+const Header = () => { 
+    const [username, setUsername] = useState(null);
     const UserProfile = () => {
-        const [username, setUsername] = useState(null);
-      
+       
+
         useEffect(() => {
-          const token = localStorage.getItem('token');
-          const name = getUsernameFromToken(token);
-          setUsername(name);
+            const token = localStorage.getItem('token');
+            if (token) {
+                const name = getUsernameFromToken(token);
+                setUsername(name);
+            }
         }, []);
+
         return (
             <div className="header_login">
-              {username ? (
-                <p>{username}</p> 
-              ) : (
-                <Link to={ROUTERS.USER.LOGIN}>Login</Link> 
-              )}
+                {username ? (
+                    <LogoutButton username={username} />
+                ) : (
+                    <Link to={ROUTERS.USER.LOGIN}>Login</Link>
+                )}
             </div>
-          );
-    }      
+        );
+        
+    };
+
+    const LogoutButton = ({ username }) => {
+
+        const handleLogout = () => {
+            localStorage.removeItem("token"); 
+            setUsername(null); 
+        };
+
+        return (
+            <div>
+                <span>Welcome, {username}!</span>
+                <button onClick={handleLogout}>
+                    Logout
+                </button>
+            </div>
+        );
+    };
     const[menus, setmenu] = useState([
         {
             name: "Home",
