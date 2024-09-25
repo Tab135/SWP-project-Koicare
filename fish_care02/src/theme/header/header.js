@@ -1,10 +1,30 @@
 import { memo, useState } from "react";
 import { ROUTERS } from "../../utis/router";
 import { Outlet,Link } from "react-router-dom";
-import "./header.css"
-import { FaUserAlt } from "react-icons/fa";
-import { RiLoginBoxFill } from "react-icons/ri";
+import "./header.scss"
+import logo from "../../assets/image/logo.jpg"
+import React, { useEffect} from 'react';
+import { getUsernameFromToken } from '../../utis/gettoken';
 const Header = () => {
+    
+    const UserProfile = () => {
+        const [username, setUsername] = useState(null);
+      
+        useEffect(() => {
+          const token = localStorage.getItem('token');
+          const name = getUsernameFromToken(token);
+          setUsername(name);
+        }, []);
+        return (
+            <div className="header_login">
+              {username ? (
+                <p>{username}</p> 
+              ) : (
+                <Link to={ROUTERS.USER.LOGIN}>Login</Link> 
+              )}
+            </div>
+          );
+    }      
     const[menus, setmenu] = useState([
         {
             name: "Home",
@@ -28,7 +48,7 @@ const Header = () => {
             <div className="row">
                 <div className="col-xl-3 col-lg-3">
                     <div className="header_logo">
-                        <h1><Link>KOI</Link></h1>                 
+                    <img src={(logo)} alt="Logo" />       
                     </div>
                 </div>
                 <div className="col-xl-3 col-lg-6">
@@ -45,12 +65,13 @@ const Header = () => {
                     </div>
                 </div>
                 <div className="col-xl-3 col-lg-3">
-                    <div className="header_login">
-                            <div ><Link to={ROUTERS.USER.LOGIN}><RiLoginBoxFill /></Link></div>
-                            <div>
-                                    <FaUserAlt />
-                            </div>        
-                    </div>
+                            {/* <div >{username ? (
+                        <h1>Welcome, {username}!</h1>
+                            ) : (
+                                <Link to={ROUTERS.USER.LOGIN}>Login</Link>
+                                )}</div>       */}
+                                <UserProfile/>
+
                 </div>
             </div>
         </div>

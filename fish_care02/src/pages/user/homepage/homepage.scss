@@ -1,24 +1,32 @@
  $bannerimage: '/assets/image/CaKoi.jpg';
-.banner{
-    background-image: url($bannerimage);
+.homepage{
+    height: 500px;
+    padding: 20px 0;
+}
+ .banner{
     background-size: cover;
-    height: 350px;
+    height: 225px;
     width: 100%;
 
     .text_banner{
         display: flex;
         justify-content: center;
-        padding: 80px 0;
+        padding: 30px 0;
         color: #F4A950;
     }
     .menu_banner{
         ul{
             display: flex;
             justify-content: space-around; 
-            li{
+            li{ 
+                border-radius: 20%;
+                padding-top: 4.5px;
+                background-color: #F4A950;
                 list-style: none;
+                height: 100px;
+                width: 100px;
                 a{
-                    
+                    padding: 0 16px ;
                     text-decoration: none;
                     color: white;
                     span{

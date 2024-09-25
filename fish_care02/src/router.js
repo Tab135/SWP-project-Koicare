@@ -1,38 +1,50 @@
 import { ROUTERS } from "./utis/router";
-import Homepage from "./pages/user/homepage";
 import { Route, Routes } from "react-router-dom";
 import MasterLayout from "./theme/masterLayout/masterlayout";
 import Login from "./pages/user/loginpage/login";
 import ForgotPassword from './pages/user/loginpage/ForgotPassword/ForgotPassword';
 import AddKoiPondPage from './pages/user/PondPage/AddKoiPondPage/AddKoiPondPage';
 import ListKoiPondPage from './pages/user/PondPage/ListKoiPondPage/ListKoiPondPage';
+import PrivateRoute from "./component/private-route";
+import Homepage from "./pages/user/homepage";
 
 const renderUserRouter = () => {
     const userRouter = [
         {
             path: ROUTERS.USER.HOME,
-            Component: Homepage,
-            useLayout: true
+            element: <PrivateRoute/>,
+            children: [
+                {
+                    path: ROUTERS.USER.HOME,
+                    element: <MasterLayout>
+                            <Homepage />  {/* Bọc PrivateRoute bên trong MasterLayout */}
+                                </MasterLayout>,
+                }
+            ],
         },
         {
             path: ROUTERS.USER.LOGIN,
-            Component: Login,
+            element: <Login/>,
             useLayout: false
         },
         {
             path: ROUTERS.USER.FORGOT_PASSWORD,
-            Component: ForgotPassword,
+            element: <ForgotPassword />,
             useLayout: false
         },
         {
             path: ROUTERS.USER.ADD_POND,
-            Component: AddKoiPondPage,
-            useLayout: true
+            element: <MasterLayout>
+                <AddKoiPondPage />,
+            </MasterLayout>
+            
+          
         },
         {
             path: ROUTERS.USER.LIST_PONDS,
-            Component: ListKoiPondPage,
-            useLayout: true
+           element:<MasterLayout>
+                    <ListKoiPondPage />,
+               </MasterLayout>,
         }
     ];
 
@@ -42,16 +54,16 @@ const renderUserRouter = () => {
                 <Route
                     key={key}
                     path={item.path}
-                    element={
-                        item.useLayout ? (
-                            <MasterLayout>
-                                <item.Component />
-                            </MasterLayout>
-                        ) : (
-                            <item.Component />
-                        )
-                    }
-                />
+                    element={item.element}
+                >
+                    {item.children?.map((child, childKey) => (
+                        <Route  
+                            key={childKey}
+                            path={child.path}
+                            element={child.element}  // Render children trong layout
+                        />
+                    ))}
+                </Route>
             ))}
         </Routes>
     );
