@@ -1,9 +1,11 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DTO.PondModel;
+import com.example.demo.REQUEST_AND_RESPONSE.ReqResWater;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.PondService;
+import com.example.demo.Service.WaterManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,11 +17,19 @@ import java.util.List;
 public class PondController {
 @Autowired
     private PondService pService;
+
 @Autowired
     private JWTUtils jwt;
 @PostMapping("/createPond")
-ResponseEntity<ResReqPond> createP(@RequestHeader ("Authorization") String token, @RequestBody ResReqPond pond){
+ResponseEntity<ResReqPond> createP(@RequestHeader ("Authorization") String token, @RequestBody ResReqPond pond) {
     int userId = jwt.extractUserId(token);
+    return ResponseEntity.ok(pService.createP(pond,userId));
+}
+
+@PostMapping("/createPond/{userId}")
+ResponseEntity<ResReqPond> createP(@PathVariable int userId, @RequestBody ResReqPond pond){
+
+
     return ResponseEntity.ok(pService.createP(pond, userId));
 }
 
