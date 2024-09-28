@@ -1,6 +1,5 @@
 package com.example.demo.REQUEST_AND_RESPONSE;
 
-import com.example.demo.DTO.KoiFishModel;
 import com.example.demo.DTO.PondModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;

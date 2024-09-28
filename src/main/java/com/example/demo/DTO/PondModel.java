@@ -15,26 +15,28 @@ public class PondModel {
     private String pondName;
     @Column (columnDefinition = "TEXT")
     private String picture;
-    private double depth;
-    private double volume;
+    private Double depth;
+    private Double volume;
     @Column(name = "number_of_fish")
     private int numberOfFish;
     @Column(name = "pumping_capacity")
-    private int pumpingCapacity;
-    private int drain;
-    private int skimmers;
-    private int userId;
+    private Integer pumpingCapacity;
+    private Integer drain;
+    private Integer skimmers;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel user;
     @Column (columnDefinition = "TEXT")
     private String location;
     @Column(name = "water_source")
     private String waterSource;
 
-    public int getPumpingCapacity() {
-        return pumpingCapacity;
+    public int getNumberOfFish() {
+        return numberOfFish;
     }
 
-    public void setPumpingCapacity(int pumpingCapacity) {
-        this.pumpingCapacity = pumpingCapacity;
+    public void setNumberOfFish(int numberOfFish) {
+        this.numberOfFish = numberOfFish;
     }
 
     public int getId() {
@@ -61,52 +63,44 @@ public class PondModel {
         this.picture = picture;
     }
 
-    public double getDepth() {
+    public Double getDepth() {
         return depth;
     }
 
-    public void setDepth(double depth) {
+    public void setDepth(Double depth) {
         this.depth = depth;
     }
 
-    public double getVolume() {
+    public Double getVolume() {
         return volume;
     }
 
-    public void setVolume(double volume) {
+    public void setVolume(Double volume) {
         this.volume = volume;
     }
 
-    public int getNumberOfFish() {
-        return numberOfFish;
+    public Integer getPumpingCapacity() {
+        return pumpingCapacity;
     }
 
-    public void setNumberOfFish(int numberOfFish) {
-        this.numberOfFish = numberOfFish;
+    public void setPumpingCapacity(Integer pumpingCapacity) {
+        this.pumpingCapacity = pumpingCapacity;
     }
 
-    public int getDrain() {
+    public Integer getDrain() {
         return drain;
     }
 
-    public void setDrain(int drain) {
+    public void setDrain(Integer drain) {
         this.drain = drain;
     }
 
-    public int getSkimmers() {
+    public Integer getSkimmers() {
         return skimmers;
     }
 
-    public void setSkimmers(int skimmers) {
+    public void setSkimmers(Integer skimmers) {
         this.skimmers = skimmers;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
     }
 
     public String getLocation() {
@@ -125,8 +119,16 @@ public class PondModel {
         this.waterSource = waterSource;
     }
 
-    public PondModel(int skimmers, int id, String pondName, String picture, double depth, double volume, int numberOfFish, int pumpingCapacity, int drain, int userId, String location, String waterSource) {
-        this.skimmers = skimmers;
+    public UserModel getUser() {
+        return user;
+    }
+
+    public void setUser(UserModel user) {
+        this.user = user;
+    }
+
+    public PondModel(UserModel user, int id, String pondName, String picture, Double depth, Double volume, int numberOfFish, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource) {
+        this.user = user;
         Id = id;
         this.pondName = pondName;
         this.picture = picture;
@@ -135,7 +137,7 @@ public class PondModel {
         this.numberOfFish = numberOfFish;
         this.pumpingCapacity = pumpingCapacity;
         this.drain = drain;
-        this.userId = userId;
+        this.skimmers = skimmers;
         this.location = location;
         this.waterSource = waterSource;
     }

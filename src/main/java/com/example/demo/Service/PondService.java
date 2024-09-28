@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.DTO.PondModel;
+import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
 import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.UserRepo;
@@ -8,19 +9,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PondService {
     @Autowired
     private PondRepo pondR;
+    @Autowired
     private UserRepo userR;
 
     public ResReqPond createP(ResReqPond request, int userId) {
         ResReqPond res = new ResReqPond();
+        Optional<UserModel> user = userR.findById(userId);
         List<PondModel> pList = getPondsByUserId(userId).getPondList();
         if(pList !=null) {
             for (PondModel list : pList) {
                 if (list.getPondName().equals(request.getPondName())) {
+                    res.setUserId(userId);
                     res.setError("Pond existed");
                     res.setStatusCode(409);
                     return res;
@@ -30,7 +35,7 @@ public class PondService {
         }
         try {
             PondModel pondModel = new PondModel();
-            pondModel.setUserId(userId);
+            pondModel.setUser(user.get());
             pondModel.setPondName(request.getPondName());
             pondModel.setPicture(request.getPicture());
             pondModel.setDepth(request.getDepth());
@@ -44,6 +49,7 @@ public class PondService {
             PondModel result = pondR.save(pondModel);
             if(result.getId() >0){
                 res.setMessage("Pond created successfully");
+                res.setUserId(userId);
                 res.setStatusCode(200);
                 res.setPond(result);
             }
