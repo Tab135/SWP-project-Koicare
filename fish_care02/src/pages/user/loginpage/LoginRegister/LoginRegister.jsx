@@ -82,12 +82,15 @@ const LoginRegister = () => {
         }
     };
 
-
-
     const handleGoogleLogin = () => {
-        // Redirect to the backend service for Google OAuth2 authorization
         window.location.href = 'http://localhost:8080/oauth2/authorization/google';
     };
+
+    // New handler for navigating back to home
+    const handleBackToHome = () => {
+        navigate("/");
+    };
+
     return (
         <div className='bodyLogin'>
             <div className={`wrapper${action}`}>
@@ -127,17 +130,22 @@ const LoginRegister = () => {
                         <button type="submit">Login</button>
 
                         <div className="social-login">
-
-                                      <button onClick={handleGoogleLogin}>
-                                          Login with Google
-                                      </button>
+                            <button onClick={handleGoogleLogin}>
+                                Login with Google
+                            </button>
                         </div>
+
                         <div className="register-link">
                             <p>Don't have an account?
                                 <a href="#" onClick={registerLink}>Register</a>
                             </p>
                         </div>
                     </form>
+
+                    {/* Back to Home button */}
+                    <button className="back-to-home" onClick={handleBackToHome}>
+                        Back to Home
+                    </button>
                 </div>
 
                 <div className="form-box register">
@@ -189,6 +197,11 @@ const LoginRegister = () => {
                             </p>
                         </div>
                     </form>
+
+                    {/* Back to Home button */}
+                    <button className="back-to-home" onClick={handleBackToHome}>
+                        Back to Home
+                    </button>
                 </div>
             </div>
         </div>
