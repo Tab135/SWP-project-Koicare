@@ -20,7 +20,7 @@ public class PondController {
 
 @Autowired
     private JWTUtils jwt;
-@PostMapping("/createPond/")
+@PostMapping("/createPond")
 ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token, @RequestBody ResReqPond pond) {
     int userId = jwt.extractUserId(token.replace("Bearer ", ""));
     return ResponseEntity.ok(pService.createP(pond,userId));
@@ -29,13 +29,13 @@ ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token,
 
 @GetMapping("/pond")
 ResponseEntity<ResReqPond> getPonds(@RequestHeader ("Authorization") String token){
-    int userId = jwt.extractUserId(token);
+    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
     return ResponseEntity.ok(pService.getPondsByUserId(userId));
 }
 
 @DeleteMapping("/pond/{pondId}")
     String deletePond(@RequestHeader ("Authorization") String token, @PathVariable int pondId){
-    int userId = jwt.extractUserId(token);
+    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
     ResReqPond res = pService.getPond(pondId, userId);
     if(res.getStatusCode() ==200){
         pService.deletePondById(pondId);

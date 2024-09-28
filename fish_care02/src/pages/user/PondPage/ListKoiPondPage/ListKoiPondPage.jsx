@@ -5,6 +5,7 @@ import './ListKoiPondPage.css';
 const PondListPage = () => {
     const [ponds, setPonds] = useState([]);
     const [error, setError] = useState(null);
+    const [successMessage, setSuccessMessage] = useState(null);
 
     useEffect(() => {
         const fetchPonds = async () => {
@@ -13,7 +14,6 @@ const PondListPage = () => {
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`
-
                     }
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
@@ -31,10 +31,36 @@ const PondListPage = () => {
         window.location.href = "/add-pond";
     };
 
+    const handleDeletePond = async (pondId) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this pond?");
+        if (!confirmDelete) return;
+
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            };
+            const response = await axios.delete(`http://localhost:8080/user/pond/${pondId}`, config);
+
+            if (response.status === 200) {
+                setPonds(prevPonds => prevPonds.filter(pond => pond.id !== pondId));
+                setSuccessMessage("Pond deleted successfully!");
+            } else {
+                setError("Could not delete pond.");
+            }
+        } catch (error) {
+            console.error("Error deleting pond", error);
+            setError("An error occurred. Please try again.");
+        }
+    };
+
     return (
         <div className="pond-list-container">
             <h1>My Koi Ponds</h1>
             {error && <p className="error-message">{error}</p>}
+            {successMessage && <p className="success-message">{successMessage}</p>}
             <div className="pond-grid">
                 {Array.isArray(ponds) && ponds.length > 0 ? (
                     ponds.map((pond) => (
@@ -54,6 +80,11 @@ const PondListPage = () => {
                                 <p><strong>Skimmers:</strong> {pond.skimmers}</p>
                                 <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
                                 <p><strong>Water Source:</strong> {pond.waterSource}</p>
+                                <button
+                                    className="delete-pond-button"
+                                    onClick={() => handleDeletePond(pond.id)}>
+                                    Delete Pond
+                                </button>
                             </div>
                         </div>
                     ))
