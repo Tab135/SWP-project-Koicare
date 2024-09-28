@@ -23,4 +23,6 @@ public class ForgotPassword {
     private int verified;
     @OneToOne
     private  UserModel user;
+
+
 }

@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface RegistrationFormRepo extends JpaRepository<RegistrationForm, Integer> {
     List<RegistrationForm> findByStatus(String status);
-    List<RegistrationForm> findByUserId(int userId);
+    RegistrationForm findByUserId(int userId);
 }
