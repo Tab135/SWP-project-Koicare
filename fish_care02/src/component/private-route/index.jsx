@@ -8,11 +8,11 @@ const PrivateRoute = () => {
         const token = localStorage.getItem("token");
 
         if (!token) {
-            navigate("/login");  // Chuyển hướng tới trang login nếu không có token
+            navigate("/login");  
         } 
     }, [navigate]);
 
-    return <Outlet />; // Render các route con
+    return <Outlet />; 
 };
 
 export default PrivateRoute;

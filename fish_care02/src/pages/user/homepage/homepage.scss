@@ -1,60 +1,97 @@
- $bannerimage: '/assets/image/CaKoi.jpg';
-.homepage{
-    height: 500px;
-    padding: 20px 0;
-}
+$bannerimage: "/assets/image/ho-ca-koi.webp";
+$bannerinfo: "/assets/image/peakpx.jpg";
  .banner{
+    background-repeat:no-repeat;
+    // background-image: url($bannerimage);
+    background-color: rgb(27, 24, 24);
     background-size: cover;
-    height: 225px;
+    height: 250px;
     width: 100%;
-
-    .text_banner{
+    .home_title{
+        padding: 30px 0;
         display: flex;
         justify-content: center;
-        padding: 30px 0;
-        color: #F4A950;
-    }
-    .menu_banner{
-        ul{
-            display: flex;
-            justify-content: space-around; 
-            li{ 
-                border-radius: 20%;
-                padding-top: 4.5px;
-                background-color: #F4A950;
-                list-style: none;
-                height: 100px;
-                width: 100px;
-                a{
-                    padding: 0 16px ;
-                    text-decoration: none;
-                    color: white;
-                    span{
-                        display: flex;
-                        justify-content: center;
-                    }
-                }
-            } 
-        }
     }
 }
-.recommendations{
-    
-    .title_recom{
+.home_info_banner{
+    background-image: url($bannerinfo);
+    background-size: cover;
+    height: 480px;
+    width: 100%;
+}
+.home_info_title{
+    font-family: 'Playfair Display';font-size: 22px;
+    padding: 70px 0 0 0;
+    background-color: beige;
+    h1{
+        padding: 0 0 0 30px;
+    }
+    p{
         display: flex;
-        justify-content: center;
+        align-items: center;
+        padding: 0 0 0 10px;
     }
+}
+.home-new-title{
+    display: flex;
+}
+.container-home-new-slider{
+    max-width: 1200px;
+    height: 300px;
+}
+.news-container {
+    width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
 
-    .koi_product{
-        .title_koi_product{
-            display: flex;
-            justify-content: center;
-        }
-    }
-    .water_product{
-        .title_water_product{
-            display: flex;
-            justify-content: center;
-        }
-    }
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.news-card {
+    display: flex;
+    flex-direction: column;
+    background-color: #fafafa;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.news-card:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.news-header {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 0;
+    margin-bottom: 5px;
+    border-bottom: 2px solid #ddd;
+}
+
+.news-header.cakoi {
+    color: #00a79d;
+}
+
+.news-content {
+    font-size: 14px;
+    color: #555;
+}
+
+.news-content p {
+    margin: 5px 0;
+}
+
+.time {
+    font-size: 12px;
+    color: #999;
 }

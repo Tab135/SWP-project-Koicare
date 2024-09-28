@@ -87,8 +87,8 @@ const Header = () => {
   };
   const [menus, setmenu] = useState([
     {
-      name: "Home",
-      path: ROUTERS.USER.HOME,
+      name: "Koicare",
+      path: ROUTERS.USER.KOICARE,
     },
     {
       name: "Shop",
@@ -109,7 +109,7 @@ const Header = () => {
         <div className="row">
           <div className="col-xl-3 col-lg-3">
             <div className="header_logo">
-              <img src={logo} alt="Logo" />
+            <Link to={ROUTERS.USER.HOME} ><img src={(logo)} alt="Logo" /></Link>   
             </div>
           </div>
           <div className="col-xl-3 col-lg-6">

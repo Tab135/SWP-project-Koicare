@@ -8,23 +8,29 @@ import ListKoiPondPage from "./pages/user/PondPage/ListKoiPondPage/ListKoiPondPa
 import PrivateRoute from "./component/private-route";
 import Homepage from "./pages/user/homepage";
 import Profile from "./pages/user/Profile/Profile";
-
+import Koicarepage from "./pages/user/koicarepage";
 const renderUserRouter = () => {
   const userRouter = [
     {
       path: ROUTERS.USER.HOME,
-      element: <PrivateRoute />,
-      children: [
+      element: <MasterLayout>
+                  <Homepage />  
+              </MasterLayout>,
+  },
+  {
+    path: ROUTERS.USER.KOICARE,
+    element: <PrivateRoute/>,
+    children: [
         {
-          path: ROUTERS.USER.HOME,
-          element: (
-            <MasterLayout>
-              <Homepage /> {/* Bọc PrivateRoute bên trong MasterLayout */}
-            </MasterLayout>
-          ),
-        },
-      ],
-    },
+            path: ROUTERS.USER.HOME,
+            path:  ROUTERS.USER.KOICARE,
+            element:<MasterLayout>,
+                        <Koicarepage/>
+                    </MasterLayout>
+        }
+    ],
+},
+
     {
       path: ROUTERS.USER.LOGIN,
       element: <Login />,

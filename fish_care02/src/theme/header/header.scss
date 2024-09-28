@@ -3,6 +3,11 @@ $logo: "/assets/image/logo.jpg";
 
 .header {
   background-image: url($header);
+  background-size: cover;
+  height: 180px;
+  width: 100%;
+  text-align:center;
+  background-repeat:no-repeat;
 }
 
 .header_logo {

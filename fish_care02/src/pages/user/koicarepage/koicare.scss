@@ -1,0 +1,60 @@
+ $bannerimage: '/assets/image/CaKoi.jpg';
+.koicarepage{
+    height: 500px;
+    padding: 20px 0;
+}
+ .koicare{
+    background-size: cover;
+    height: 225px;
+    width: 100%;
+
+    .text_banner{
+        display: flex;
+        justify-content: center;
+        padding: 30px 0;
+        color: #F4A950;
+    }
+    .menu_banner{
+        ul{
+            display: flex;
+            justify-content: space-around; 
+            li{ 
+                border-radius: 20%;
+                padding-top: 4.5px;
+                background-color: #F4A950;
+                list-style: none;
+                height: 100px;
+                width: 100px;
+                a{
+                    padding: 0 16px ;
+                    text-decoration: none;
+                    color: white;
+                    span{
+                        display: flex;
+                        justify-content: center;
+                    }
+                }
+            } 
+        }
+    }
+}
+.recommendations{
+    
+    .title_recom{
+        display: flex;
+        justify-content: center;
+    }
+
+    .koi_product{
+        .title_koi_product{
+            display: flex;
+            justify-content: center;
+        }
+    }
+    .water_product{
+        .title_water_product{
+            display: flex;
+            justify-content: center;
+        }
+    }
+}
