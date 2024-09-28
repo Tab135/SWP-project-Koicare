@@ -1,21 +1,21 @@
 package com.example.demo.Service;
 
-import com.example.demo.DTO.RoleModel;
+import com.example.demo.DTO.*;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
 import com.example.demo.Repo.RoleRepo;
+import com.example.demo.Repo.SignUpRepo;
 import com.example.demo.Repo.UserRepo;
-import com.example.demo.DTO.UserModel;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.parameters.P;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 @Service
 public class UserManagement {
@@ -25,6 +25,8 @@ public class UserManagement {
     @Autowired
     private  RoleRepo roleRepo;
     @Autowired
+    private SignUpRepo signUpRepo;
+    @Autowired
     private JWTUtils jwtUtils;
 
     @Autowired
@@ -33,28 +35,121 @@ public class UserManagement {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ReqResUser Signup(ReqResUser SignupRequest){
+    @Autowired
+    private EmailService emailService;
+
+    public ReqResUser sendOtpSignUp(ReqResUser email) {
+        ReqResUser resp = new ReqResUser();
+        Optional<SignupOTP> existingOtp = signUpRepo.findByEmail(email.getEmail());
+        existingOtp.ifPresent(otp -> signUpRepo.deleteById(otp.getId()));
+
+        int otp = OtpGen();
+        MailDTO mailDTO = MailDTO.builder()
+                .to(email.getEmail())
+                .text("OTP to verify sign up : " + otp)
+                .subject("KoiFish Control sign up request")
+                .build();
+
+        SignupOTP suOtp = SignupOTP.builder()
+                .otp(otp)
+                .expirationTime(new Date(System.currentTimeMillis() + 120000))
+                .email(email.getEmail())
+                .verified(0)
+                .build();
+
+        emailService.sendSimpleMessage(mailDTO);
+        signUpRepo.save(suOtp);
+
+        resp.setMessage("Otp sent to " + email.getEmail());
+        return resp;
+    }
+
+    public ReqResUser verifyOtpAndSignup(int otp, String email, String name, String password) {
         ReqResUser resp = new ReqResUser();
 
-        try{
-            RoleModel userRole = roleRepo.findByName("USER");
-            UserModel user = new UserModel();
-            user.setEmail(SignupRequest.getEmail());
-            user.setPassword(passwordEncoder.encode(SignupRequest.getPassword()));
-            user.setName(SignupRequest.getName());
-            user.setRole(userRole);
-            UserModel result = userRepo.save(user);
+        SignupOTP su = signUpRepo.findByOtpAndEmail(otp, email)
+                .orElseThrow(() -> new RuntimeException("Invalid OTP"));
 
-            if(result.getId() > 0){
-                resp.setUsers(result);
-                resp.setMessage("User Sign up successfully");
-                resp.setStatusCode(200);
-            }
-        }catch (Exception e){
+        if (su.getExpirationTime().before(Date.from(Instant.now()))) {
+            signUpRepo.deleteById(su.getId());
+            throw new RuntimeException("OTP has expired");
+        }
+
+        su.setVerified(1);
+        signUpRepo.save(su);
+
+        Optional<UserModel> existingUser = userRepo.findByEmail(email);
+
+        if (existingUser.isPresent()) {
+            resp.setMessage("This email has already been used to sign up");
+            return resp;
+        }
+
+        RoleModel userRole = roleRepo.findByName("USER");
+        UserModel newUser = new UserModel();
+
+        newUser.setEmail(email);
+        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setName(name);
+        newUser.setRole(userRole);
+
+        UserModel savedUser = userRepo.save(newUser);
+
+        if (savedUser.getId() > 0) {
+            resp.setUsers(savedUser);
+            resp.setMessage("User signed up successfully");
+            resp.setStatusCode(200);
+        } else {
+            resp.setMessage("Error during sign up");
             resp.setStatusCode(500);
-            resp.setError(e.getMessage());
+        }
+
+        return resp;
+    }
+
+    private int OtpGen() {
+        Random random = new Random();
+        return random.nextInt(100_000, 999_999);
+    }
+
+    public ReqResUser handleGoogleLogin(OAuth2AuthenticationToken authentication) {
+        ReqResUser resp = new ReqResUser();
+
+        try {
+
+            OAuth2User oAuth2User = authentication.getPrincipal();
+            String email = oAuth2User.getAttribute("email");
+            String name = oAuth2User.getAttribute("name");
+
+            UserModel user = findOrCreateGoogleUser(email, name);
+
+            var jwt = jwtUtils.generateToken(user, user.getId());
+            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
+
+            resp.setStatusCode(200);
+            resp.setRole(user.getRole().getName());
+            resp.setToken(jwt);
+            resp.setRefreshToken(refreshToken);
+            resp.setMessage("Google login successful");
+        } catch (Exception e) {
+            resp.setStatusCode(500);
+            resp.setMessage(e.getMessage());
         }
         return resp;
+    }
+
+    private UserModel findOrCreateGoogleUser(String email, String name) {
+        Optional<UserModel> existingUser = userRepo.findByEmail(email);
+        if (existingUser.isPresent()) {
+            return existingUser.get();
+        }
+
+        RoleModel userRole = roleRepo.findByName("USER");
+        UserModel newUser = new UserModel();
+        newUser.setEmail(email);
+        newUser.setName(name);
+        newUser.setRole(userRole);
+        return userRepo.save(newUser);
     }
 
     public ReqResUser Login(ReqResUser LoginRequest){
@@ -64,14 +159,14 @@ public class UserManagement {
             authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(LoginRequest.getEmail(),LoginRequest.getPassword()));
 
-                var user = userRepo.findByEmail(LoginRequest.getEmail()).orElseThrow();
-                var jwt = jwtUtils.generateToken(user,user.getId());
-                var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(),user);
-                resp.setStatusCode(200);
-                resp.setRole(user.getRole().getName());
-                resp.setToken(jwt);
-                resp.setRefreshToken(refreshToken);
-                resp.setMessage("Succesfully logged in");
+            var user = userRepo.findByEmail(LoginRequest.getEmail()).orElseThrow();
+            var jwt = jwtUtils.generateToken(user,user.getId());
+            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(),user);
+            resp.setStatusCode(200);
+            resp.setRole(user.getRole().getName());
+            resp.setToken(jwt);
+            resp.setRefreshToken(refreshToken);
+            resp.setMessage("Succesfully logged in");
         }catch(Exception e){
             resp.setStatusCode(500);
             resp.setMessage(e.getMessage());

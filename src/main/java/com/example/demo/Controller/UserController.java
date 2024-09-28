@@ -4,20 +4,38 @@ import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
 import com.example.demo.Service.UserManagement;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin
+
 public class UserController {
     @Autowired
     private UserManagement userManagement;
 
+
+    @GetMapping("/auth/controler/google-login")
+    public ResponseEntity<ReqResUser> googleLogin(OAuth2AuthenticationToken authentication) {
+        HttpHeaders headers = new HttpHeaders();
+        return ResponseEntity.ok(userManagement.handleGoogleLogin(authentication));
+    }
+
     @PostMapping("/auth/signup")
-    public ResponseEntity<ReqResUser> Signup(@RequestBody ReqResUser signup) {
-        return ResponseEntity.ok(userManagement.Signup(signup));
+    public ResponseEntity<ReqResUser> sendOtpForSignup(@RequestBody ReqResUser signup) {
+        return ResponseEntity.ok(userManagement.sendOtpSignUp(signup));
+    }
+
+    @PostMapping("/auth/otp-verify/{otp}")
+    public ResponseEntity<ReqResUser> verifyOtpAndSignup(
+            @PathVariable int otp,
+            @RequestParam String email,
+            @RequestParam String name,
+            @RequestParam String password) {
+        return ResponseEntity.ok(userManagement.verifyOtpAndSignup(otp, email, name, password));
     }
 
     @PostMapping("/auth/login")

@@ -1,20 +1,24 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; // Correct import for jwt-decode
 import './AddKoiPondPage.css';
 
-const AddKoiPondPage = ({ userId }) => {
+const AddKoiPondPage = () => {
     const [pond, setPond] = useState({
-        name: '',
+        pondName: '',
         depth: '',
         drain: '',
         location: '',
-        number_of_fish: '',
-        picture: '',
-        pumping_capacity: '',
+        numberOfFish: '',
+        pumpingCapacity: '',
         skimmers: '',
         volume: '',
-        water_source: ''
+        waterSource: ''
     });
+
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [isImageUploaded, setIsImageUploaded] = useState(false);
 
     const handleChange = (e) => {
         setPond({
@@ -23,13 +27,44 @@ const AddKoiPondPage = ({ userId }) => {
         });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setSelectedFile(file);
+        const fileUrl = URL.createObjectURL(file);
+        setPreviewUrl(fileUrl);
+        setIsImageUploaded(true);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+        Object.keys(pond).forEach(key => {
+            formData.append(key, pond[key]);
+        });
+
+        const token = localStorage.getItem('token');
+        console.log(token);
+
         try {
-            await axios.post(`/user/createPond/${userId}`, pond);
-            alert('Pond added successfully!');
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken.userId;
+            console.log('User ID:', userId);
+
+            const config = {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+            };
+            const response = await axios.post('http://localhost:8080/user/createPond', { ...pond, userId, file: selectedFile }, config);
+            if (response.status === 200) {
+                alert('Pond added successfully!');
+            } else {
+                alert('Failed to add pond.');
+            }
         } catch (error) {
-            console.error('Error adding pond', error);
+            console.error('Error adding pond' + error);
             alert('Failed to add pond.');
         }
     };
@@ -37,30 +72,62 @@ const AddKoiPondPage = ({ userId }) => {
     return (
         <div className="pond-form-container">
             <h1>Create New Pond</h1>
-            <div className="image-upload">select image</div>
-            <form onSubmit={handleSubmit}>
+            <div className="image-upload-container">
+                {isImageUploaded ? (
+                    <>
+                        <img src={previewUrl} alt="Preview" className="image-preview" />
+                        <button
+                            type="button"
+                            className="change-image-button"
+                            onClick={() => document.querySelector('input[type="file"]').click()}
+                        >
+                            Change Image
+                        </button>
+                    </>
+                ) : (
+                    <div className="image-upload" onClick={() => document.querySelector('input[type="file"]').click()}>
+                        Select Image
+                    </div>
+                )}
+                <input
+                    type="file"
+                    name="picture"
+                    onChange={handleFileChange}
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                />
+            </div>
+
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div>
-                    <label>Name:</label>
-                    <input type="text" name="name" value={pond.name} onChange={handleChange} required/>
+                    <label>Pond Name:</label>
+                    <input type="text" name="pondName" value={pond.pondName} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Depth:</label>
-                    <input type="number" name="depth" value={pond.depth} onChange={handleChange} required/>
+                    <input type="number" name="depth" value={pond.depth} onChange={handleChange} required />
                     <label>Volume:</label>
-                    <input type="number" name="volume" value={pond.volume} onChange={handleChange} required/>
+                    <input type="number" name="volume" value={pond.volume} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Drain:</label>
-                    <input type="number" name="drain" value={pond.drain} onChange={handleChange} required/>
+                    <input type="number" name="drain" value={pond.drain} onChange={handleChange} required />
+                </div>
+                <div>
+                    <label>Location:</label>
+                    <input type="text" name="location" value={pond.location} onChange={handleChange} required />
+                </div>
+                <div>
+                    <label>Skimmers:</label>
+                    <input type="text" name="skimmers" value={pond.skimmers} onChange={handleChange} required />
                 </div>
                 <div>
                     <label>Pumping Capacity:</label>
-                    <input type="number" name="pumping_capacity" value={pond.pumping_capacity} onChange={handleChange}
-                           required/>
+                    <input type="number" name="pumpingCapacity" value={pond.pumpingCapacity} onChange={handleChange} required />
                 </div>
                 <div>
-                    <label>Select Image:</label>
-                    <input type="text" name="picture" value={pond.picture} onChange={handleChange}/>
+                    <label>Water Source:</label>
+                    <input type="text" name="waterSource" value={pond.waterSource} onChange={handleChange} required />
                 </div>
                 <button type="submit">Add Pond</button>
             </form>
