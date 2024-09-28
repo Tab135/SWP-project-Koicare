@@ -37,7 +37,12 @@ public class PondService {
             PondModel pondModel = new PondModel();
             pondModel.setUser(user.get());
             pondModel.setPondName(request.getPondName());
-            pondModel.setPicture(request.getPicture());
+            if(request.getPicture() ==null){
+                pondModel.setPicture(null);
+            }else {
+byte[] picByte =request.getPicture().getBytes();
+                pondModel.setPicture(picByte);
+            }
             pondModel.setDepth(request.getDepth());
             pondModel.setVolume(request.getVolume());
             pondModel.setPumpingCapacity(request.getPumpingCapacity());
@@ -110,7 +115,7 @@ public class PondService {
         PondModel pond = res.getPond();
         ResReqPond pList = getPondsByUserId(userId);
         for(PondModel list: pList.getPondList()){
-            if(list.getPondName().equals(request.getPondName())){
+            if(list.getPondName().equals(request.getPondName()) && list.getId() != pond.getId()){
                 ResReqPond result = new ResReqPond();
                 result.setStatusCode(409);
                 result.setError("Pond existed");
@@ -123,7 +128,8 @@ public class PondService {
                 pond.setPondName(request.getPondName());//
             }
             if (request.getPicture() != null) {
-                pond.setPicture(request.getPicture());
+                byte[] picByte =request.getPicture().getBytes();
+                pond.setPicture(picByte);
             }
             if (request.getDepth() != null) {
                 pond.setDepth(request.getDepth());

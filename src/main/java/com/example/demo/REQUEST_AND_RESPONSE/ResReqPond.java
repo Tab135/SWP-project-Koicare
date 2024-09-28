@@ -1,9 +1,12 @@
 package com.example.demo.REQUEST_AND_RESPONSE;
 
+import com.example.demo.DTO.KoiFishModel;
 import com.example.demo.DTO.PondModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Lob;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,7 +15,8 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ResReqPond {
     private String pondName;
-    private String picture;
+    @Lob
+    private MultipartFile picture;
     private Double depth;
     private Double volume;
     private Integer pumpingCapacity;
@@ -39,11 +43,11 @@ public class ResReqPond {
         this.pondName = pondName;
     }
 
-    public String getPicture() {
+    public MultipartFile getPicture() {
         return picture;
     }
 
-    public void setPicture(String picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 
@@ -159,7 +163,7 @@ public class ResReqPond {
         this.pondList = pondList;
     }
 
-    public ResReqPond(int statusCode, String pondName, String picture, Double depth, Double volume, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource, int userId, List<KoiFishModel> koiList, String error, String message, PondModel pond, List<PondModel> pondList) {
+    public ResReqPond(int statusCode, String pondName, MultipartFile picture, Double depth, Double volume, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource, int userId, List<KoiFishModel> koiList, String error, String message, PondModel pond, List<PondModel> pondList) {
         this.statusCode = statusCode;
         this.pondName = pondName;
         this.picture = picture;

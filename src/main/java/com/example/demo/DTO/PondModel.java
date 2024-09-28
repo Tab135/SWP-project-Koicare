@@ -13,8 +13,9 @@ public class PondModel {
     private int Id;
     @Column(name = "name")
     private String pondName;
-    @Column (columnDefinition = "TEXT")
-    private String picture;
+    @Lob
+    @Column(name = "picture", columnDefinition = "VARBINARY(MAX)")
+    private byte[] picture;
     private Double depth;
     private Double volume;
     @Column(name = "number_of_fish")
@@ -55,13 +56,6 @@ public class PondModel {
         this.pondName = pondName;
     }
 
-    public String getPicture() {
-        return picture;
-    }
-
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
 
     public Double getDepth() {
         return depth;
@@ -127,7 +121,15 @@ public class PondModel {
         this.user = user;
     }
 
-    public PondModel(UserModel user, int id, String pondName, String picture, Double depth, Double volume, int numberOfFish, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource) {
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
+
+    public PondModel(UserModel user, int id, String pondName, byte[] picture, Double depth, Double volume, int numberOfFish, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource) {
         this.user = user;
         Id = id;
         this.pondName = pondName;
