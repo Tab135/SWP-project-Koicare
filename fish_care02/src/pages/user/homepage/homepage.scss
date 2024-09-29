@@ -1,36 +1,39 @@
 $bannerimage: "/assets/image/ho-ca-koi.webp";
 $bannerinfo: "/assets/image/peakpx.jpg";
+$newsimage: "/assets/image/koiinart.jpg";
  .banner{
     background-repeat:no-repeat;
     // background-image: url($bannerimage);
     background-color: rgb(27, 24, 24);
     background-size: cover;
-    height: 250px;
+    height: 400px;
     width: 100%;
     .home_title{
         padding: 30px 0;
         display: flex;
         justify-content: center;
     }
+}  
+.home_info{
+    padding: 35px 0 ;
 }
 .home_info_banner{
     background-image: url($bannerinfo);
     background-size: cover;
     height: 480px;
     width: 100%;
+    border-radius: 10px;
 }
-.home_info_title{
-    font-family: 'Playfair Display';font-size: 22px;
-    padding: 70px 0 0 0;
-    background-color: beige;
-    h1{
-        padding: 0 0 0 30px;
-    }
-    p{
-        display: flex;
-        align-items: center;
-        padding: 0 0 0 10px;
-    }
+.row-home{
+    display: flex;
+    flex-wrap: wrap;
+    opacity: 0; /* Ban đầu phần tử sẽ bị ẩn */
+    transform: translateY(20px); /* Đặt vị trí phần tử ở dưới */
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Hiệu ứng chuyển */
+}
+.row-home.animate{
+    opacity: 1; /* Hiển thị phần tử */
+    transform: translateY(0); /* Đưa phần tử trở về vị trí ban đầu */
 }
 .home-new-title{
     display: flex;
@@ -38,6 +41,9 @@ $bannerinfo: "/assets/image/peakpx.jpg";
 .container-home-new-slider{
     max-width: 1200px;
     height: 300px;
+}
+.home-content{
+    padding: 60px 0 10px 0;
 }
 .news-container {
     width: 1200px;
@@ -47,7 +53,12 @@ $bannerinfo: "/assets/image/peakpx.jpg";
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 15px;
 }
-
+h1{
+    text-align: center;
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
 .section-title {
     font-size: 18px;
     font-weight: bold;
@@ -57,7 +68,6 @@ $bannerinfo: "/assets/image/peakpx.jpg";
 
 .news-card {
     display: flex;
-    flex-direction: column;
     background-color: #fafafa;
     margin-bottom: 15px;
     padding: 10px;
@@ -70,6 +80,23 @@ $bannerinfo: "/assets/image/peakpx.jpg";
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
+.news-image {
+    flex: 0 0 100px; /* Adjust width to fit image size */
+    margin-right: 10px;
+}
+
+.news-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.news-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
 .news-header {
     font-size: 14px;
     font-weight: bold;
@@ -78,7 +105,7 @@ $bannerinfo: "/assets/image/peakpx.jpg";
     border-bottom: 2px solid #ddd;
 }
 
-.news-header.cakoi {
+.news-header {
     color: #00a79d;
 }
 
@@ -95,3 +122,43 @@ $bannerinfo: "/assets/image/peakpx.jpg";
     font-size: 12px;
     color: #999;
 }
+.news-content-des{
+    display: inline-block;
+    width: 1030px; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }
+  .shop-item{
+    text-align: center;
+  }
+  .shop-item-image img{
+    width: 225px;
+    height: 225px;
+  }
+  .shop-item-content{
+    display: flex;
+    justify-content: center;
+    span{
+        padding: 0 25px;
+    }
+    button{
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+  }
+  .mainkoi{
+    border-radius: 50%;
+    width: 570px;
+    height: 570px;
+  }
+  .koicare-intro{
+    text-align: center;
+    height: 285px;
+  }
