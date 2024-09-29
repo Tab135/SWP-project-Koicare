@@ -23,8 +23,6 @@ const HomePage = () => {
         const [ref, inView] = useInView({
           triggerOnce: true,  
           threshold: 0.2   
-          
-
         });
         console.log('In view:', inView);
         console.log('Class:', inView ? 'animate' : '');
