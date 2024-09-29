@@ -1,7 +1,7 @@
 package com.example.demo.DTO;
 
 import jakarta.persistence.*;
-import lombok.Data;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +12,7 @@ import java.util.Optional;
 @Getter
 @Entity
 @Table(name = "registration_forms")
-@Data
+
 public class RegistrationForm {
 
     @Id

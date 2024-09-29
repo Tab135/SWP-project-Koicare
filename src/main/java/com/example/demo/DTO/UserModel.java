@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "users")
-@Data
+
 public class UserModel implements UserDetails {
 
     @Id
