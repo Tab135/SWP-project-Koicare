@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ListKoiPondPage.css';
+import {Link} from "react-router-dom";
 
 const PondListPage = () => {
     const [ponds, setPonds] = useState([]);
@@ -80,11 +81,17 @@ const PondListPage = () => {
                                 <p><strong>Skimmers:</strong> {pond.skimmers}</p>
                                 <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
                                 <p><strong>Water Source:</strong> {pond.waterSource}</p>
-                                <button
-                                    className="delete-pond-button"
-                                    onClick={() => handleDeletePond(pond.id)}>
-                                    Delete Pond
-                                </button>
+                                <div className="button-group">
+                                    <button
+                                        className="delete-pond-button"
+                                        onClick={() => handleDeletePond(pond.id)}>
+                                        Delete Pond
+                                    </button>
+                                    <Link to={`/edit-pond/${pond.id}`}>
+                                        <button className="edit-pond-button">Edit Pond</button>
+                                    </Link>
+                                </div>
+
                             </div>
                         </div>
                     ))

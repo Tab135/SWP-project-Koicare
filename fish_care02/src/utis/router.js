@@ -6,6 +6,7 @@ export const ROUTERS = {
         FORGOT_PASSWORD: "/forgot-password",
         ADD_POND: "/add-pond",
         LIST_PONDS: "/list-ponds",
+        EDIT_POND: "/edit-pond/:pondId",
         Profile : "/get-profile/${userId}"
     }
 };

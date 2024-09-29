@@ -5,10 +5,12 @@ import Login from "./pages/user/loginpage/login";
 import ForgotPassword from "./pages/user/loginpage/ForgotPassword/ForgotPassword";
 import AddKoiPondPage from "./pages/user/PondPage/AddKoiPondPage/AddKoiPondPage";
 import ListKoiPondPage from "./pages/user/PondPage/ListKoiPondPage/ListKoiPondPage";
+import EditPondPage from "./pages/user/PondPage/EditPondPage/EditPondPage";
 import PrivateRoute from "./component/private-route";
 import Homepage from "./pages/user/homepage";
 import Profile from "./pages/user/Profile/Profile";
 import Koicarepage from "./pages/user/koicarepage";
+import EditKoiPondPage from "./pages/user/PondPage/EditPondPage/EditPondPage";
 const renderUserRouter = () => {
   const userRouter = [
     {
@@ -65,6 +67,14 @@ const renderUserRouter = () => {
         </MasterLayout>
       ),
     },
+      {
+          path: ROUTERS.USER.EDIT_POND,
+          element: (
+              <MasterLayout>
+                  <EditPondPage />
+              </MasterLayout>
+          ),
+      },
   ];
 
   return (
