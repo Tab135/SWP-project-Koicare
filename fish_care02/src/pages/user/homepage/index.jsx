@@ -29,7 +29,7 @@ const HomePage = () => {
         return (
             <div ref={ref}
             className={`row-home ${inView ? 'animate' : ''}`}>
-                        <div className="col-xl-3 col-lg-3">
+                        <div className="col-xl-3 col-lg-3 col-md-3">
                             <div className="koicare-intro">
                                 <GiCirclingFish size={70} />
                                 <h2>Manage Koi</h2>
@@ -41,10 +41,10 @@ const HomePage = () => {
                                 
                             </div>
                         </div>
-                        <div className="col-xl-3 col-lg-6">
+                        <div className="col-xl-6 col-lg-6 col-md-6 col-sm-12">
                         <img className="mainkoi" src={(mainkoi)} alt="image"/>
                         </div>
-                        <div className="col-xl-3 col-lg-3">
+                        <div className="col-xl-3 col-lg-3 col-md-3 col-sm-3">
                             <div className="koicare-intro">
                                 <IoWater size={70}/>
                                 <h2>Manage Water</h2>
@@ -70,19 +70,17 @@ const HomePage = () => {
         };
       
         return (
-          <div>
-            <Slider {...settings}>
-              <div>
-                <img  src={(banner1)} alt="image"/>
-              </div>
-              <div>
-              <img src={(banner2)} alt="image"/>
-              </div>
-              <div>
-              <img src={(banner3)} alt="image"/>
-              </div>
-            </Slider>
-          </div>
+            <div className="container-home">
+                <div className="row">
+            <div className="col-xl-12 col-lg-12 col-md-12">
+                <Slider {...settings}>
+                    <div><img  src={(banner1)} alt="image"/></div>
+                    <div><img src={(banner2)} alt="image"/></div>
+                    <div><img src={(banner3)} alt="image"/></div>
+                </Slider>
+            </div>
+            </div>
+            </div>
         );
       };
     const responsive = {
@@ -162,7 +160,7 @@ const HomePage = () => {
                                         </div>   
                                         </div>
                                 </Carousel>
-                                <div className="news-container">
+                                <div className="col-xl-12 col-lg-12 col-md-12 news-container">
                                     <h2 className="section-title">News</h2>
                                     <div className="news-card">
                                         <div className="news-image">
@@ -201,6 +199,7 @@ const HomePage = () => {
                                         </div>
                                     </div>
                                 </div>
+                                
                         </div>
                     </div>
                 </div>
