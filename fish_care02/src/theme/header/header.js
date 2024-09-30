@@ -107,12 +107,12 @@ const Header = () => {
     <div className="header">
       <div className="container">
         <div className="row">
-          <div className="col-xl-3 col-lg-3">
+          <div className="col-xl-3 col-lg-3 col-md-3">
             <div className="header_logo">
             <Link to={ROUTERS.USER.HOME} ><img src={(logo)} alt="Logo" /></Link>   
             </div>
           </div>
-          <div className="col-xl-3 col-lg-6">
+          <div className="col-xl-6 col-lg-6 col-md-6">
             <div className="header_menu">
               <ul>
                 {menus?.map((menu, menukey) => (
@@ -125,7 +125,7 @@ const Header = () => {
               </ul>
             </div>
           </div>
-          <div className="col-xl-3 col-lg-3">
+          <div className="col-xl-3 col-lg-3 col-md-3">
             {/* <div >{username ? (
                         <h1>Welcome, {username}!</h1>
                             ) : (

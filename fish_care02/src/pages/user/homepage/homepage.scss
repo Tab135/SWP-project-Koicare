@@ -3,8 +3,6 @@ $bannerinfo: "/assets/image/peakpx.jpg";
 $newsimage: "/assets/image/koiinart.jpg";
  .banner{
     background-repeat:no-repeat;
-    // background-image: url($bannerimage);
-    background-color: rgb(27, 24, 24);
     background-size: cover;
     height: 400px;
     width: 100%;
@@ -13,7 +11,14 @@ $newsimage: "/assets/image/koiinart.jpg";
         display: flex;
         justify-content: center;
     }
-}  
+} 
+.container-home{
+    max-width: 1570px;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    margin: auto;
+} 
 .home_info{
     padding: 35px 0 ;
 }
@@ -27,9 +32,9 @@ $newsimage: "/assets/image/koiinart.jpg";
 .row-home{
     display: flex;
     flex-wrap: wrap;
-    opacity: 0; /* Ban đầu phần tử sẽ bị ẩn */
-    transform: translateY(20px); /* Đặt vị trí phần tử ở dưới */
-    transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Hiệu ứng chuyển */
+    opacity: 0; 
+    transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 .row-home.animate{
     opacity: 1; /* Hiển thị phần tử */
@@ -120,13 +125,59 @@ h1{
     font-size: 12px;
     color: #999;
 }
-.news-content-des{
+.news-content-des {
     display: inline-block;
-    width: 1030px; 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; 
-  }
+}
+@media (min-width: 1201px) {
+    .mainkoi{
+        border-radius: 50%;
+        width: 570px;
+        height: 570px;
+      }
+}
+@media (max-width: 1200px) {
+    .news-content-des {
+        width: 800px;
+    }
+    .mainkoi{
+        border-radius: 50%;
+        width: 570px;
+        height: 570px;
+      }
+}
+
+@media (max-width: 992px) {
+    .news-content-des {
+        width: 600px;
+    }
+    .mainkoi{
+        border-radius: 50%;
+        width: 570px;
+        height: 570px;
+      }
+}
+
+@media (max-width: 768px) {
+    .news-content-des {
+        width: 545px;
+    }
+    .mainkoi{
+        border-radius: 50%;
+        width: 500px;
+        height: 500px;
+      }
+}
+@media (max-width: 425px) {
+    .banner{
+        display: none;
+    }
+    .koicare-intro{
+        display: none;
+      }
+}
   .shop-item{
     text-align: center;
   }
@@ -150,11 +201,6 @@ h1{
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-  }
-  .mainkoi{
-    border-radius: 50%;
-    width: 570px;
-    height: 570px;
   }
   .koicare-intro{
     text-align: center;
