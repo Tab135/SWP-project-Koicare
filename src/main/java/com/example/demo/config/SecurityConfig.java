@@ -37,19 +37,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSec) throws Exception {
         httpSec.csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .authorizeHttpRequests(request -> request.requestMatchers("/auth/**", "/public/**","/forgotpassword/**","/oauth2/**").permitAll()
-                        .requestMatchers("/admin/**").hasAnyAuthority(("ADMIN"))
+                .authorizeHttpRequests(request -> request
+                        .requestMatchers("/auth/**", "/public/**", "/forgotpassword/**", "/oauth2/**","/login**").permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
                         .requestMatchers("/shop/**").hasAnyAuthority("SHOP")
                         .anyRequest().authenticated())
-                .oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/",true))
-                .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider()).addFilterBefore(
-                        jwtAuthConfig, UsernamePasswordAuthenticationFilter.class
-                );
+                //.oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/login", true))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))  // Keep sessions for OAuth2
+                .authenticationProvider(authenticationProvider())  // Apply custom authentication provider
+                .addFilterBefore(jwtAuthConfig, UsernamePasswordAuthenticationFilter.class);  // Apply JWT filter
+
         return httpSec.build();
     }
+
     @Bean
     public AuthenticationProvider authenticationProvider(){
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();

@@ -16,7 +16,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
                 public void addCorsMappings(CorsRegistry registry) {
                     registry.addMapping("/**")
                             .allowedMethods("GET", "PUT", "POST", "DELETE", "HEAD", "OPTIONS")
-                            .allowedOrigins("https://accounts.google.com/**","http://localhost:3000")
+                            .allowedOrigins("http://localhost:3000")
                             .allowedHeaders("*")
                             .allowCredentials(true)
                             .maxAge(3600);

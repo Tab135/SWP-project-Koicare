@@ -28,7 +28,7 @@ public class JWTUtils {
 
         return Jwts.builder()
                 .claim("userId", userId)
-                .subject(userDetails.getUsername())
+                .claim("email",userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + Expiration_Time ))
                 .signWith(Key)
@@ -46,7 +46,7 @@ public class JWTUtils {
     }
 
     public String extractUsername(String token){
-        return extractClaims(token, Claims::getSubject);
+        return extractClaims(token, claims -> claims.get("email", String.class));
     }
     public int extractUserId(String token) {
         return extractClaims(token, claims -> claims.get("userId", Integer.class));

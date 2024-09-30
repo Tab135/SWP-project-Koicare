@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
@@ -42,7 +43,12 @@ public class UserManagement {
         ReqResUser resp = new ReqResUser();
         Optional<SignupOTP> existingOtp = signUpRepo.findByEmail(email.getEmail());
         existingOtp.ifPresent(otp -> signUpRepo.deleteById(otp.getId()));
+        Optional<UserModel> existingUser = userRepo.findByEmail(email.getEmail());
 
+        if (existingUser.isPresent()) {
+            resp.setMessage("This email has already been used to sign up");
+            return resp;
+        }
         int otp = OtpGen();
         MailDTO mailDTO = MailDTO.builder()
                 .to(email.getEmail())
@@ -78,12 +84,7 @@ public class UserManagement {
         su.setVerified(1);
         signUpRepo.save(su);
 
-        Optional<UserModel> existingUser = userRepo.findByEmail(email);
 
-        if (existingUser.isPresent()) {
-            resp.setMessage("This email has already been used to sign up");
-            return resp;
-        }
 
         RoleModel userRole = roleRepo.findByName("USER");
         UserModel newUser = new UserModel();
@@ -112,24 +113,19 @@ public class UserManagement {
         return random.nextInt(100_000, 999_999);
     }
 
-    public ReqResUser handleGoogleLogin(OAuth2AuthenticationToken authentication) {
+    public ReqResUser handleGoogleLogin(OidcUser authentication) {
         ReqResUser resp = new ReqResUser();
 
         try {
-
-            OAuth2User oAuth2User = authentication.getPrincipal();
-            String email = oAuth2User.getAttribute("email");
-            String name = oAuth2User.getAttribute("name");
+            String email = authentication.getAttribute("email");
+            String name = authentication.getAttribute("name");
 
             UserModel user = findOrCreateGoogleUser(email, name);
 
-            var jwt = jwtUtils.generateToken(user, user.getId());
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
-
+            // Prepare response
+            resp.setEmail(email);
             resp.setStatusCode(200);
             resp.setRole(user.getRole().getName());
-            resp.setToken(jwt);
-            resp.setRefreshToken(refreshToken);
             resp.setMessage("Google login successful");
         } catch (Exception e) {
             resp.setStatusCode(500);
@@ -149,6 +145,7 @@ public class UserManagement {
         newUser.setEmail(email);
         newUser.setName(name);
         newUser.setRole(userRole);
+
         return userRepo.save(newUser);
     }
 
