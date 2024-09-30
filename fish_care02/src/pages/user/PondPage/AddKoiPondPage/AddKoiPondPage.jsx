@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode'; // Correct import for jwt-decode
+import {jwtDecode} from 'jwt-decode';  // Fix incorrect import
 import './AddKoiPondPage.css';
 
 const AddKoiPondPage = () => {
@@ -27,6 +27,7 @@ const AddKoiPondPage = () => {
         });
     };
 
+    // Handle image file selection and preview
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setSelectedFile(file);
@@ -39,13 +40,16 @@ const AddKoiPondPage = () => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('file', selectedFile);
+        formData.append('picture', selectedFile);
         Object.keys(pond).forEach(key => {
             formData.append(key, pond[key]);
         });
 
         const token = localStorage.getItem('token');
-        console.log(token);
+        if (!token) {
+            alert('Please login to add a pond.');
+            return;
+        }
 
         try {
             const decodedToken = jwtDecode(token);
@@ -55,16 +59,19 @@ const AddKoiPondPage = () => {
             const config = {
                 headers: {
                     Authorization: 'Bearer ' + token,
+                    'Content-Type': 'multipart/form-data'
                 },
             };
-            const response = await axios.post('http://localhost:8080/user/createPond', { ...pond, userId, file: selectedFile }, config);
+
+            const response = await axios.post('http://localhost:8080/user/createPond', formData, config);
+
             if (response.status === 200) {
                 alert('Pond added successfully!');
             } else {
                 alert('Failed to add pond.');
             }
         } catch (error) {
-            console.error('Error adding pond' + error);
+            console.error('Error adding pond: ', error);
             alert('Failed to add pond.');
         }
     };

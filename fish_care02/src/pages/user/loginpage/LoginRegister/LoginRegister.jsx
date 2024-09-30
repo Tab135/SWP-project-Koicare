@@ -6,29 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const LoginRegister = () => {
+
     const [action, setAction] = useState('');
     const [userDetails, setUserDetails] = useState({ email: '', password: '', username: '' });
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-    const [user, setUser] = useState(null);
- useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/oauth2/user', { withCredentials: true });
-                console.log('JWT Token:', response.data.jwtToken); // Print out the token
-                localStorage.setItem("token", response.data.jwtToken);
-                setUser(response.data.userAttributes); // Set user attributes
-
-                // Navigate to home page after successful fetch
-                navigate("/");
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-        fetchUserData();
-    }, [navigate]);
-    // Extract tokens from the URL and store them in localStorage
 
     const registerLink = () => {
         setAction(' active');
@@ -84,24 +66,25 @@ const LoginRegister = () => {
                 password: userDetails.password,
                 email: userDetails.email
             });
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 201) {
                 console.log('Registration successful:', response.data);
-                window.location.reload();
+                localStorage.setItem('userEmail', userDetails.email);
+                localStorage.setItem('userName', userDetails.username);
+                localStorage.setItem('userPassword', userDetails.password);
+                navigate("/otp-verify", { state: { email: userDetails.email } });
             } else {
                 console.error('Registration failed with status code:', response.status);
+                setErrorMessage('Registration failed. Please try again.');
             }
         } catch (error) {
             if (error.response) {
                 console.error('Registration error:', error.response.data);
+                setErrorMessage(error.response.data.message || 'Registration failed. Please try again.');
             } else {
                 console.error('Error during registration:', error.message);
+                setErrorMessage('An error has occurred. Please try again later.');
             }
         }
-    };
-
-    const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
-
     };
 
     const handleBackToHome = () => {
@@ -110,123 +93,111 @@ const LoginRegister = () => {
 
     return (
         <div className='bodyLogin'>
-            {user ? (
-                <div className="user-info">
-                    <h2>Welcome, {user.name}!</h2>
-                    <p>Email: {user.email}</p>
-                    <button onClick={handleBackToHome}>Go to Home</button>
+            <div className={`wrapper${action}`}>
+                <div className="form-box login">
+                    <form onSubmit={handleLoginSubmit}>
+                        <h1>Login</h1>
+                        <div className="input-box">
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder='Email'
+                                value={userDetails.email}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <FaEnvelope className='icon' />
+                        </div>
+                        <div className="input-box">
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder='Password'
+                                value={userDetails.password}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <FaLock className='icon' />
+                        </div>
+
+                        <div className="remember-forgot">
+                            <label><input type='checkbox' />Remember</label>
+                            <Link to="/forgot-password">Forgot Password?</Link>
+                        </div>
+
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+                        <button type="submit">Login</button>
+
+                        <div className="register-link">
+                            <p>Don't have an account?
+                                <a href="#" onClick={registerLink}>Register</a>
+                            </p>
+                        </div>
+                    </form>
+
+                    <button className="back-to-home" onClick={handleBackToHome}>
+                        Back to Home
+                    </button>
                 </div>
-            ) : (
-                <div className={`wrapper${action}`}>
-                    <div className="form-box login">
-                        <form onSubmit={handleLoginSubmit}>
-                            <h1>Login</h1>
-                            <div className="input-box">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder='Email'
-                                    value={userDetails.email}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                <FaEnvelope className='icon' />
-                            </div>
-                            <div className="input-box">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder='Password'
-                                    value={userDetails.password}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                <FaLock className='icon' />
-                            </div>
 
-                            <div className="remember-forgot">
-                                <label><input type='checkbox' />Remember</label>
-                                <Link to="/forgot-password">Forgot Password?</Link>
-                            </div>
+                <div className="form-box register">
+                    <form onSubmit={handleRegisterSubmit}>
+                        <h1>Registration</h1>
+                        <div className="input-box">
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder='Username'
+                                value={userDetails.username}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <FaUser className='icon' />
+                        </div>
+                        <div className="input-box">
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder='Email'
+                                value={userDetails.email}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <FaEnvelope className='icon' />
+                        </div>
+                        <div className="input-box">
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder='Password'
+                                value={userDetails.password}
+                                onChange={handleInputChange}
+                                required
+                            />
+                            <FaLock className='icon' />
+                        </div>
 
-                            {errorMessage && <p className="error-message">{errorMessage}</p>}
+                        <div className="remember-forgot">
+                            <label><input type='checkbox' />I agree to the terms & conditions</label>
+                        </div>
 
-                            <button type="submit">Login</button>
+                        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-                            <div className="social-login">
-                                <button onClick={handleGoogleLogin}>
-                                    Login with Google
-                                </button>
-                            </div>
+                        <button type="submit">Register</button>
 
-                            <div className="register-link">
-                                <p>Don't have an account?
-                                    <a href="#" onClick={registerLink}>Register</a>
-                                </p>
-                            </div>
-                        </form>
+                        <div className="register-link">
+                            <p>Already have an account?
+                                <a href="#" onClick={loginLink}>Login</a>
+                            </p>
+                        </div>
+                    </form>
 
-                        <button className="back-to-home" onClick={handleBackToHome}>
-                            Back to Home
-                        </button>
-                    </div>
-
-                    <div className="form-box register">
-                        <form onSubmit={handleRegisterSubmit}>
-                            <h1>Registration</h1>
-                            <div className="input-box">
-                                <input
-                                    type="text"
-                                    name="username"
-                                    placeholder='Username'
-                                    value={userDetails.username}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                <FaUser className='icon' />
-                            </div>
-                            <div className="input-box">
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder='Email'
-                                    value={userDetails.email}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                <FaEnvelope className='icon' />
-                            </div>
-                            <div className="input-box">
-                                <input
-                                    type="password"
-                                    name="password"
-                                    placeholder='Password'
-                                    value={userDetails.password}
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                                <FaLock className='icon' />
-                            </div>
-
-                            <div className="remember-forgot">
-                                <label><input type='checkbox' />I agree to the terms & conditions</label>
-                            </div>
-
-                            <button type="submit">Register</button>
-
-                            <div className="register-link">
-                                <p>Already have an account?
-                                    <a href="#" onClick={loginLink}>Login</a>
-                                </p>
-                            </div>
-                        </form>
-
-                        <button className="back-to-home" onClick={handleBackToHome}>
-                            Back to Home
-                        </button>
-                    </div>
+                    <button className="back-to-home" onClick={handleBackToHome}>
+                        Back to Home
+                    </button>
                 </div>
-            )}
+            </div>
         </div>
     );
 };

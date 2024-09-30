@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './ListKoiPondPage.css';
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PondListPage = () => {
     const [ponds, setPonds] = useState([]);
@@ -18,7 +18,7 @@ const PondListPage = () => {
                     }
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
-                setPonds(response.data.pondList);
+                setPonds(response.data.pondList);  // Ensure this contains 'picture' field
             } catch (error) {
                 console.error("Error fetching ponds", error);
                 setError("Could not fetch ponds.");
@@ -67,9 +67,10 @@ const PondListPage = () => {
                     ponds.map((pond) => (
                         <div key={pond.id} className="pond-card">
                             <img
-                                src={pond.picture || ''}
+                                src={`http://localhost:8080/user/pond/${pond.id}/picture`}
                                 alt={pond.pondName}
                                 className="pond-image"
+
                             />
                             <div className="pond-details">
                                 <p><strong>Pond Name:</strong> {pond.pondName}</p>
@@ -91,7 +92,6 @@ const PondListPage = () => {
                                         <button className="edit-pond-button">Edit Pond</button>
                                     </Link>
                                 </div>
-
                             </div>
                         </div>
                     ))

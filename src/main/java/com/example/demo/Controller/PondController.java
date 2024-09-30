@@ -16,80 +16,83 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/user")
 public class PondController {
-@Autowired
+    @Autowired
     private PondService pService;
 
-@Autowired
+    @Autowired
     private JWTUtils jwt;
-@Autowired
+    @Autowired
     private PondRepo pondR;
-@PostMapping("/createPond")
-ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token, @ModelAttribute ResReqPond pond, @RequestParam("picture")MultipartFile image) {
-    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-    try{
-        if(!image.isEmpty()){
-        pond.setPicture(image);
-        }else{
-pond.setPicture(null);
+
+    @PostMapping("/createPond")
+    ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token, @ModelAttribute ResReqPond pond, @RequestParam("picture") MultipartFile image) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        try {
+            if (!image.isEmpty()) {
+                pond.setPicture(image);
+            } else {
+                pond.setPicture(null);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-    } catch (Exception e) {
-        throw new RuntimeException(e);
+
+        return ResponseEntity.ok(pService.createP(pond, userId));
     }
 
-    return ResponseEntity.ok(pService.createP(pond,userId));
-}
 
+    @GetMapping("/pond")
+    ResponseEntity<ResReqPond> getPonds(@RequestHeader("Authorization") String token) {
 
-@GetMapping("/pond")
-ResponseEntity<ResReqPond> getPonds(@RequestHeader ("Authorization") String token){
-
-    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-    return ResponseEntity.ok(pService.getPondsByUserId(userId));
-}
-
-@DeleteMapping("/pond/{pondId}")
-    String deletePond(@RequestHeader ("Authorization") String token, @PathVariable int pondId){
-    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-
-    ResReqPond res = pService.getPond(pondId, userId);
-    if(res.getStatusCode() ==200){
-        pService.deletePondById(pondId);
-        return "Delete success";
-    }
-    else{
-        return "Delete failed, pond not found";
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(pService.getPondsByUserId(userId));
     }
 
-}
+    @DeleteMapping("/pond/{pondId}")
+    String deletePond(@RequestHeader("Authorization") String token, @PathVariable int pondId) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
 
-@GetMapping("/pond/{pondId}/get")
-ResponseEntity<ResReqPond> getPond(@RequestHeader ("Authorization") String token, @PathVariable int pondId) {
-    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-    return ResponseEntity.ok(pService.getPond(pondId, userId));
-}
+        ResReqPond res = pService.getPond(pondId, userId);
+        if (res.getStatusCode() == 200) {
+            pService.deletePondById(pondId);
+            return "Delete success";
+        } else {
+            return "Delete failed, pond not found";
+        }
+
+    }
+
+    @GetMapping("/pond/{pondId}/get")
+    ResponseEntity<ResReqPond> getPond(@RequestHeader("Authorization") String token, @PathVariable int pondId) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(pService.getPond(pondId, userId));
+    }
 
 
-@PutMapping("/pond/{pondId}/update")
-ResponseEntity<ResReqPond> updatePond(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqPond pond, @RequestParam("picture") MultipartFile picture){
-    int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-try{
-    pond.setPicture(picture);
-} catch (Exception e) {
-    throw new RuntimeException(e);
-}
-    return ResponseEntity.ok(pService.updatePond(userId, pondId, pond));
+    @PutMapping("/pond/{pondId}/update")
+    ResponseEntity<ResReqPond> updatePond(@RequestHeader("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqPond pond, @RequestParam("picture") MultipartFile picture) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        try {
+            pond.setPicture(picture);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.ok(pService.updatePond(userId, pondId, pond));
 
-}
+    }
 
 
-@GetMapping("/pond/{pondId}/picture")
-    ResponseEntity<byte[]>getPondImage(@PathVariable int pondId){
-    Optional<PondModel> pond = pondR.findById(pondId);
-if(!pond.isPresent() || pond.get().getPicture() ==null){
-return ResponseEntity.notFound().build();
-}
-byte[] picByte =pond.get().getPicture();
-return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(picByte);
-}
+    @GetMapping("/pond/{pondId}/picture")
+    ResponseEntity<byte[]> getPondImage(@RequestHeader("Authorization") String token, @PathVariable int pondId) {
 
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        Optional<PondModel> pond = pondR.findById(pondId);
+
+        if (!pond.isPresent() || pond.get().getPicture() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        byte[] picByte = pond.get().getPicture();
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(picByte);
+    }
 }

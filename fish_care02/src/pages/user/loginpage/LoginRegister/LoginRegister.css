@@ -9,7 +9,7 @@
 .wrapper {
     position: relative;
     inline-size: 420px;
-    block-size: 450px;
+    block-size: 640px;
     background: transparent;
     border: 2px solid rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(30px);
@@ -23,7 +23,7 @@
 }
 
 .wrapper.active {
-    block-size: 520px;
+    block-size: 680px;
 }
 
 .wrapper .form-box {
