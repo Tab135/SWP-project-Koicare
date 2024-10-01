@@ -11,6 +11,7 @@ import Homepage from "./pages/user/homepage";
 import Profile from "./pages/user/Profile/Profile";
 import Koicarepage from "./pages/user/koicarepage";
 import OtpVerify from "./pages/user/loginpage/OtpVerify/OtpVerify";
+import UpdateProfile from "./pages/user/Profile/UpdateProfile";
 
 const renderUserRouter = () => {
     const userRouter = [
@@ -84,6 +85,14 @@ const renderUserRouter = () => {
             element: <OtpVerify />,
             useLayout: false,
         },
+        {
+            path: ROUTERS.USER.UpdateProfile,
+            element: (
+                <MasterLayout>
+                    <UpdateProfile />
+                </MasterLayout>
+            ),
+        }
     ];
 
     return (
