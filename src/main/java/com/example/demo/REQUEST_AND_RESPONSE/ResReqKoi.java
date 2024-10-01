@@ -3,7 +3,9 @@ package com.example.demo.REQUEST_AND_RESPONSE;
 import com.example.demo.DTO.KoiFishModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.Lob;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,8 +25,11 @@ public class ResReqKoi {
     private BigDecimal price;
     private Integer pondId;
     private int userId;
-
-    private String image;
+    private String breeder;
+    private String physique;
+    private LocalDate inPondSince;
+    @Lob
+    private MultipartFile image;
     private int statusCode;
     private String error;
     private String message;
@@ -113,13 +118,7 @@ public class ResReqKoi {
 
 
 
-    public String getImage() {
-        return image;
-    }
 
-    public void setImage(String image) {
-        this.image = image;
-    }
 
     public int getStatusCode() {
         return statusCode;
@@ -161,8 +160,40 @@ public class ResReqKoi {
         this.koiList = koiList;
     }
 
-    public ResReqKoi(String error, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, int userId, String image, int statusCode, String message, KoiFishModel koi, List<KoiFishModel> koiList) {
-        this.error = error;
+    public String getPhysique() {
+        return physique;
+    }
+
+    public void setPhysique(String physique) {
+        this.physique = physique;
+    }
+
+    public String getBreeder() {
+        return breeder;
+    }
+
+    public void setBreeder(String breeder) {
+        this.breeder = breeder;
+    }
+
+    public LocalDate getInPondSince() {
+        return inPondSince;
+    }
+
+    public void setInPondSince(LocalDate inPondSince) {
+        this.inPondSince = inPondSince;
+    }
+
+    public MultipartFile getImage() {
+        return image;
+    }
+
+    public void setImage(MultipartFile image) {
+        this.image = image;
+    }
+
+    public ResReqKoi(String breeder, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, Integer pondId, int userId, String physique, LocalDate inPondSince, MultipartFile image, int statusCode, String error, String message, KoiFishModel koi, List<KoiFishModel> koiList) {
+        this.breeder = breeder;
         this.koiName = koiName;
         this.age = age;
         this.length = length;
@@ -173,8 +204,11 @@ public class ResReqKoi {
         this.price = price;
         this.pondId = pondId;
         this.userId = userId;
+        this.physique = physique;
+        this.inPondSince = inPondSince;
         this.image = image;
         this.statusCode = statusCode;
+        this.error = error;
         this.message = message;
         this.koi = koi;
         this.koiList = koiList;

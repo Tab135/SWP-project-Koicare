@@ -16,26 +16,33 @@ public class KoiFishModel {
     private int koiId;
     @Column(name = "name")
     private String koiName;
-    private int age;
-    private double length;
-    private double weight;
+    private Integer age;
+    private Double length;
+    private Double weight;
     private String sex;
     private String variety;
     private String origin;
     private BigDecimal price;
-    @Column(name ="pond_id")
-    private int pondId;
-    @Column(name = "user_id")
-    private int userId;
+    @ManyToOne
+    @JoinColumn(name ="pond_id")
+    private PondModel pondId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserModel userId;
+    @Column(name = "In_pond_since")
+    private LocalDate inPondSince;
+    private String breeder;
+    private String physique;
+    @Lob
+    @Column(name = "image", columnDefinition = "VARBINARY(MAX)")
+    private byte[] image;
 
-    private String image;
-
-    public BigDecimal getPrice() {
-        return price;
+    public String getOrigin() {
+        return origin;
     }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public int getKoiId() {
@@ -54,27 +61,27 @@ public class KoiFishModel {
         this.koiName = koiName;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 
-    public double getLength() {
+    public Double getLength() {
         return length;
     }
 
-    public void setLength(double length) {
+    public void setLength(Double length) {
         this.length = length;
     }
 
-    public double getWeight() {
+    public Double getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(Double weight) {
         this.weight = weight;
     }
 
@@ -94,42 +101,68 @@ public class KoiFishModel {
         this.variety = variety;
     }
 
-    public String getOrigin() {
-        return origin;
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setOrigin(String origin) {
-        this.origin = origin;
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
-    public int getPondId() {
+    public PondModel getPondId() {
         return pondId;
     }
 
-    public void setPondId(int pondId) {
+    public void setPondId(PondModel pondId) {
         this.pondId = pondId;
     }
 
-    public int getUserId() {
+
+
+    public LocalDate getInPondSince() {
+        return inPondSince;
+    }
+
+    public void setInPondSince(LocalDate inPondSince) {
+        this.inPondSince = inPondSince;
+    }
+
+    public String getBreeder() {
+        return breeder;
+    }
+
+    public void setBreeder(String breeder) {
+        this.breeder = breeder;
+    }
+
+    public String getPhysique() {
+        return physique;
+    }
+
+    public void setPhysique(String physique) {
+        this.physique = physique;
+    }
+
+
+
+    public UserModel getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(UserModel userId) {
         this.userId = userId;
     }
 
-
-
-    public String getImage() {
+    public byte[] getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(byte[] image) {
         this.image = image;
     }
 
-    public KoiFishModel(String origin, int koiId, String koiName, int age, double length, double weight, String sex, String variety, BigDecimal price, int pondId, int userId, String image) {
-        this.origin = origin;
+    public KoiFishModel(UserModel userId, int koiId, String koiName, Integer age, Double length, Double weight, String sex, String variety, String origin, BigDecimal price, PondModel pondId, LocalDate inPondSince, String breeder, String physique, byte[] image) {
+        this.userId = userId;
         this.koiId = koiId;
         this.koiName = koiName;
         this.age = age;
@@ -137,9 +170,12 @@ public class KoiFishModel {
         this.weight = weight;
         this.sex = sex;
         this.variety = variety;
+        this.origin = origin;
         this.price = price;
         this.pondId = pondId;
-        this.userId = userId;
+        this.inPondSince = inPondSince;
+        this.breeder = breeder;
+        this.physique = physique;
         this.image = image;
     }
 
