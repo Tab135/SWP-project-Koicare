@@ -3,9 +3,10 @@ import UserService from "./UserService";
 import { useParams, useNavigate } from "react-router-dom";
 import "./update_profile.css";
 import { ROUTERS } from "../../../utis/router";
-
+import { jwtDecode } from 'jwt-decode';
 function UpdateProfile() {
-  const { id } = useParams(); // Get the user ID from the URL
+  const { userId } = useParams(); 
+  console.log(userId);
   const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
     name: "",
@@ -19,15 +20,18 @@ function UpdateProfile() {
   const fetchProfileInfo = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await UserService.getYourProfile(token); // Fetch the user's profile data
+      const response = await UserService.getYourProfile(token); 
+      const decodedToken = jwtDecode(token);
+      console.log("Thông tin trong token:", decodedToken);
       if (response && response.users) {
         setProfileInfo({
           name: response.users.name,
           email: response.users.email,
         });
       }
+
     } catch (error) {
-      console.error("Error fetching profile information:", error);
+      console.error("Error fetching profile information:", error);  
     }
   };
 
@@ -40,12 +44,11 @@ function UpdateProfile() {
     event.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await UserService.updateUser(id, profileInfo, token); // Update the user's profile
-
-      // Handle successful response
+      console.log("Token:", token); 
+      const response = await UserService.updateUser(userId, profileInfo, token); 
       if (response) {
         alert("Profile updated successfully!");
-        navigate(ROUTERS.USER.Profile); // Ensure you replace the placeholder `:userId` correctly
+        navigate(ROUTERS.USER.Profile); 
       } else {
         console.error("Failed to update profile.");
       }

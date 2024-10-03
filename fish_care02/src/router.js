@@ -12,7 +12,8 @@ import Profile from "./pages/user/Profile/Profile";
 import Koicarepage from "./pages/user/koicarepage";
 import OtpVerify from "./pages/user/loginpage/OtpVerify/OtpVerify";
 import UpdateProfile from "./pages/user/Profile/UpdateProfile";
-
+import foodcal from "./pages/user/foodcalpage/foodcal";
+import Foodcal from "./pages/user/foodcalpage/foodcal";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -92,7 +93,15 @@ const renderUserRouter = () => {
                     <UpdateProfile />
                 </MasterLayout>
             ),
-        }
+        },
+        {
+            path: ROUTERS.USER.FOODCAL,
+            element: (
+                <MasterLayout>
+                    <Foodcal />
+                </MasterLayout>
+            ),
+        },
     ];
 
     return (

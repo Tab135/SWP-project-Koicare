@@ -101,7 +101,7 @@ public class UserController {
         return ResponseEntity.status(resp.getStatusCode()).body(resp);
     }
     @PutMapping("/adminuser/update/{userId}")
-    public ResponseEntity<ReqResUser> updateUser(@PathVariable int userID, @RequestBody UserModel update){
-        return  ResponseEntity.ok(userManagement.updateUser(userID,update));
+    public ResponseEntity<ReqResUser> updateUser(@PathVariable int userId, @RequestBody UserModel update){
+        return  ResponseEntity.ok(userManagement.updateUser(userId,update));
     }
 }

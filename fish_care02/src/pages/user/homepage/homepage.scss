@@ -132,6 +132,9 @@ h1{
     text-overflow: ellipsis; 
 }
 @media (min-width: 1201px) {
+    .news-content-des {
+        width: 900px;
+    }
     .mainkoi{
         border-radius: 50%;
         width: 570px;

@@ -3,10 +3,11 @@ import "./profile.css";
 import UserService from "./UserService";
 import { Link } from "react-router-dom";
 import { ROUTERS } from "../../../utis/router";
+import { jwtDecode } from 'jwt-decode';
 
 function Profile() {
   const [profileInfo, setProfileInfo] = useState({});
-
+  const [userId, setUserId] = useState(null);
   useEffect(() => {
     fetchProfileInfo();
   }, []);
@@ -16,6 +17,7 @@ function Profile() {
       const token = localStorage.getItem("token");
       const response = await UserService.getYourProfile(token);
       setProfileInfo(response.users);
+       setUserId(response.users.id);
     } catch (err) {
       console.log("Error fetching profile information: ", err);
     }
@@ -45,7 +47,7 @@ function Profile() {
             <li>Email: {profileInfo.email}</li>
           </ul>
           <button>
-            <Link to={ROUTERS.USER.UpdateProfile}>Update This Profile</Link>
+            <Link to={`/adminuser/update/${userId}`}>Update This Profile</Link>
           </button>
         </div>
       </div>
