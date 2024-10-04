@@ -1,43 +1,31 @@
-import { memo, useState } from "react";
+import React, { memo, useState, useEffect } from "react";
 import { ROUTERS } from "../../utis/router";
 import { Outlet, Link } from "react-router-dom";
 import "./header.scss";
 import logo from "../../assets/image/logo.jpg";
-import React, { useEffect } from "react";
 import { getUsernameFromToken } from "../../utis/gettoken";
 
-const Header = () => {
-  const [userId, setUserId] = useState(null);
-  const [username, setUsername] = useState(null);
-  const UserProfile = () => {
-    useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        setUserId(getUsernameFromToken(token)); // Assuming `getUsernameFromToken` sets the `userId`
-        fetchUserDetails(); // Fetch user details using the token
-      }
-    }, []);
+const UserProfile = ({ setUserId, userId }) => {
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setUserId(getUsernameFromToken(token)); 
+      fetchUserDetails(token); 
+    }
+  }, [setUserId]);
 
-    return (
-      <div className="header_login">
-        {userId ? <DropdownMenu /> : <Link to={ROUTERS.USER.LOGIN}>Login</Link>}
-      </div>
-    );
-  };
-  const fetchUserDetails = async () => {
+  const fetchUserDetails = async (token) => {
     try {
-      const token = localStorage.getItem("token");
-
-      const response = await fetch("/adminuser/get-profile", {
+      const response = await fetch("http://localhost:8080/adminuser/get-profile", {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
         const userData = await response.json();
-        setUsername(userData.name); // Assuming `name` is the field for the user's name in the response
+        setUserId(userData.users.name); // Assuming `name` is the field for the user's name
       } else {
         console.error("Failed to fetch user details:", response.statusText);
       }
@@ -46,46 +34,56 @@ const Header = () => {
     }
   };
 
-  const DropdownMenu = () => {
-    const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="header_login">
+      {userId ? <DropdownMenu userId={userId} /> : <Link to={ROUTERS.USER.LOGIN}>Login</Link>}
+    </div>
+  );
+};
 
-    // Toggle the dropdown menu's visibility
-    const toggleDropdown = () => {
-      setIsOpen(!isOpen);
-    };
+const DropdownMenu = ({ userId }) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-    return (
-      <div className="dropdown">
-        <button className="dropdown-btn" onClick={toggleDropdown}>
-          {username}
-          <span className="arrow-down">{isOpen ? "▲" : "▼"}</span>
-        </button>
-
-        {isOpen && (
-          <div className="dropdown-content">
-            <Link to={ROUTERS.USER.Profile}>Profile</Link>
-            <a href="#settings">Settings</a>
-            <LogoutButton />
-          </div>
-        )}
-      </div>
-    );
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
   };
-  const LogoutButton = ({ username }) => {
-    const handleLogout = () => {
-      localStorage.removeItem("token");
-      setUserId(null);
-    };
 
-    return (
-      <div>
-        <Link to={ROUTERS.USER.LOGIN} onClick={handleLogout}>
-          Logout
-        </Link>
-      </div>
-    );
+  return (
+    <div className="dropdown">
+      <button className="dropdown-btn" onClick={toggleDropdown}>
+        {userId}
+        <span className="arrow-down">{isOpen ? "▲" : "▼"}</span>
+      </button>
+
+      {isOpen && (
+        <div className="dropdown-content">
+          <Link to={ROUTERS.USER.Profile}>Profile</Link>
+          <LogoutButton />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const LogoutButton = () => {
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.reload(); // Reload the page after logout
   };
-  const [menus, setmenu] = useState([
+
+  return (
+    <div>
+      <Link to={ROUTERS.USER.LOGIN} onClick={handleLogout}>
+        Logout
+      </Link>
+    </div>
+  );
+};
+
+const Header = () => {
+  const [userId, setUserId] = useState(null);
+
+  const menus = [
     {
       name: "Koicare",
       path: ROUTERS.USER.KOICARE,
@@ -102,23 +100,26 @@ const Header = () => {
       name: "Contact",
       path: ROUTERS.USER.CONTACT,
     },
-  ]);
+  ];
+
   return (
     <div className="header">
       <div className="container">
         <div className="row">
           <div className="col-xl-3 col-lg-3 col-md-3">
             <div className="header_logo">
-            <Link to={ROUTERS.USER.HOME} ><img src={(logo)} alt="Logo" /></Link>   
+              <Link to={ROUTERS.USER.HOME}>
+                <img src={logo} alt="Logo" />
+              </Link>
             </div>
           </div>
           <div className="col-xl-6 col-lg-6 col-md-6">
             <div className="header_menu">
               <ul>
-                {menus?.map((menu, menukey) => (
+                {menus.map((menu, menukey) => (
                   <li key={menukey}>
                     <Link to={menu.path} className="menu">
-                      {menu?.name}
+                      {menu.name}
                     </Link>
                   </li>
                 ))}
@@ -126,12 +127,7 @@ const Header = () => {
             </div>
           </div>
           <div className="col-xl-3 col-lg-3 col-md-3">
-            {/* <div >{username ? (
-                        <h1>Welcome, {username}!</h1>
-                            ) : (
-                                <Link to={ROUTERS.USER.LOGIN}>Login</Link>
-                                )}</div>       */}
-            <UserProfile />
+            <UserProfile setUserId={setUserId} userId={userId} />
           </div>
         </div>
       </div>

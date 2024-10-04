@@ -7,7 +7,9 @@ export const ROUTERS = {
         ADD_POND: "/add-pond",
         LIST_PONDS: "/list-ponds",
         EDIT_POND: "/edit-pond/:pondId",
-        Profile : "/get-profile/${userId}",
-        OTP_VERIFY: "/otp-verify"
+        Profile: "/get-profile/:userId",
+        OTP_VERIFY: "/otp-verify",
+        UpdateProfile: "/adminuser/update/:userId",
+        FOODCAL:"/food-cal",
     }
 };

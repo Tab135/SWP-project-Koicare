@@ -1,43 +1,58 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./profile.css";
+import UserService from "./UserService";
+import { Link } from "react-router-dom";
+import { ROUTERS } from "../../../utis/router";
+import { jwtDecode } from 'jwt-decode';
 
-const Profile = () => {
+function Profile() {
+  const [profileInfo, setProfileInfo] = useState({});
+  const [userId, setUserId] = useState(null);
+  useEffect(() => {
+    fetchProfileInfo();
+  }, []);
+
+  const fetchProfileInfo = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await UserService.getYourProfile(token);
+      setProfileInfo(response.users);
+       setUserId(response.users.id);
+    } catch (err) {
+      console.log("Error fetching profile information: ", err);
+    }
+  };
+
+  // Check if profileInfo is loaded
+  if (!profileInfo.name) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <div className="profile-container">
       <div className="profile-card">
         <div className="profile-header">
-          
-          <h2>John Doe</h2>
-          <p className="profile-username">@johndoe</p>
+          <h2>{profileInfo.name}</h2>
+          <p className="profile-username">{profileInfo.username}</p>
         </div>
         <div className="profile-info">
           <h3>About Me</h3>
           <p>
-            Hi! I'm John, a software engineer with a passion for web development
+            Hi! I'm {profileInfo.name}, a software engineer with a passion for web development
             and artificial intelligence. I love building applications that make
             people's lives easier.
           </p>
           <h3>Contact</h3>
           <ul className="contact-info">
-            <li>Email: johndoe@example.com</li>
-            <li>Phone: +123-456-7890</li>
+            <li>Email: {profileInfo.email}</li>
           </ul>
-          <h3>Social Links</h3>
-          <ul className="social-links">
-            <li>
-              <a href="#">Twitter</a>
-            </li>
-            <li>
-              <a href="#">LinkedIn</a>
-            </li>
-            <li>
-              <a href="#">GitHub</a>
-            </li>
-          </ul>
+          <button>
+            <Link to={`/adminuser/update/${userId}`}>Update This Profile</Link>
+          </button>
         </div>
       </div>
     </div>
   );
-};
+}
 
 export default Profile;

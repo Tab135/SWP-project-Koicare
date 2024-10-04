@@ -11,7 +11,9 @@ import Homepage from "./pages/user/homepage";
 import Profile from "./pages/user/Profile/Profile";
 import Koicarepage from "./pages/user/koicarepage";
 import OtpVerify from "./pages/user/loginpage/OtpVerify/OtpVerify";
-
+import UpdateProfile from "./pages/user/Profile/UpdateProfile";
+import foodcal from "./pages/user/foodcalpage/foodcal";
+import Foodcal from "./pages/user/foodcalpage/foodcal";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -83,6 +85,22 @@ const renderUserRouter = () => {
             path: ROUTERS.USER.OTP_VERIFY,
             element: <OtpVerify />,
             useLayout: false,
+        },
+        {
+            path: ROUTERS.USER.UpdateProfile,
+            element: (
+                <MasterLayout>
+                    <UpdateProfile />
+                </MasterLayout>
+            ),
+        },
+        {
+            path: ROUTERS.USER.FOODCAL,
+            element: (
+                <MasterLayout>
+                    <Foodcal />
+                </MasterLayout>
+            ),
         },
     ];
 
