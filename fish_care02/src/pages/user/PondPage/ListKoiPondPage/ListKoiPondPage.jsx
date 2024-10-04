@@ -18,7 +18,7 @@ const PondListPage = () => {
                     }
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
-                setPonds(response.data.pondList);  // Ensure this contains 'picture' field
+                setPonds(response.data.pondList);
             } catch (error) {
                 console.error("Error fetching ponds", error);
                 setError("Could not fetch ponds.");
@@ -70,7 +70,6 @@ const PondListPage = () => {
                                 src={`http://localhost:8080/user/pond/${pond.id}/picture`}
                                 alt={pond.pondName}
                                 className="pond-image"
-
                             />
                             <div className="pond-details">
                                 <p><strong>Pond Name:</strong> {pond.pondName}</p>

@@ -27,7 +27,7 @@ const AddKoiPondPage = () => {
         });
     };
 
-    // Handle image file selection and preview
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setSelectedFile(file);
