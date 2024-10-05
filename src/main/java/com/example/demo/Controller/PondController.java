@@ -6,11 +6,13 @@ import com.example.demo.Repo.PondRepo;
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.PondService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @RestController
@@ -25,10 +27,10 @@ public class PondController {
     private PondRepo pondR;
 
     @PostMapping("/createPond")
-    ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token, @ModelAttribute ResReqPond pond, @RequestParam("picture") MultipartFile image) {
+    ResponseEntity<ResReqPond> createP(@RequestHeader("Authorization") String token, @ModelAttribute ResReqPond pond, @RequestParam(value ="picture", required = false) MultipartFile image) {
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
         try {
-            if (!image.isEmpty()) {
+            if (image !=null && !image.isEmpty()) {
                 pond.setPicture(image);
             } else {
                 pond.setPicture(null);
@@ -70,10 +72,14 @@ public class PondController {
 
 
     @PutMapping("/pond/{pondId}/update")
-    ResponseEntity<ResReqPond> updatePond(@RequestHeader("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqPond pond, @RequestParam("picture") MultipartFile picture) {
+    ResponseEntity<ResReqPond> updatePond(@RequestHeader("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqPond pond, @RequestParam(value ="picture", required = false) MultipartFile picture) {
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
         try {
-            pond.setPicture(picture);
+            if (picture !=null && !picture.isEmpty()) {
+                pond.setPicture(picture);
+            } else {
+                pond.setPicture(null);
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -82,17 +88,22 @@ public class PondController {
     }
 
 
-    @GetMapping("/pond/{pondId}/picture")
-    ResponseEntity<byte[]> getPondImage(@RequestHeader("Authorization") String token, @PathVariable int pondId) {
 
-        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+    @GetMapping("/pond-image/{pondId}")
+    public ResponseEntity<String> getPondImage(@PathVariable int pondId) {
         Optional<PondModel> pond = pondR.findById(pondId);
 
-        if (!pond.isPresent() || pond.get().getPicture() == null) {
-            return ResponseEntity.notFound().build();
-        }
+        if (pond.isPresent() && pond.get().getPicture() != null) {
+            byte[] imageData = pond.get().getPicture();
 
-        byte[] picByte = pond.get().getPicture();
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_PNG).body(picByte);
+            String base64Image = Base64.getEncoder().encodeToString(imageData);
+
+            return ResponseEntity.ok(base64Image);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found");
+        }
     }
+
+
 }

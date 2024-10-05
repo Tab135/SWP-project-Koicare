@@ -1,16 +1,19 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DTO.KoiFishModel;
+import com.example.demo.DTO.PondModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.KoiService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.Optional;
 
 @RestController
@@ -24,10 +27,10 @@ import java.util.Optional;
     private KoiRepo koiR;
 
     @PostMapping("/{pondId}/addKoi")
-        ResponseEntity<ResReqKoi> addKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqKoi request, @RequestParam("image")MultipartFile imageFile){
+        ResponseEntity<ResReqKoi> addKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqKoi request, @RequestParam(value ="image", required = false)MultipartFile imageFile){
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
         try {
-            if (!imageFile.isEmpty()) {
+            if (imageFile !=null && !imageFile.isEmpty()) {
                 request.setImage(imageFile);
             } else {
                 request.setImage(null);
@@ -51,19 +54,28 @@ import java.util.Optional;
         return ResponseEntity.ok(kService.getKoi(pondId, koiId));
     }
 
-    @GetMapping("/koi/{koiId}/image")
-    public ResponseEntity<byte[]> getKoiImage(@PathVariable int koiId) {
+
+
+    @GetMapping("/koi-image/{koiId}")
+    public ResponseEntity<String> getKoiImage(@PathVariable int koiId) {
         Optional<KoiFishModel> koi = koiR.findById(koiId);
 
-        if (!koi.isPresent() || koi.get().getImage() == null) {
-            return ResponseEntity.notFound().build();
+        if (koi.isPresent() && koi.get().getImage() != null) {
+            byte[] imageData = koi.get().getImage();
+
+            String base64Image = Base64.getEncoder().encodeToString(imageData);
+
+            return ResponseEntity.ok(base64Image);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found");
         }
 
-        byte[] imageBytes = koi.get().getImage();
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_PNG)
-                .body(imageBytes);
+
     }
+
+
+
+
 
 
 
@@ -80,12 +92,12 @@ import java.util.Optional;
     }
 
     @PutMapping("/{pondId}/{koiId}")
-    ResponseEntity<ResReqKoi> updateKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @PathVariable int koiId, @ModelAttribute ResReqKoi request, @RequestParam("image") MultipartFile image){
+    ResponseEntity<ResReqKoi> updateKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @PathVariable int koiId, @ModelAttribute ResReqKoi request, @RequestParam(value ="image", required = false) MultipartFile image){
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
 
 
         try {
-            if (!image.isEmpty()) {
+            if (image !=null && !image.isEmpty()) {
                 request.setImage(image);
             } else {
                 request.setImage(null);
