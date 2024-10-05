@@ -67,7 +67,7 @@ const PondListPage = () => {
                     ponds.map((pond) => (
                         <div key={pond.id} className="pond-card">
                             <img
-                                src={`http://localhost:8080/user/pond/${pond.id}/picture`}
+                                src={`data:image/png;base64,${pond.picture}`}
                                 alt={pond.pondName}
                                 className="pond-image"
                             />
@@ -82,11 +82,14 @@ const PondListPage = () => {
                                 <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
                                 <p><strong>Water Source:</strong> {pond.waterSource}</p>
                                 <div className="button-group">
-                                    <button
-                                        className="delete-pond-button"
-                                        onClick={() => handleDeletePond(pond.id)}>
-                                        Delete Pond
-                                    </button>
+                                    {/* Kiểm tra nếu chỉ còn 1 ao thì ẩn nút Delete */}
+                                    {ponds.length > 1 && (
+                                        <button
+                                            className="delete-pond-button"
+                                            onClick={() => handleDeletePond(pond.id)}>
+                                            Delete Pond
+                                        </button>
+                                    )}
                                     <Link to={`/edit-pond/${pond.id}`}>
                                         <button className="edit-pond-button">Edit Pond</button>
                                     </Link>

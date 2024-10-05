@@ -5,8 +5,21 @@ import './EditPondPage.css';
 
 const EditPondPage = () => {
     const { pondId } = useParams();
-    const [pond, setPond] = useState({});
+    const [pond, setPond] = useState({
+        pondName: '',
+        depth: '',
+        drain: '',
+        location: '',
+        numberOfFish: '',
+        pumpingCapacity: '',
+        skimmers: '',
+        volume: '',
+        waterSource: ''
+    });
+    const [picture, setPicture] = useState(null);
     const [error, setError] = useState(null);
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [isImageUploaded, setIsImageUploaded] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,8 +31,10 @@ const EditPondPage = () => {
                         Authorization: `Bearer ${token}`
                     }
                 };
-                const response = await axios.get(`http://localhost:8080/user/pond/${pondId}`, config);
+                const response = await axios.get(`http://localhost:8080/user/pond/${pondId}/get`, config);
                 setPond(response.data.pond);
+                setPreviewUrl(response.data.pond.picture);
+                setIsImageUploaded(!!response.data.pond.picture);
             } catch (error) {
                 setError("Error fetching pond data.");
             }
@@ -36,6 +51,16 @@ const EditPondPage = () => {
         });
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setPicture(file);
+
+        if (file) {
+            setPreviewUrl(URL.createObjectURL(file));
+            setIsImageUploaded(true);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -43,10 +68,26 @@ const EditPondPage = () => {
             const token = localStorage.getItem('token');
             const config = {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
                 }
             };
-            await axios.put(`http://localhost:8080/user/pond/${pondId}/update`, pond, config);
+
+            const formData = new FormData();
+            formData.append('pondName', pond.pondName);
+            formData.append('depth', pond.depth);
+            formData.append('drain', pond.drain);
+            formData.append('location', pond.location);
+            formData.append('numberOfFish', pond.numberOfFish);
+            formData.append('pumpingCapacity', pond.pumpingCapacity);
+            formData.append('skimmers', pond.skimmers);
+            formData.append('volume', pond.volume);
+            formData.append('waterSource', pond.waterSource);
+            if (picture) {
+                formData.append('picture', picture);
+            }
+
+            await axios.put(`http://localhost:8080/user/pond/${pondId}/update`, formData, config);
             navigate('/list-ponds');
         } catch (error) {
             setError("Error updating pond. Please try again.");
@@ -57,87 +98,109 @@ const EditPondPage = () => {
         <div className="edit-pond-container">
             <h1>Edit Pond</h1>
             {error && <p className="error-message">{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Pond Name:
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+                <label>Picture:</label>
+                <div className="image-upload-container">
+                    {isImageUploaded ? (
+                        <>
+                            <img src={previewUrl} alt="Preview" className="image-preview" />
+                            <button
+                                type="button"
+                                className="change-image-button"
+                                onClick={() => document.querySelector('input[type="file"]').click()}
+                            >
+                                Change Image
+                            </button>
+                        </>
+                    ) : (
+                        <div
+                            className="image-upload"
+                            onClick={() => document.querySelector('input[type="file"]').click()}
+                        >
+                            Select Image
+                        </div>
+                    )}
                     <input
-                        type="text"
-                        name="pondName"
-                        value={pond.pondName || ''}
-                        onChange={handleInputChange}
-                        required
+                        type="file"
+                        name="picture"
+                        onChange={handleFileChange}
+                        style={{ display: 'none' }}
+                        accept="image/*"
                     />
-                </label>
-                <label>
-                    Depth (m):
-                    <input
-                        type="number"
-                        name="depth"
-                        value={pond.depth || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Volume (L):
-                    <input
-                        type="number"
-                        name="volume"
-                        value={pond.volume || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Depth (m):
-                    <input
-                        type="number"
-                        name="depth"
-                        value={pond.drain || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Depth (m):
-                    <input
-                        type="text"
-                        name="depth"
-                        value={pond.location || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Depth (m):
-                    <input
-                        type="text"
-                        name="depth"
-                        value={pond.skimmers || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Depth (m):
-                    <input
-                        type="number"
-                        name="depth"
-                        value={pond.pumpingCapacity || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Depth (m):
-                    <input
-                        type="text"
-                        name="depth"
-                        value={pond.waterSource || ''}
-                        onChange={handleInputChange}
-                        required
-                    />
-                </label>
+                </div>
+
+                <label>Pond Name:</label>
+                <input
+                    type="text"
+                    name="pondName"
+                    value={pond.pondName}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Depth (m):</label>
+                <input
+                    type="number"
+                    name="depth"
+                    value={pond.depth}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Volume (L):</label>
+                <input
+                    type="number"
+                    name="volume"
+                    value={pond.volume}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Drain:</label>
+                <input
+                    type="number"
+                    name="drain"
+                    value={pond.drain}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Location:</label>
+                <input
+                    type="text"
+                    name="location"
+                    value={pond.location}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Skimmers:</label>
+                <input
+                    type="text"
+                    name="skimmers"
+                    value={pond.skimmers}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Pumping Capacity (L/min):</label>
+                <input
+                    type="number"
+                    name="pumpingCapacity"
+                    value={pond.pumpingCapacity}
+                    onChange={handleInputChange}
+                    required
+                />
+
+                <label>Water Source:</label>
+                <input
+                    type="text"
+                    name="waterSource"
+                    value={pond.waterSource}
+                    onChange={handleInputChange}
+                    required
+                />
+
                 <button type="submit">Update Pond</button>
             </form>
         </div>

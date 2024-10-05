@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import {jwtDecode} from 'jwt-decode';  // Fix incorrect import
+import { jwtDecode } from 'jwt-decode';  // Fix incorrect import
 import './AddKoiPondPage.css';
 
 const AddKoiPondPage = () => {
@@ -27,7 +27,6 @@ const AddKoiPondPage = () => {
         });
     };
 
-
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         setSelectedFile(file);
@@ -36,11 +35,20 @@ const AddKoiPondPage = () => {
         setIsImageUploaded(true);
     };
 
+    const handleDeleteImage = () => {
+        setSelectedFile(null);
+        setPreviewUrl(null);
+        setIsImageUploaded(false);
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('picture', selectedFile);
+
+        if (selectedFile) {
+            formData.append('picture', selectedFile);
+        }
         Object.keys(pond).forEach(key => {
             formData.append(key, pond[key]);
         });
@@ -89,6 +97,13 @@ const AddKoiPondPage = () => {
                             onClick={() => document.querySelector('input[type="file"]').click()}
                         >
                             Change Image
+                        </button>
+                        <button
+                            type="button"
+                            className="delete-image-button"
+                            onClick={handleDeleteImage}
+                        >
+                            Delete Image
                         </button>
                     </>
                 ) : (
