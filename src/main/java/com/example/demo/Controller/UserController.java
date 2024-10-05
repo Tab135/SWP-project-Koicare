@@ -28,33 +28,33 @@ public class UserController {
     private UserManagement userManagement;
     @Autowired
     private OAuth2AuthorizedClientService clientService;
-
-    @PostMapping("/oauth2/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        if (authentication instanceof OAuth2AuthenticationToken) {
-            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
-            clientService.removeAuthorizedClient(
-                    oauthToken.getAuthorizedClientRegistrationId(),
-                    oauthToken.getName()
-            );
-        }
-
-        new SecurityContextLogoutHandler().logout(request, response, authentication);
-        return ResponseEntity.ok().body("Logged out successfully");
-    }
-    @ResponseBody
-    @GetMapping("/oauth2/user")
-    public Map<String, Object> Ginfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        // OIDC provides the ID token, which is a JWT token
-        String jwtToken = oidcUser.getIdToken().getTokenValue();
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("userAttributes", oidcUser.getAttributes());
-        response.put("jwtToken", jwtToken);
-        userManagement.handleGoogleLogin(oidcUser);
-
-        return response;
-    }
+//
+//    @PostMapping("/oauth2/logout")
+//    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+//        if (authentication instanceof OAuth2AuthenticationToken) {
+//            OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) authentication;
+//            clientService.removeAuthorizedClient(
+//                    oauthToken.getAuthorizedClientRegistrationId(),
+//                    oauthToken.getName()
+//            );
+//        }
+//
+//        new SecurityContextLogoutHandler().logout(request, response, authentication);
+//        return ResponseEntity.ok().body("Logged out successfully");
+//    }
+//    @ResponseBody
+//    @GetMapping("/oauth2/user")
+//    public Map<String, Object> Ginfo(@AuthenticationPrincipal OidcUser oidcUser) {
+//        // OIDC provides the ID token, which is a JWT token
+//        String jwtToken = oidcUser.getIdToken().getTokenValue();
+//
+//        Map<String, Object> response = new HashMap<>();
+//        response.put("userAttributes", oidcUser.getAttributes());
+//        response.put("jwtToken", jwtToken);
+//        userManagement.handleGoogleLogin(oidcUser);
+//
+//        return response;
+//    }
     @PostMapping("/auth/signup")
     public ResponseEntity<ReqResUser> sendOtpForSignup(@RequestBody ReqResUser signup) {
         return ResponseEntity.ok(userManagement.sendOtpSignUp(signup));
