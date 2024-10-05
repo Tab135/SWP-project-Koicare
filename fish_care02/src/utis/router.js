@@ -9,7 +9,8 @@ export const ROUTERS = {
         EDIT_POND: "/edit-pond/:pondId",
         Profile: "/get-profile/:userId",
         OTP_VERIFY: "/otp-verify",
-        UpdateProfile: "/adminuser/update/:userId",
+        UpdateProfile: "/adminusershop/update/:userId",
         FOODCAL:"/food-cal",
+        Shop : "/public/product"
     }
 };

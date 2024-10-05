@@ -41,7 +41,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/public/**", "/forgotpassword/**", "/oauth2/**","/login**").permitAll()
                         .requestMatchers("/admin/**").hasAnyAuthority("ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("USER")
-                        .requestMatchers("/adminuser/**").hasAnyAuthority("ADMIN", "USER")
+                        .requestMatchers("/adminusershop/**").hasAnyAuthority("ADMIN", "USER","SHOP")
                         .requestMatchers("/shop/**").hasAnyAuthority("SHOP")
                         .anyRequest().authenticated())
                 //.oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/login", true))

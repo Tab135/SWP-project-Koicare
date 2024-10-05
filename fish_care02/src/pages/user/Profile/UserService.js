@@ -4,7 +4,7 @@ class UserService {
   static async getYourProfile(token) {
     try {
       const response = await axios.get(
-        `${UserService.BASE_URL}/adminuser/get-profile`,
+        `${UserService.BASE_URL}/adminusershop/get-profile`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -21,7 +21,7 @@ class UserService {
   
     try {
       const response = await axios.put(
-        `${UserService.BASE_URL}/adminuser/update/${userId}`, // Ensure BASE_URL is correct
+        `${UserService.BASE_URL}/adminusershop/update/${userId}`, // Ensure BASE_URL is correct
         userData,
         {
           headers: { Authorization: `Bearer ${token}` }, // Include token in headers

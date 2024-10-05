@@ -14,6 +14,7 @@ import OtpVerify from "./pages/user/loginpage/OtpVerify/OtpVerify";
 import UpdateProfile from "./pages/user/Profile/UpdateProfile";
 import foodcal from "./pages/user/foodcalpage/foodcal";
 import Foodcal from "./pages/user/foodcalpage/foodcal";
+import Shop from "./pages/Shop/Shop";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -102,6 +103,14 @@ const renderUserRouter = () => {
                 </MasterLayout>
             ),
         },
+        {
+            path: ROUTERS.USER.Shop,
+            element: (
+                <MasterLayout>
+                    <Shop/>
+                </MasterLayout>
+            ),
+        }
     ];
 
     return (

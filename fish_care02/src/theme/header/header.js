@@ -16,7 +16,7 @@ const UserProfile = ({ setUserId, userId }) => {
 
   const fetchUserDetails = async (token) => {
     try {
-      const response = await fetch("http://localhost:8080/adminuser/get-profile", {
+      const response = await fetch("http://localhost:8080/adminusershop/get-profile", {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const Header = () => {
     },
     {
       name: "Shop",
-      path: ROUTERS.USER.SHOP,
+      path: ROUTERS.USER.Shop,
     },
     {
       name: "Blog",

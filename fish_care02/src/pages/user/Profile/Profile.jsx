@@ -47,7 +47,7 @@ function Profile() {
             <li>Email: {profileInfo.email}</li>
           </ul>
           <button>
-            <Link to={`/adminuser/update/${userId}`}>Update This Profile</Link>
+            <Link to={`/adminusershop/update/${userId}`}>Update This Profile</Link>
           </button>
         </div>
       </div>
