@@ -27,8 +27,9 @@ public class ProductModel {
     private float price;
 
     private String description;
-
-    private String productImage;
+    @Lob
+    @Column( columnDefinition = "VARBINARY(MAX)")
+    private byte[] productImage;
 
     private int stockQuantity;
 
@@ -40,7 +41,7 @@ public class ProductModel {
     public ProductModel() {
     }
 
-    public ProductModel(int id, long amount, double productRating, int stockQuantity, String productImage, String description, float price, String productName, CategoryModel category) {
+    public ProductModel(int id, long amount, double productRating, int stockQuantity, byte[] productImage, String description, float price, String productName, CategoryModel category) {
         this.id = id;
         this.amount = amount;
         this.productRating = productRating;
@@ -84,11 +85,11 @@ public class ProductModel {
         this.stockQuantity = stockQuantity;
     }
 
-    public String getProductImage() {
+    public byte[] getProductImage() {
         return productImage;
     }
 
-    public void setProductImage(String productImage) {
+    public void setProductImage(byte[] productImage) {
         this.productImage = productImage;
     }
 

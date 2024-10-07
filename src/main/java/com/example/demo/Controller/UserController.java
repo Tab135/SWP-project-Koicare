@@ -93,14 +93,14 @@ public class UserController {
         return ResponseEntity.ok(userManagement.checkEmail(checkEmail.getEmail()));
     }
 
-    @GetMapping("/adminuser/get-profile")
+    @GetMapping("/adminusershop/get-profile")
     public ResponseEntity<ReqResUser> getMyProfile(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         ReqResUser resp = userManagement.myProfile(email);
         return ResponseEntity.status(resp.getStatusCode()).body(resp);
     }
-    @PutMapping("/adminuser/update/{userId}")
+    @PutMapping("/adminusershop/update/{userID}")
     public ResponseEntity<ReqResUser> updateUser(@PathVariable int userId, @RequestBody UserModel update){
         return  ResponseEntity.ok(userManagement.updateUser(userId,update));
     }

@@ -11,6 +11,7 @@ export const ROUTERS = {
         OTP_VERIFY: "/otp-verify",
         UpdateProfile: "/adminusershop/update/:userId",
         FOODCAL:"/food-cal",
-        Shop : "/public/product"
+        Shop : "/public/product",
+        AddProduct: "/shop/addPro"
     }
 };

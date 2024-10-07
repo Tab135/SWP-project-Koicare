@@ -3,6 +3,7 @@ import com.example.demo.DTO.ProductModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -17,10 +18,19 @@ public class ReqResProduct {
     private String description;
     private int categoryId; // CamelCase for consistency
     private int stockQuantity;
-    private long amount;// CamelCase for consistency
+    private long amount;
+    private MultipartFile productImage;// CamelCase for consistency
     private String message;
     private ProductModel productM;
     private List<ProductModel> productList;
+
+    public MultipartFile getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(MultipartFile productImage) {
+        this.productImage = productImage;
+    }
 
     public int getStatusCode() {
         return statusCode;

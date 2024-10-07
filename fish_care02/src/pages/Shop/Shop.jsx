@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 import ProductService from "./ShopService.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -11,9 +12,12 @@ import {
   Form,
   InputGroup,
   Button,
+  Badge,
+
 } from "react-bootstrap";
-import { FaShoppingCart, FaSearch } from "react-icons/fa";
+import { FaShoppingCart, FaSearch,FaPlus } from "react-icons/fa";
 import "./shop.css";
+import { ROUTERS } from "../../utis/router.js";
 
 const Shop = () => {
   const [products, setProducts] = useState([]);
@@ -24,7 +28,6 @@ const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-      
         const productData = await ProductService.getAllProducts();
         setProducts(productData);
         setLoading(false);
@@ -45,9 +48,7 @@ const Shop = () => {
     if (searchTerm.trim() === "") {
       return;
     }
-    // You can add additional search logic here if needed
     console.log("Searching for:", searchTerm);
-    // For now, we're just logging the search term
   };
 
   const handleKeyPress = (event) => {
@@ -61,12 +62,16 @@ const Shop = () => {
   );
 
   return (
-    <Container className="mt-5">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Our Products</h1>
-        <div className="d-flex align-items-center">
-          <InputGroup className="me-3 custom-search-bar">
-            <InputGroup.Text>
+    <Container fluid className="shop-container py-5">
+      <Row className="mb-4">
+        <Col>
+          <h1 className="shop-title text-center mb-4">Our Products</h1>
+        </Col>
+      </Row>
+      <Row className="justify-content-center mb-4">
+        <Col xs={12} md={6} lg={4}>
+          <InputGroup className="custom-search-bar">
+            <InputGroup.Text className="bg-primary text-white">
               <FaSearch />
             </InputGroup.Text>
             <Form.Control
@@ -75,42 +80,71 @@ const Shop = () => {
               value={searchTerm}
               onChange={handleSearchInputChange}
               onKeyPress={handleKeyPress}
+              className="border-primary"
             />
           </InputGroup>
-          <div className="position-relative">
+        </Col>
+        <Col xs="auto" className="mt-3 mt-md-0">
+          <Button
+            variant="outline-primary"
+            className="rounded-circle p-2 position-relative"
+          >
             <FaShoppingCart size={24} />
-            <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            <Badge
+              bg="danger"
+              className="position-absolute top-0 start-100 translate-middle rounded-pill"
+            >
               0
-            </span>
-          </div>
-        </div>
-      </div>
+            </Badge>
+          </Button>
+        </Col>
+      </Row>
+
+      <Row className="justify-content-end mb-4">
+        <Col xs="auto">
+          <Link to={ROUTERS.USER.AddProduct}>
+            <Button variant="success" className="d-flex align-items-center">
+              <FaPlus className="me-2" /> Add New Product
+            </Button>
+          </Link>
+        </Col>
+      </Row>
 
       {loading ? (
         <div className="text-center">
-          <Spinner animation="border" role="status">
+          <Spinner animation="border" variant="primary" role="status">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>
       ) : error ? (
         <Alert variant="danger">{error}</Alert>
       ) : filteredProducts.length > 0 ? (
-        <Row xs={1} md={2} lg={3} className="g-4">
+        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
           {filteredProducts.map((product) => (
             <Col key={product.id}>
-              <Card className="h-100 shadow-sm">
+              <Card className="h-100 shadow product-card">
+                {product.productImage && (
+                  <Card.Img
+                    variant="top"
+                    src={`data:image/jpeg;base64,${product.productImage}`}
+                    alt={product.productName}
+                    className="product-image"
+                  />
+                )}
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title>{product.productName}</Card.Title>
-                  <Card.Text className="text-muted mb-2">
-                    Price: ${product.price.toFixed(2)}
+                  <Card.Title className="product-title">
+                    {product.productName}
+                  </Card.Title>
+                  <Card.Text className="text-primary fw-bold mb-2">
+                    ${product.price.toFixed(2)}
                   </Card.Text>
-                  <Card.Text className="flex-grow-1">
+                  <Card.Text className="product-description flex-grow-1">
                     {product.description}
                   </Card.Text>
                   <Button
-                    variant="primary"
+                    variant="outline-primary"
                     onClick={() => console.log("Add to cart clicked")}
-                    className="mt-auto"
+                    className="mt-auto w-100"
                   >
                     Add to Cart
                   </Button>

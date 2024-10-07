@@ -14,6 +14,7 @@ import OtpVerify from "./pages/user/loginpage/OtpVerify/OtpVerify";
 import UpdateProfile from "./pages/user/Profile/UpdateProfile";
 import Foodcal from "./pages/user/foodcalpage/foodcal";
 import Shop from "./pages/Shop/Shop";
+import AddProduct from "./pages/Shop/product/Add_Product/AddProduct";
 import Saltcal from "./pages/user/saltCalPage/saltcal";
 const renderUserRouter = () => {
     const userRouter = [
@@ -116,6 +117,14 @@ const renderUserRouter = () => {
             element: (
                 <MasterLayout>
                     <Shop/>
+                </MasterLayout>
+            ),
+        },
+        {
+            path: ROUTERS.USER.AddProduct,
+            element: (
+                <MasterLayout>
+                    <AddProduct/>
                 </MasterLayout>
             ),
         }

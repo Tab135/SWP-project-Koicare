@@ -1,38 +1,109 @@
-.footer{
-    background-color: rgb(27, 24, 24);
-}
-.Logo{
-    padding: 30px 0;
-    div{
-        display: flex;
-        justify-content: center;
-        img{
-            height: 150px;
-            width: 150px;
+.footer {
+  &.crystal-bg {
+    background-color: rgba(173, 216, 230, 0.7) !important;
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  color: #000 !important;
+
+  .footer-logo {
+    img {
+      border: 2px solid white;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+      }
+    }
+    h4 {
+      color: #000 !important;
+    }
+  }
+
+  .footer-links {
+    li {
+      margin-bottom: 0.5rem;
+
+      a {
+        color: #000 !important;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #333 !important;
+          text-decoration: none;
         }
+      }
     }
-    h1{
-        padding: 10px 0 ;
-        text-align: center;
-        color: white;
+  }
 
+  .footer-contact {
+    li {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+      color: #000 !important;
+
+      svg {
+        margin-right: 0.5rem;
+        color: #000 !important;
+      }
     }
+  }
+
+  .social-icons {
+    a {
+      transition: transform 0.3s ease, color 0.3s ease;
+      color: #000 !important;
+
+      &:hover {
+        transform: scale(1.1);
+        color: #333 !important;
+      }
+    }
+  }
+
+  h5 {
+    color: #000 !important;
+  }
+
+  p {
+    color: #000 !important;
+  }
+
+  .hover-white {
+    transition: color 0.3s ease;
+    &:hover {
+      color: #333 !important;
+    }
+  }
+  .text-white {
+    color: #000 !important;
+  }
+  svg {
+    fill: #000 !important;
+  }
+  .hover-scale {
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
 }
-.about{
-    padding: 30px 0;
-    h1{
-        padding: 10px 0 ;
-        text-align: center;
-        color: white;
 
-    }
-}
-.contact{
-    padding: 30px 0;
-    h1{
-        padding: 10px 0 ;
-        text-align: center;
-        color: white;
+@media (max-width: 767px) {
+  .footer {
+    text-align: center;
 
+    .footer-logo,
+    .social-icons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
+
+    .footer-contact li {
+      justify-content: center;
+    }
+  }
 }

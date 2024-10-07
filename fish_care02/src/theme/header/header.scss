@@ -1,109 +1,140 @@
-
 $logo: "/assets/image/logo.jpg";
 
 .header {
-  background-color: rgb(27, 24, 24);
-  background-size: cover;
-  height: 180px;
-  width: 100%;
-  text-align:center;
-  background-repeat:no-repeat;
-}
+  padding: 0.5rem 0;
 
-.header_logo {
-  display: flex;
-  justify-content: center;
-  padding: 50px 0;
-  
-  img {
-    border-radius: 50%;
-    width: 84px;
-    height: 84px; // Keep width and height the same for a circular logo
+  &.crystal-bg {
+    background-color: rgba(
+      173,
+      216,
+      230,
+      0.7
+    ) !important; // Light blue with 70% opacity
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   }
-}
+  .navbar-brand {
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border: 2px solid white;
+      transition: transform 0.3s ease;
 
-.header_menu {
-  padding: 65px 0;
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
 
-  ul {
+  .navbar-collapse {
+    flex-grow: 1;
+  }
+
+  .header_menu {
     display: flex;
-    justify-content: space-evenly; // Center the menu items
-    gap: 20px; // Add spacing between items
+    justify-content: space-between;
+    max-width: 500px; // Adjust this value as needed
+    margin: 0 auto;
 
-    li {
-      list-style: none;
-      
-      a {
-        text-decoration: none;
-        color: white;
-        transition: color 0.3s ease;
-        font-size: 20px;
+    .nav-link {
+      color: #000 !important;
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s ease;
+
+      &:hover,
+      &.active {
+        color: #333 !important;
+      }
+    }
+  }
+
+  .header_login {
+    .user-dropdown {
+      background-color: transparent !important;
+      border: 2px solid black !important;
+      color: black !important;
+      padding: 0.375rem 0.75rem;
+      border-radius: 20px !important;
+      transition: all 0.3s ease;
+
+      &:hover,
+      &:focus,
+      &:active {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+        border-color: black !important;
+        color: black !important;
+      }
+
+      &::after {
+        color: black !important;
+      }
+    }
+
+    .user-dropdown-menu {
+      background-color: white;
+      border: 1px solid rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 0.5rem 0;
+      min-width: 150px;
+
+      .dropdown-item {
+        color: black;
+        padding: 0.5rem 1rem;
+        transition: background-color 0.3s ease;
 
         &:hover {
-          color: #ffcc00; // Change color on hover
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+
+      .dropdown-divider {
+        border-top-color: rgba(0, 0, 0, 0.15);
+      }
+
+      .logout-item {
+        color: #dc3545;
+
+        &:hover {
+          background-color: #dc3545;
+          color: white;
         }
       }
     }
   }
+
+  // Ensure all icons in the header are black
+  .header svg {
+    fill: black !important;
+  }
+
+  // If you're using Bootstrap's text-white class, override it
+  .text-white {
+    color: black !important;
+  }
 }
 
-.header_login {
-  padding: 65px 0;
-  display: flex;
-  justify-content: end;
-
-  div {
-    a {
-      text-decoration: none;
-      color: white;
+@media (max-width: 991.98px) {
+  .header {
+    .navbar-brand {
+      img {
+        width: 50px;
+        height: 50px;
+      }
     }
-    color: white;
-  }
-}
 
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
+    .header_menu {
+      flex-direction: column;
+      align-items: center;
+      max-width: 100%;
+    }
 
-.dropdown-btn {
-  color: white;
-  padding: 10px;
-  font-size: 16px;
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  transition: background 0.3s ease;
-
-  &:hover {
-    background-color: rgba(255, 255, 255, 0.1); // Background change on hover
-  }
-}
-
-.dropdown-btn .arrow-down {
-  margin-left: 10px;
-}
-
-.dropdown-content {
-  display: flex;
-  flex-direction: column;
-  position: absolute;
-  background-color: #9343d1;
-  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-  min-width: 160px;
-  right: 0;
-  z-index: 1;
-  border-radius: 4px;
-}
-
-.dropdown-content a {
-  color: white; // Changed for better visibility
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-
-  &:hover {
-    background-color: #ddd;
-    color: black; // Keep hover color change
+    .header_login {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+    }
   }
 }

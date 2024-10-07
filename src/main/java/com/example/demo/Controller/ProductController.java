@@ -7,18 +7,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
 @CrossOrigin
 public class ProductController {
     @Autowired
     private ProductManagement proM;
+
     @PostMapping("/shop/addPro")
-    public ResponseEntity<ReqResProduct> addPro(@RequestBody ReqResProduct addProduct)
-    {
-        return ResponseEntity.ok(proM.addPro(addProduct));
+    public ResponseEntity<ReqResProduct> addPro(
+            @ModelAttribute ReqResProduct addProduct,
+            @RequestParam(value = "productImage", required = false) MultipartFile imageFile) {
+        ReqResProduct response = proM.addPro(addProduct, imageFile);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
     @DeleteMapping("/shop/deletePro/{id}")
     public ResponseEntity<ReqResProduct> delePro(@PathVariable int id)

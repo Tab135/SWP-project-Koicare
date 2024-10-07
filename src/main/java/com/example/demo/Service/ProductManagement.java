@@ -9,11 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-@Service
+import java.util.UUID;
+
+ @Service
 public class ProductManagement {
     @Autowired
     private ProductRepo proRepository;
@@ -42,50 +47,57 @@ public class ProductManagement {
         return req;
     }
 
-    public ReqResProduct addPro(ReqResProduct addPro) {
-        ReqResProduct req = new ReqResProduct();
+     public ReqResProduct addPro(ReqResProduct addPro, MultipartFile imageFile) {
+         ReqResProduct req = new ReqResProduct();
 
-        try {
-            // Validate input
-            if (addPro.getName() == null || addPro.getPrice() <= 0 || addPro.getStockQuantity() <= 0 || addPro.getCategoryId() <= 0 || addPro.getAmount() <= 0) {
-                req.setMessage("Invalid product data");
-                req.setStatusCode(400); // Bad Request
-                return req;
-            }
+             try {
+             if (addPro.getName() == null || addPro.getPrice() <= 0 || addPro.getStockQuantity() <= 0 || addPro.getCategoryId() <= 0 ||
+                     addPro.getAmount() <= 0) {
+                 System.out.println(addPro.getName());
+                 System.out.println(addPro.getPrice());
+                 System.out.println(addPro.getCategoryId());
+                 System.out.println(addPro.getStockQuantity());
+                 System.out.println(addPro.getAmount());
+                 req.setMessage("Invalid product data");
+                 req.setStatusCode(400); // Bad Request
+                 return req;
+             }
+             Optional<CategoryModel> cm = cateRepo.findByCategoryId(addPro.getCategoryId());
+             if (!cm.isPresent()) {
+                 req.setMessage("Category not found");
+                 req.setStatusCode(404); // Not Found
+                 return req;
+             }
 
-            // Fetch the category by ID
-            Optional<CategoryModel> cm = cateRepo.findByCategoryId(addPro.getCategoryId());
-            if (!cm.isPresent()) {
-                req.setMessage("Category not found");
-                req.setStatusCode(404); // Not Found
-                return req;
-            }
+             ProductModel pm = new ProductModel();
+             pm.setProductName(addPro.getName());
+             pm.setPrice(addPro.getPrice());
+             pm.setDescription(addPro.getDescription());
+             pm.setCategory(cm.get());
+             pm.setStockQuantity(addPro.getStockQuantity());
+             pm.setAmount(addPro.getAmount());
 
-            // Create a new ProductModel object
-            ProductModel pm = new ProductModel();
-            pm.setProductName(addPro.getName());
-            pm.setPrice(addPro.getPrice());
-            pm.setDescription(addPro.getDescription());
-            pm.setCategory(cm.get());  // Set the CategoryModel object
-            pm.setStockQuantity(addPro.getStockQuantity());
-            pm.setAmount(addPro.getAmount());
+             // Handle image upload if provided
+             if (imageFile != null && !imageFile.isEmpty()) {
+                 byte[] imageBytes = imageFile.getBytes();
+                 pm.setProductImage(imageBytes);  // Make sure ProductModel has byte[] field for image
+             }
 
-            // Save the product to the repository
-            proRepository.save(pm);
+             // Save the product to the database
+             proRepository.save(pm);
 
-            // Return success response
-            req.setMessage("Product added successfully");
-            req.setStatusCode(200);
+             req.setMessage("Product added successfully");
+             req.setStatusCode(200);
+         } catch (RuntimeException | IOException e) {
+             // Handle any exceptions and return appropriate message
+             req.setMessage("Error while adding product: " + e.getMessage());
+             req.setStatusCode(500); // Internal Server Error
+         }
 
-        } catch (RuntimeException e) {
-            // Handle exception, log error for debugging
-            req.setMessage("Error while adding product: " + e.getMessage());
-            req.setStatusCode(500); // Internal Server Error
-        }
+         return req;
+     }
 
-        return req;
-    }
-    @Transactional
+     @Transactional
     public ReqResProduct delePro(int id){
         ReqResProduct req = new ReqResProduct();
         try{
