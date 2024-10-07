@@ -12,26 +12,35 @@
         display: flex;
         justify-content: center;
         padding: 30px 0;
-        color: #F4A950;
+        color: black;
     }
     .menu_banner{
+        padding: 10px 0;
         ul{
             display: flex;
             justify-content: space-around; 
             li{ 
+                display: flex;
+                justify-content: center; 
+                align-items: center;
                 border-radius: 20%;
                 padding-top: 4.5px;
-                background-color: #F4A950;
+                background-color: #64b5f6;
                 list-style: none;
-                height: 100px;
-                width: 100px;
+                height: 150px;
+                width: 150px;
+                align-items: center;
                 a{
-                    padding: 0 16px ;
+                    display: flex; 
+                    flex-direction: column; 
+                    justify-content: center; 
+                    align-items: center; 
                     text-decoration: none;
                     color: white;
-                    span{
+                    span , svg {
                         display: flex;
-                        justify-content: center;
+                        justify-content: center; 
+                        align-items: center;
                     }
                 }
             } 

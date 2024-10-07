@@ -1,0 +1,148 @@
+.food-cal-page{
+    padding: 10px;
+}
+.pond-name{
+    h3{
+        padding: 25px;
+    }
+}
+.food-cal{
+    display: flex;
+    flex-direction: column;  
+    justify-content: center; 
+    align-items: center;     
+    height: 100%;            
+    text-align: center;
+}
+.desired-growth {
+    padding: 5px;
+    margin: 5px;
+    span{
+        padding: 5px;
+        margin: 5px;
+    }
+    .desired-growth-menu{
+        padding: 5px;
+        display: flex;       
+        justify-content: center;
+        align-items: center;
+        height: 70px;
+        width: 200px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 5px;
+        button {
+            width: 65px;
+            height: 65px;
+            background-color: white; 
+            border: none;
+            border-radius: 5px;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 14px;
+            span{
+                padding: 0;
+                margin: -15px;
+                font-weight: bold;
+            }
+            
+            p{
+                font-size: 20px;
+                ;
+                font-weight: bold;
+            }
+        }
+        
+        button.active {
+            background-color: #64b5f6; 
+            
+        }
+        
+        button:hover {
+            background-color: #64b5f6; 
+        }
+        ul{
+            list-style: none; 
+            padding: 0;         
+            display: flex;       
+            justify-content: center;
+            margin: 0;
+            }
+            li{
+            cursor: pointer; 
+            }
+    }
+}
+.water-parameter {
+    .water-parameter-menu{
+        display: flex;       
+        justify-content: center;
+        align-items: center;
+        height: 97px;
+        width: 456px;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        border-radius: 5px;
+        button {
+            width: 90px;
+            height: 90px;
+            background-color: white; 
+            border: none;
+            border-radius: 5px;
+            color: #333;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            span{
+                padding: 0;
+                margin: 0;
+                font-weight: bold;
+            }
+            
+            p{
+                font-size: 20px;
+                ;
+                font-weight: bold;
+            }
+        }
+        
+        button.active {
+            background-color: #64b5f6; 
+            
+        }
+        
+        button:hover {
+            background-color: #64b5f6; 
+        }
+        ul{
+            list-style: none; 
+            padding: 0;
+            margin: 0;        
+            display: flex;       
+            justify-content: center;
+            }
+            li{
+            cursor: pointer; 
+            }
+    }
+}
+.recomend-amount {
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;            
+    width: 500px;                    
+    margin: 10px auto;                
+    padding: 20px;
+    border-radius: 10px;             
+    background-color: rgb(31, 31, 31);       
+}
+
+.recomend-amount-text h1, 
+.recomend-amount-number h1 {
+    margin: 0; 
+    color: white;
+}
+.pond-name-dropdown{
+    select{
+        width: 200px;
+    }
+
+}

@@ -7,7 +7,8 @@ import { SiSpond } from "react-icons/si";
 import { IoWater } from "react-icons/io5";
 import { FaCalculator } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
-
+import { FaShoppingCart } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa6";
 import 'react-multi-carousel/lib/styles.css';
 const KoiCare = () => {
     const[menus, setmenu] = useState([
@@ -15,7 +16,7 @@ const KoiCare = () => {
             name: 
             (
                 <>
-                    <GiCirclingFish size={70} /><br/>
+                    <GiCirclingFish size={70} />
                     <span>Koi</span>
                 </>
             ),
@@ -39,26 +40,6 @@ const KoiCare = () => {
             path: "#",
         },
         {
-            name: (
-                    <>
-                    <FaCalculator size={70}/><br/>
-                    <span>Caculator</span>
-                    </>
-            ),
-            path: "#",
-            isShowSubmenu: false,
-            child:[
-                {
-                    name: "Food Caculator",
-                    path: "",
-                },
-                {
-                    name: "Salt Caculator",
-                    path: "",
-                },
-            ],
-        },
-        {
             name:(
                 <>
                  <IoStatsChart size={70}/><br/>
@@ -67,6 +48,47 @@ const KoiCare = () => {
             ),
             path: "#",
         },
+        
+        
+    ]);
+    const[menus1, setmenu1] = useState([
+        {
+            name: (
+                <>
+                <FaShoppingCart size={70} />
+                <span>Shop</span>
+                </>
+            ),
+            path: ROUTERS.USER.LIST_PONDS,
+        },    {
+            name: (
+                    <>
+                    <FaCalculator size={70}/><br/>
+                    <span>Salt Caculator</span>
+                    </>
+            ),
+            path: ROUTERS.USER.SALTCAL,
+        },
+        {
+            name: (
+                    <>
+                    <FaCalculator size={70}/><br/>
+                    <span>Food Caculator</span>
+                    </>
+            ),
+            path: ROUTERS.USER.FOODCAL,
+        },
+        {
+            name: 
+            (
+                <>
+                   <FaUsers size={70}/>
+                    <span>About Koi care</span>
+                </>
+            ),
+            path: "#",
+        },
+     
         
         
     ]);
@@ -82,6 +104,18 @@ const KoiCare = () => {
                             <ul>    
                                 {
                                      menus?.map((menu, menukey)=>(
+                                        <li key={menukey}>
+                                            <Link to={menu.path}className="menu">{menu?.name}</Link>
+                                        </li>
+                                    )) 
+                                }
+                             
+                            </ul>
+                            </div>
+                            <div className="menu_banner">
+                            <ul>    
+                                {
+                                     menus1?.map((menu, menukey)=>(
                                         <li key={menukey}>
                                             <Link to={menu.path}className="menu">{menu?.name}</Link>
                                         </li>

@@ -12,9 +12,9 @@ import Profile from "./pages/user/Profile/Profile";
 import Koicarepage from "./pages/user/koicarepage";
 import OtpVerify from "./pages/user/loginpage/OtpVerify/OtpVerify";
 import UpdateProfile from "./pages/user/Profile/UpdateProfile";
-import foodcal from "./pages/user/foodcalpage/foodcal";
 import Foodcal from "./pages/user/foodcalpage/foodcal";
 import Shop from "./pages/Shop/Shop";
+import Saltcal from "./pages/user/saltCalPage/saltcal";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -100,6 +100,14 @@ const renderUserRouter = () => {
             element: (
                 <MasterLayout>
                     <Foodcal />
+                </MasterLayout>
+            ),
+        },
+        {
+            path: ROUTERS.USER.SALTCAL,
+            element: (
+                <MasterLayout>
+                    <Saltcal/>
                 </MasterLayout>
             ),
         },
