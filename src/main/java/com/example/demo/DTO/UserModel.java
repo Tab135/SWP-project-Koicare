@@ -37,9 +37,6 @@ public class UserModel implements UserDetails {
 
     @OneToOne(mappedBy = "user")
     private ShopModel shopModel;
-
-    @OneToOne(mappedBy = "user")
-    private RegistrationForm registrationForm;
     @Override
     public String getUsername() {
         return email;
