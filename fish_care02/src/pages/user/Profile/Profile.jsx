@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import "./profile.css";
 import UserService from "./UserService";
 import { Link } from "react-router-dom";
-import { ROUTERS } from "../../../utis/router";
-import { jwtDecode } from 'jwt-decode';
+import { Container, Row, Col, Card, Spinner } from "react-bootstrap";
+import { FaEnvelope, FaUser, FaPencilAlt } from "react-icons/fa";
 
 function Profile() {
   const [profileInfo, setProfileInfo] = useState({});
   const [userId, setUserId] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchProfileInfo();
   }, []);
@@ -17,41 +19,57 @@ function Profile() {
       const token = localStorage.getItem("token");
       const response = await UserService.getYourProfile(token);
       setProfileInfo(response.users);
-       setUserId(response.users.id);
+      setUserId(response.users.id);
     } catch (err) {
       console.log("Error fetching profile information: ", err);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Check if profileInfo is loaded
-  if (!profileInfo.name) {
-    return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "100vh" }}
+      >
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
   }
 
   return (
-    <div className="profile-container">
-      <div className="profile-card">
-        <div className="profile-header">
-          <h2>{profileInfo.name}</h2>
-          <p className="profile-username">{profileInfo.username}</p>
-        </div>
-        <div className="profile-info">
-          <h3>About Me</h3>
-          <p>
-            Hi! I'm {profileInfo.name}, a software engineer with a passion for web development
-            and artificial intelligence. I love building applications that make
-            people's lives easier.
-          </p>
-          <h3>Contact</h3>
-          <ul className="contact-info">
-            <li>Email: {profileInfo.email}</li>
-          </ul>
-          <button>
-            <Link to={`/adminusershop/update/${userId}`}>Update This Profile</Link>
-          </button>
-        </div>
-      </div>
-    </div>
+    <Container className="py-5">
+      <Row className="justify-content-center">
+        <Col md={8} lg={6}>
+          <Card className="profile-card shadow">
+            <Card.Header className="bg-primary text-white text-center py-4">
+              <h2>{profileInfo.name}</h2>
+              <p className="mb-0">
+                <FaUser className="me-2" />
+                {profileInfo.username}
+              </p>
+            </Card.Header>
+            <Card.Body>
+              <h4 className="mb-3">Contact Information</h4>
+              <p>
+                <FaEnvelope className="me-2" />
+                {profileInfo.email}
+              </p>
+              <div className="text-center mt-4">
+                <Link
+                  to={`/adminusershop/update/${userId}`}
+                  className="btn btn-primary"
+                >
+                  <FaPencilAlt className="me-2" />
+                  Update Profile
+                </Link>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

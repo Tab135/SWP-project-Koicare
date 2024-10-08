@@ -1,17 +1,28 @@
 import React, { useState, useEffect } from "react";
 import UserService from "./UserService";
 import { useParams, useNavigate } from "react-router-dom";
-import "./update_profile.css";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button,
+  Card,
+  Alert,
+} from "react-bootstrap";
 import { ROUTERS } from "../../../utis/router";
-import { jwtDecode } from 'jwt-decode';
+import { jwtDecode } from "jwt-decode";
+import "./update_profile.css";
+
 function UpdateProfile() {
-  const { userId } = useParams(); 
-  console.log(userId);
+  const { userId } = useParams();
   const navigate = useNavigate();
   const [profileInfo, setProfileInfo] = useState({
     name: "",
     email: "",
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     fetchProfileInfo();
@@ -20,18 +31,20 @@ function UpdateProfile() {
   const fetchProfileInfo = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await UserService.getYourProfile(token); 
+      const response = await UserService.getYourProfile(token);
       const decodedToken = jwtDecode(token);
-      console.log("Thông tin trong token:", decodedToken);
+      console.log("Token information:", decodedToken);
       if (response && response.users) {
         setProfileInfo({
           name: response.users.name,
           email: response.users.email,
         });
       }
-
     } catch (error) {
-      console.error("Error fetching profile information:", error);  
+      console.error("Error fetching profile information:", error);
+      setError("Failed to load profile information. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,49 +55,80 @@ function UpdateProfile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token); 
-      const response = await UserService.updateUser(userId, profileInfo, token); 
+      const response = await UserService.updateUser(userId, profileInfo, token);
       if (response) {
         alert("Profile updated successfully!");
-        navigate(ROUTERS.USER.Profile); 
+        navigate(ROUTERS.USER.Profile);
       } else {
-        console.error("Failed to update profile.");
+        setError("Failed to update profile. Please try again.");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
+      setError(
+        "An error occurred while updating the profile. Please try again."
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
-  return (
-    <div className="update-profile-container">
-      <h2>Update Profile</h2>
-      <form onSubmit={handleSubmit} className="update-profile-form">
-        <div className="form-group">
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={profileInfo.name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+  if (loading) {
+    return (
+      <Container className="mt-5">
+        <Row className="justify-content-center">
+          <Col md={6}>
+            <Alert variant="info">Loading profile information...</Alert>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
 
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={profileInfo.email}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <button type="submit" className="update-button">Update Profile</button>
-      </form>
-    </div>
+  return (
+    <Container className="mt-5">
+      <Row className="justify-content-center">
+        <Col md={6}>
+          <Card className="shadow-sm">
+            <Card.Body>
+              <h2 className="text-center mb-4">Update Profile</h2>
+              {error && <Alert variant="danger">{error}</Alert>}
+              <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    value={profileInfo.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    name="email"
+                    value={profileInfo.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+
+                <div className="d-grid">
+                  <Button variant="primary" type="submit" disabled={loading}>
+                    {loading ? "Updating..." : "Update Profile"}
+                  </Button>
+                </div>
+              </Form>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 

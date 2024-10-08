@@ -1,6 +1,17 @@
 import React, { useState } from "react";
-import { Form, Button, Container, Alert, Spinner } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Alert,
+  Spinner,
+  Row,
+  Col,
+  Card,
+} from "react-bootstrap";
 import ProductService from "../../ShopService";
+import { FaUpload } from "react-icons/fa";
+import "./addProduct.css"; // We'll create this file for custom styles
 
 const AddProduct = () => {
   const [productData, setProductData] = useState({
@@ -22,123 +33,176 @@ const AddProduct = () => {
   };
 
   const handleImageChange = (e) => {
-    setImageFiles([...e.target.files]); // e.target.files is a FileList, converting it to an array
+    const files = [...e.target.files];
+    setImageFiles(files);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
+    setLoading(true);
+    setError(null);
+    setMessage(null);
 
-    // Append product data to formData
+    if (imageFiles.length === 0) {
+      setError("Please select at least one image");
+      setLoading(false);
+      return;
+    }
+
+    const formData = new FormData();
     Object.keys(productData).forEach((key) => {
       formData.append(key, productData[key]);
     });
-
-    // Append images to formData
-    imageFiles.forEach((file) => formData.append("productImage", file)); // Use "productImage" as the key
+    imageFiles.forEach((file) => formData.append("productImage", file));
 
     try {
-      await ProductService.addProduct(formData); // Pass formData directly
-      alert("Product added successfully!");
+      await ProductService.addProduct(productData, imageFiles);
+      setMessage("Product added successfully!");
+      setProductData({
+        name: "",
+        price: 0,
+        description: "",
+        categoryId: "",
+        stockQuantity: 0,
+        amount: 0,
+      });
+      setImageFiles([]);
     } catch (error) {
-      alert("Failed to add product: " + error.message);
+      setError("Failed to add product. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Container className="mt-5">
-      <h1>Add New Product</h1>
-      {error && <Alert variant="danger">{error}</Alert>}
-      {message && <Alert variant="success">{message}</Alert>}
+    <Container className="mt-5 add-product-container">
+      <Card className="shadow-sm">
+        <Card.Body>
+          <h2 className="text-center mb-4">Add New Product</h2>
+          {error && <Alert variant="danger">{error}</Alert>}
+          {message && <Alert variant="success">{message}</Alert>}
 
-      <Form onSubmit={handleSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Product Name</Form.Label>
-          <Form.Control
-            type="text"
-            name="name"
-            placeholder="Enter product name"
-            value={productData.name}
-            onChange={handleInputChange}
-            required
-          />
-        </Form.Group>
+          <Form onSubmit={handleSubmit}>
+            <Row>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Product Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="name"
+                    placeholder="Enter product name"
+                    value={productData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Price</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="price"
+                    placeholder="Enter price"
+                    value={productData.price}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Price</Form.Label>
-          <Form.Control
-            type="number"
-            name="price"
-            placeholder="Enter price"
-            value={productData.price}
-            onChange={handleInputChange}
-            required
-          />
-        </Form.Group>
+            <Form.Group className="mb-3">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                name="description"
+                placeholder="Enter description"
+                value={productData.description}
+                onChange={handleInputChange}
+              />
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            name="description"
-            placeholder="Enter description"
-            value={productData.description}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
+            <Row>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Category ID</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="categoryId"
+                    placeholder="Enter category ID"
+                    value={productData.categoryId}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Stock Quantity</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="stockQuantity"
+                    placeholder="Enter stock quantity"
+                    value={productData.stockQuantity}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Amount</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="amount"
+                    placeholder="Enter amount"
+                    value={productData.amount}
+                    onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Category ID</Form.Label>
-          <Form.Control
-            type="number"
-            name="categoryId"
-            placeholder="Enter category ID"
-            value={productData.categoryId}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
+            <Form.Group className="mb-4">
+              <Form.Label>Product Images</Form.Label>
+              <div className="custom-file-upload">
+                <Form.Control
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  id="file-upload"
+                />
+                <label
+                  htmlFor="file-upload"
+                  className="btn btn-outline-primary w-100"
+                >
+                  <FaUpload className="me-2" />
+                  Choose Images
+                </label>
+              </div>
+              {imageFiles.length > 0 && (
+                <small className="text-muted">
+                  {imageFiles.length} file(s) selected
+                </small>
+              )}
+            </Form.Group>
 
-        <Form.Group className="mb-3">
-          <Form.Label>Stock Quantity</Form.Label>
-          <Form.Control
-            type="number"
-            name="stockQuantity"
-            placeholder="Enter stock quantity"
-            value={productData.stockQuantity}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Amount</Form.Label>
-          <Form.Control
-            type="number"
-            name="amount"
-            placeholder="Enter amount"
-            value={productData.amount}
-            onChange={handleInputChange}
-          />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Product Images</Form.Label>
-          <Form.Control
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-        </Form.Group>
-
-        <Button variant="primary" type="submit" disabled={loading}>
-          {loading ? (
-            <Spinner as="span" animation="border" size="sm" />
-          ) : (
-            "Add Product"
-          )}
-        </Button>
-      </Form>
+            <div className="d-grid">
+              <Button variant="primary" type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <Spinner as="span" animation="border" size="sm" /> Adding
+                    Product...
+                  </>
+                ) : (
+                  "Add Product"
+                )}
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
     </Container>
   );
 };

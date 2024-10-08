@@ -46,12 +46,12 @@ class ProductService {
     }
 
     // Append images to formData
-    if (Array.isArray(imageFiles) && imageFiles.length > 0) {
+    if (Array.isArray(imageFiles)) {
       imageFiles.forEach((file) => {
         formData.append("productImage", file);
       });
     } else {
-      console.error("imageFiles is not an array or is empty.");
+      console.error("imageFiles is not an array or undefined.");
     }
 
     // Log FormData entries for debugging
@@ -77,6 +77,25 @@ class ProductService {
         "Error adding product: ",
         error.response ? error.response.data : error
       );
+      throw error;
+    }
+  }
+
+  static async deleteProduct(productId) {
+    try {
+      const token = localStorage.getItem("token"); // Ensure the token is correct
+      const response = await axios.delete(
+        `${ProductService.base_url}/shop/deletePro/${productId}`,
+        {
+          headers: {
+            
+            Authorization: `Bearer ${token}`, // Include Bearer token
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting product: ", error);
       throw error;
     }
   }

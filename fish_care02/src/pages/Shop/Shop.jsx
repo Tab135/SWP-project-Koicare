@@ -13,9 +13,14 @@ import {
   InputGroup,
   Button,
   Badge,
-
 } from "react-bootstrap";
-import { FaShoppingCart, FaSearch,FaPlus } from "react-icons/fa";
+import {
+  FaShoppingCart,
+  FaSearch,
+  FaPlus,
+  FaImage,
+  FaTrashAlt,
+} from "react-icons/fa"; // Import FaTrashAlt for delete icon
 import "./shop.css";
 import { ROUTERS } from "../../utis/router.js";
 
@@ -44,6 +49,19 @@ const Shop = () => {
     setSearchTerm(event.target.value);
   };
 
+  const handleDelete = async (productId) => {
+    if (window.confirm("Are you sure you want to delete this product?")) {
+      try {
+        await ProductService.deleteProduct(productId);
+        // Filter out the deleted product from the list
+        setProducts(products.filter((product) => product.id !== productId));
+        alert("Product deleted successfully");
+      } catch (error) {
+        setError("Failed to delete product: " + error.message);
+      }
+    }
+  };
+
   const handleSearch = () => {
     if (searchTerm.trim() === "") {
       return;
@@ -70,19 +88,19 @@ const Shop = () => {
       </Row>
       <Row className="justify-content-center mb-4">
         <Col xs={12} md={6} lg={4}>
-          <InputGroup className="custom-search-bar">
-            <InputGroup.Text className="bg-primary text-white">
-              <FaSearch />
-            </InputGroup.Text>
-            <Form.Control
-              type="text"
-              placeholder="Search for products..."
-              value={searchTerm}
-              onChange={handleSearchInputChange}
-              onKeyPress={handleKeyPress}
-              className="border-primary"
-            />
-          </InputGroup>
+          <div className="search-bar-container">
+            <div className="search-input-wrapper">
+              <FaSearch className="search-icon" />
+              <Form.Control
+                type="text"
+                placeholder="Search for products..."
+                value={searchTerm}
+                onChange={handleSearchInputChange}
+                onKeyPress={handleKeyPress}
+                className="search-input"
+              />
+            </div>
+          </div>
         </Col>
         <Col xs="auto" className="mt-3 mt-md-0">
           <Button
@@ -122,32 +140,55 @@ const Shop = () => {
         <Row xs={1} md={2} lg={3} xl={4} className="g-4">
           {filteredProducts.map((product) => (
             <Col key={product.id}>
-              <Card className="h-100 shadow product-card">
-                {product.productImage && (
-                  <Card.Img
-                    variant="top"
-                    src={`data:image/jpeg;base64,${product.productImage}`}
-                    alt={product.productName}
-                    className="product-image"
-                  />
-                )}
+              <Card className="h-100 shadow-sm product-card">
+                <div className="product-image-container">
+                  {product.productImage ? (
+                    <Card.Img
+                      variant="top"
+                      src={`data:image/jpeg;base64,${product.productImage}`}
+                      alt={product.productName}
+                      className="product-image"
+                    />
+                  ) : (
+                    <div className="placeholder-image">
+                      <FaImage size={48} color="#ccc" />
+                    </div>
+                  )}
+                </div>
                 <Card.Body className="d-flex flex-column">
                   <Card.Title className="product-title">
                     {product.productName}
                   </Card.Title>
                   <Card.Text className="text-primary fw-bold mb-2">
-                    ${product.price.toFixed(2)}
+                    {product.price
+                      .toLocaleString("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                      })
+                      .replace("₫", "đ")}
                   </Card.Text>
-                  <Card.Text className="product-description flex-grow-1">
-                    {product.description}
-                  </Card.Text>
-                  <Button
-                    variant="outline-primary"
-                    onClick={() => console.log("Add to cart clicked")}
-                    className="mt-auto w-100"
-                  >
-                    Add to Cart
-                  </Button>
+                  {product.description && (
+                    <Card.Text className="product-description">
+                      {product.description}
+                    </Card.Text>
+                  )}
+                  <div className="mt-auto">
+                    <Button
+                      variant="outline-primary"
+                      onClick={() => console.log("Add to cart clicked")}
+                      className="w-100 mb-2"
+                    >
+                      Add to Cart
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="w-100"
+                      onClick={() => handleDelete(product.id)}
+                    >
+                      <FaTrashAlt className="me-2" />
+                      Delete
+                    </Button>
+                  </div>
                 </Card.Body>
               </Card>
             </Col>

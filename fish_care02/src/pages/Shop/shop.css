@@ -6,7 +6,8 @@
   color: #007bff;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
+  margin-bottom: 2rem;
 }
 
 .custom-search-bar {
@@ -14,32 +15,111 @@
 }
 
 .product-card {
-  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out;
+  border: none;
 }
 
 .product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.product-image-container {
+  height: 200px;
+  overflow: hidden;
 }
 
 .product-image {
-  height: 200px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
+.placeholder-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  background-color: #f8f9fa;
+}
+
 .product-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
 .product-description {
-  font-size: 0.9rem;
+  font-size: 0.875rem;
   color: #6c757d;
+  margin-bottom: 1rem;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+.btn-outline-primary {
+  color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #c82333;
+  border-color: #bd2130;
 }
 
 @media (max-width: 768px) {
   .shop-title {
     font-size: 2rem;
   }
+}
+.search-bar-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 15px;
+  top: 35%;
+  transform: translateY(-50%);
+  color: #6c757d;
+  z-index: 10;
+  font-size: 18px; /* Slightly larger icon */
+}
+
+.search-input {
+  width: 100%;
+  padding: 12px 20px 12px 45px !important;
+  border-radius: 25px !important;
+  border: 1px solid #ced4da;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  border-color: #80bdff;
+}
+
+.search-input::placeholder {
+  color: #6c757d;
 }
