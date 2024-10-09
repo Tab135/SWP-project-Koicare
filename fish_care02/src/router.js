@@ -16,6 +16,7 @@ import Foodcal from "./pages/user/foodcalpage/foodcal";
 import Shop from "./pages/Shop/Shop";
 import AddProduct from "./pages/Shop/product/Add_Product/AddProduct";
 import Saltcal from "./pages/user/saltCalPage/saltcal";
+import LoginRegister from "./pages/user/loginpage/LoginRegister/LoginRegister";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -42,8 +43,9 @@ const renderUserRouter = () => {
         },
         {
             path: ROUTERS.USER.LOGIN,
-            element: <Login />,
-            useLayout: false,
+             element: <LoginRegister /> ,
+                useLayout: false,
+           
         },
         {
             path: ROUTERS.USER.FORGOT_PASSWORD,

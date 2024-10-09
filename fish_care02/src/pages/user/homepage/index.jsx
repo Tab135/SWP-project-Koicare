@@ -72,7 +72,7 @@ const HomePage = () => {
         return (
             <div className="container-home">
                 <div className="row">
-            <div className="col-xl-12 col-lg-12 col-md-12">
+            <div className="col-xl-12 col-lg-12 col-md-12 slider-container">
                 <Slider {...settings}>
                     <div><img  src={(banner1)} alt="image"/></div>
                     <div><img src={(banner2)} alt="image"/></div>

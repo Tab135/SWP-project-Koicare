@@ -44,7 +44,7 @@ const UserProfile = ({ setUserId, userId }) => {
       {userId ? (
         <DropdownMenu userId={userId} />
       ) : (
-        <Link to={ROUTERS.USER.LOGIN} className="btn btn-outline-light">
+        <Link to={ROUTERS.USER.LOGIN} className="btn btn-dark btn-custom">
           Login
         </Link>
       )}
