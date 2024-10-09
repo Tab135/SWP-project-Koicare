@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.DTO.KoiFishModel;
 import com.example.demo.DTO.PondModel;
 import com.example.demo.DTO.UserModel;
+import com.example.demo.REQUEST_AND_RESPONSE.ReqResGrowth;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Repo.PondRepo;
@@ -10,6 +11,7 @@ import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +23,8 @@ public class KoiService {
     private PondRepo pondR;
 @Autowired
     private UserRepo userR;
+@Autowired
+    private GrowthRecordService gService;
 public ResReqKoi addKoi(ResReqKoi request, int pondId, int userId ){
     ResReqKoi res = new ResReqKoi();
 
@@ -46,12 +50,15 @@ public ResReqKoi addKoi(ResReqKoi request, int pondId, int userId ){
     KoiFishModel koi = new KoiFishModel();
     koi.setUserId(user.get());
     koi.setKoiName(request.getKoiName());
-    koi.setPhysique(request.getPhysique());
+
     koi.setInPondSince(request.getInPondSince());
     koi.setBreeder(request.getBreeder());
     koi.setAge(request.getAge());
+
+    koi.setPhysique(request.getPhysique());
     koi.setLength(request.getLength());
     koi.setWeight(request.getWeight());
+
     koi.setSex(request.getSex());
     koi.setVariety(request.getVariety());
     koi.setOrigin(request.getOrigin());
@@ -70,7 +77,13 @@ public ResReqKoi addKoi(ResReqKoi request, int pondId, int userId ){
         koi.setImage(imageByte);
     }
     KoiFishModel result = koiR.save(koi);
-    if(koi.getKoiId() >0){
+    if(result.getKoiId()>0){
+        ReqResGrowth growthR = new ReqResGrowth();
+        growthR.setPhysique(request.getPhysique());
+        growthR.setLength(request.getLength());
+        growthR.setWeight(request.getWeight());
+        growthR.setDate(LocalDate.now());
+        gService.addRecord(growthR, koi.getKoiId());
         res.setMessage("Koi added");
         res.setStatusCode(200);
         res.setKoi(result);
@@ -95,7 +108,7 @@ public void deleteKoi(int koiId, int pondId){
     ResReqKoi res = new ResReqKoi();
     Optional<PondModel> pondFind = pondR.findById(pondId);
     List<KoiFishModel> kList = koiR.findAllByPondId(pondFind.orElse(null));
-    if(kList.isEmpty() || kList ==null){
+    if(kList.isEmpty()){
         res.setStatusCode(404);
         res.setMessage("Koi's list empty");
         return res;
@@ -198,12 +211,7 @@ public void deleteKoi(int koiId, int pondId){
                 if (request.getAge() != null) {
                     koi.setAge(request.getAge());
                 }
-                if (request.getLength() != null) {
-                    koi.setLength(request.getLength());
-                }
-                if (request.getWeight() != null) {
-                    koi.setWeight(request.getWeight());
-                }
+
                 if (request.getSex() != null) {
                     koi.setSex(request.getSex());
                 }
@@ -236,9 +244,7 @@ public void deleteKoi(int koiId, int pondId){
                    koi.setImage(imageByte);
                }
 
-                if(request.getPhysique() !=null){
-                    koi.setPhysique(request.getPhysique());
-                }
+
                 if(request.getInPondSince() !=null){
                     koi.setInPondSince(request.getInPondSince());
                 }

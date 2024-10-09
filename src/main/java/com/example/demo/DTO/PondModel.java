@@ -10,7 +10,7 @@ public class PondModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Pond_Id")
-    private int Id;
+    private int id;
     @Column(name = "name")
     private String pondName;
     @Lob
@@ -41,11 +41,11 @@ public class PondModel {
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getPondName() {
@@ -131,7 +131,7 @@ public class PondModel {
 
     public PondModel(UserModel user, int id, String pondName, byte[] picture, Double depth, Double volume, int numberOfFish, Integer pumpingCapacity, Integer drain, Integer skimmers, String location, String waterSource) {
         this.user = user;
-        Id = id;
+        this.id = id;
         this.pondName = pondName;
         this.picture = picture;
         this.depth = depth;
