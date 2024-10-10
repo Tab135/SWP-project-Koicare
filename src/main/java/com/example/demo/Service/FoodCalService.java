@@ -39,13 +39,12 @@ public class FoodCalService {
         List<KoiFishModel> koi = koiRepo.findAllByPondId(pondFind.get());
         if(!koi.isEmpty()){
             for (KoiFishModel koiFish : koi){
-                System.out.println(koiFish.getWeight());
                 double weight = koiFish.getWeight();
 
                 amount_of_food += weight * food;
-                System.out.println(amount_of_food);
             }
         }
+        amount_of_food = Math.round(amount_of_food * 100.0f) / 100.0f;
         resp.setFood_amount(amount_of_food);
         //amount_when_split = amount_of_food / food_split;
         //resp.setFood_split(amount_when_split);

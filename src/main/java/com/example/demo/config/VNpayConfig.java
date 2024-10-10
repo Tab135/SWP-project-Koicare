@@ -25,10 +25,10 @@ public class VNpayConfig {
 
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
     public static String vnp_ReturnUrl = "http://localhost:8080/public/payment/vn-pay-callback";
-    public static String vnp_TmnCode = "AKWJZ6YX";
+    public static String vnp_TmnCode = System.getenv("vnp_code");
     public static String vnp_Version = "2.1.0";
     public static String vnp_Command = "pay";
-    public static String secretKey = "7LE4J6VQFKJT327YYM8SGZYRHXXQ0KYK";
+    public static String secretKey = System.getenv("vnp_secret");
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
 

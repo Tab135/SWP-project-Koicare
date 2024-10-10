@@ -108,7 +108,7 @@ public class UserManagement {
         return resp;
     }
 
-    private int OtpGen() {
+    public int OtpGen() {
         Random random = new Random();
         return random.nextInt(100_000, 999_999);
     }
@@ -181,8 +181,12 @@ public class UserManagement {
                 resp.setStatusCode(200);
                 resp.setMessage("User deleted");
             }
+            else {
+                resp.setStatusCode(404);
+                resp.setMessage("User not found");
+            }
         }catch (Exception e){
-            resp.setStatusCode(404);
+            resp.setStatusCode(500);
             resp.setMessage(e.getMessage());
         }
         return resp;

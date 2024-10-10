@@ -44,7 +44,7 @@ public class VNpayController {
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "NCB");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", "mua loz ma may");
+        vnp_Params.put("vnp_OrderInfo", "mua hang");
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_IpAddr", VNpayConfig.getIpAddress(req));
 
