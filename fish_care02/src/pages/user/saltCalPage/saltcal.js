@@ -3,7 +3,6 @@ import React, { useEffect,useState } from 'react';
 import axios from 'axios';
 const Saltcal = () =>{
     const [pond_id, setPondId] = useState(null);
-    const [ponds, setPonds] = useState([]);
     const PondDropdown = ({ setPondId }) => {
         const [ponds, setPonds] = useState([]);
         const [error, setError] = useState(null);
@@ -80,32 +79,7 @@ const Saltcal = () =>{
                         <div className='col-xl-6 col-lg-6 col-md-6 salt-cal'>
                             <div className='pond-name'><PondDropdown setPondId={setPondId}/></div>
                             <div>
-                            {Array.isArray(ponds) && ponds.length > 0 ? (
-                    ponds.map((pond) => (
-                        <div key={pond.id} className="pond-card">
-                            <img
-                                src={`data:image/png;base64,${pond.picture}`}
-                                alt={pond.pondName}
-                                className="pond-image"
-                            />
-                            <div className="pond-details">
-                                <p><strong>Pond Name:</strong> {pond.pondName}</p>
-                                <p><strong>Depth:</strong> {pond.depth} m</p>
-                                <p><strong>Volume:</strong> {pond.volume} L</p>
-                                <p><strong>Drain:</strong> {pond.drain}</p>
-                                <p><strong>Location:</strong> {pond.location}</p>
-                                <p><strong>Number of Fish:</strong> {pond.numberOfFish}</p>
-                                <p><strong>Skimmers:</strong> {pond.skimmers}</p>
-                                <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
-                                <p><strong>Water Source:</strong> {pond.waterSource}</p>
-                                <div className="button-group">
-                                </div>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p>No ponds available.</p>
-                )}
+                        
                             </div>
                           
                             <div>Curent concentration</div>

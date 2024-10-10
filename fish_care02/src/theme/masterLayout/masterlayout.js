@@ -6,7 +6,7 @@ import cakoi from "../../assets/image/CaKoi.jpg";
 const MasterLayout = ({ children, ...props}) =>{
     return (
         <div {...props} style={{backgroundImage: `url(${cakoi})`, backgroundSize: 'cover',       // Ensures the image covers the entire container
-        backgroundPosition: 'center',  // Centers the image
+        backgroundPosition: 'center',  
         backgroundAttachment: 'fixed'}}>
             <Header/>
             {children}
