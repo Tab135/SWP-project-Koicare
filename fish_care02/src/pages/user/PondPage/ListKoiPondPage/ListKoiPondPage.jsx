@@ -66,33 +66,34 @@ const PondListPage = () => {
                 {Array.isArray(ponds) && ponds.length > 0 ? (
                     ponds.map((pond) => (
                         <div key={pond.id} className="pond-card">
-                            <img
-                                src={`data:image/png;base64,${pond.picture}`}
-                                alt={pond.pondName}
-                                className="pond-image"
-                            />
-                            <div className="pond-details">
-                                <p><strong>Pond Name:</strong> {pond.pondName}</p>
-                                <p><strong>Depth:</strong> {pond.depth} m</p>
-                                <p><strong>Volume:</strong> {pond.volume} L</p>
-                                <p><strong>Drain:</strong> {pond.drain}</p>
-                                <p><strong>Location:</strong> {pond.location}</p>
-                                <p><strong>Number of Fish:</strong> {pond.numberOfFish}</p>
-                                <p><strong>Skimmers:</strong> {pond.skimmers}</p>
-                                <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
-                                <p><strong>Water Source:</strong> {pond.waterSource}</p>
-                                <div className="button-group">
-                                    {/* Kiểm tra nếu chỉ còn 1 ao thì ẩn nút Delete */}
-                                    {ponds.length > 1 && (
-                                        <button
-                                            className="delete-pond-button"
-                                            onClick={() => handleDeletePond(pond.id)}>
-                                            Delete Pond
-                                        </button>
-                                    )}
-                                    <Link to={`/edit-pond/${pond.id}`}>
-                                        <button className="edit-pond-button">Edit Pond</button>
-                                    </Link>
+                            <div className="pond-content">
+                                <img
+                                    src={`data:image/png;base64,${pond.picture}`}
+                                    alt={pond.pondName}
+                                    className="pond-image"
+                                />
+                                <div className="pond-details">
+                                    <p><strong>Pond Name:</strong> {pond.pondName}</p>
+                                    <p><strong>Depth:</strong> {pond.depth} m</p>
+                                    <p><strong>Volume:</strong> {pond.volume} L</p>
+                                    <p><strong>Drain:</strong> {pond.drain}</p>
+                                    <p><strong>Location:</strong> {pond.location}</p>
+                                    <p><strong>Number of Fish:</strong> {pond.numberOfFish}</p>
+                                    <p><strong>Skimmers:</strong> {pond.skimmers}</p>
+                                    <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
+                                    <p><strong>Water Source:</strong> {pond.waterSource}</p>
+                                    <div className="button-group">
+                                        {ponds.length > 1 && (
+                                            <button
+                                                className="delete-pond-button"
+                                                onClick={() => handleDeletePond(pond.id)}>
+                                                Delete Pond
+                                            </button>
+                                        )}
+                                        <Link to={`/edit-pond/${pond.id}`}>
+                                            <button className="edit-pond-button">Edit Pond</button>
+                                        </Link>
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -103,7 +103,7 @@ const EditPondPage = () => {
                 <div className="image-upload-container">
                     {isImageUploaded ? (
                         <>
-                            <img src={previewUrl} alt="Preview" className="image-preview" />
+                            <img src={`data:image/png;base64, ${previewUrl}`} alt="Preview" className="image-preview" />
                             <button
                                 type="button"
                                 className="change-image-button"

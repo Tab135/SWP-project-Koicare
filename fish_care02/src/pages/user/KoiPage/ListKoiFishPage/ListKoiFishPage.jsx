@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import "./ListKoiFishPage.css";
 
 const ListKoiFishPage = () => {
     const [koiFishList, setKoiFishList] = useState([]);
@@ -18,9 +19,7 @@ const ListKoiFishPage = () => {
 
             try {
                 const config = {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
+                    headers: { Authorization: `Bearer ${token}` },
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
                 setPonds(response.data.pondList);
@@ -41,20 +40,15 @@ const ListKoiFishPage = () => {
 
         try {
             const config = {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+                headers: { Authorization: `Bearer ${token}` },
             };
-
             const response = await axios.get(`http://localhost:8080/user/koi/${pondId}`, config);
             const koiList = response.data.koiList;
-            console.log(koiList);
             if (koiList.length === 0) {
                 setMessage('No koi fish found for this pond.');
             } else {
                 setMessage('');
             }
-
             setKoiFishList(koiList);
         } catch (error) {
             console.error('Error fetching koi fish', error);
@@ -70,6 +64,26 @@ const ListKoiFishPage = () => {
         } else {
             setKoiFishList([]);
             setMessage('');
+        }
+    };
+
+    const handleDeleteKoi = async (koiId) => {
+        if (!selectedPond) {
+            alert('Please select a pond before deleting a Koi fish.');
+            return;
+        }
+
+        const token = localStorage.getItem('token');
+        try {
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            await axios.delete(`http://localhost:8080/user/${selectedPond}/${koiId}/delete`, config);
+            alert('Koi fish deleted successfully!');
+            fetchKoiFish(selectedPond);
+        } catch (error) {
+            console.error('Error deleting koi fish', error);
+            alert('Failed to delete koi fish.');
         }
     };
 
@@ -109,6 +123,9 @@ const ListKoiFishPage = () => {
                                     <Link to={`/list-koi/${koi.koiId}`}>
                                         <button>Detail</button>
                                     </Link>
+                                    <button onClick={() => handleDeleteKoi(koi.koiId)}>
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
