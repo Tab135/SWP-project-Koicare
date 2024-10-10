@@ -3,6 +3,7 @@ package com.example.demo.Controller;
 import com.example.demo.DTO.KoiFishModel;
 import com.example.demo.DTO.PondModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
+import com.example.demo.Repo.GrowthRecordRepo;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.KoiService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +27,8 @@ import java.util.Optional;
     private JWTUtils jwt;
     @Autowired
     private KoiRepo koiR;
+    @Autowired
+    private GrowthRecordRepo gRepo;
 
     @PostMapping("/{pondId}/addKoi")
         ResponseEntity<ResReqKoi> addKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @ModelAttribute ResReqKoi request, @RequestParam(value ="image", required = false)MultipartFile imageFile){
@@ -80,9 +84,11 @@ import java.util.Optional;
 
 
     @DeleteMapping("/{pondId}/{koiId}/delete")
+    @Transactional
     String deleteKoi(@PathVariable int pondId, @PathVariable int koiId){
         ResReqKoi res = kService.getKoi(pondId, koiId);
         if(res.getStatusCode() ==200 ) {
+            gRepo.deleteAllByKoiFish_KoiId(koiId);
             kService.deleteKoi(koiId, pondId);
             return "Delete koi success";
         }

@@ -10,6 +10,7 @@ import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -94,7 +95,6 @@ public ResReqKoi addKoi(ResReqKoi request, int pondId, int userId ){
     }
     return res;
 }
-
 public void deleteKoi(int koiId, int pondId){
 
     KoiFishModel koi = koiR.findById(koiId).orElseThrow(()->new RuntimeException("Not found"));

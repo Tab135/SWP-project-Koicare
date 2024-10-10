@@ -1,4 +1,5 @@
 package com.example.demo.DTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -6,6 +7,7 @@ import java.util.Objects;
 
 public class KoiStatisticId implements Serializable {
     private Integer koiId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate date;
 
     public KoiStatisticId(LocalDate date, Integer koiId) {

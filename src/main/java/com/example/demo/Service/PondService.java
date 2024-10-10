@@ -107,6 +107,10 @@ byte[] picByte =request.getPicture().getBytes();
 
 
     public void deletePondById (int pondId){
+
+
+
+
         pondR.deleteById(pondId);
     }
 
