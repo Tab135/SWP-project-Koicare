@@ -13,6 +13,9 @@ export const ROUTERS = {
         FOODCAL:"/food-cal",
         SALTCAL: "/salt-cal",
         Shop : "/public/product",
-        AddProduct: "/shop/addPro"
+        AddProduct: "/shop/addPro",
+        ADD_KOI_FISH: "/add-koi",
+        LIST_KOI_FISH: "/list-koi",
+        KOI_DETAILS: "/list-koi/:koiId",
     }
 };

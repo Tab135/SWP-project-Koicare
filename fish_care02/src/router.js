@@ -17,6 +17,9 @@ import Shop from "./pages/Shop/Shop";
 import AddProduct from "./pages/Shop/product/Add_Product/AddProduct";
 import Saltcal from "./pages/user/saltCalPage/saltcal";
 import LoginRegister from "./pages/user/loginpage/LoginRegister/LoginRegister";
+import AddKoiFishPage from "./pages/user/KoiPage/AddKoiFishPage/AddKoiFishPage";
+import ListKoiFishPage from "./pages/user/KoiPage/ListKoiFishPage/ListKoiFishPage";
+import KoiDetailPage from "./pages/user/KoiPage/KoiDetailPage/KoiDetailPage";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -129,7 +132,31 @@ const renderUserRouter = () => {
                     <AddProduct/>
                 </MasterLayout>
             ),
-        }
+        },
+        {
+            path: ROUTERS.USER.ADD_KOI_FISH,
+            element: (
+                <MasterLayout>
+                    <AddKoiFishPage />
+                </MasterLayout>
+            ),
+        },
+        {
+            path: ROUTERS.USER.LIST_KOI_FISH,
+            element: (
+                <MasterLayout>
+                    <ListKoiFishPage />
+                </MasterLayout>
+            ),
+        },
+        {
+            path: ROUTERS.USER.KOI_DETAILS,
+            element: (
+                <MasterLayout>
+                    <KoiDetailPage />
+                </MasterLayout>
+            ),
+        },
     ];
 
     return (
@@ -140,7 +167,7 @@ const renderUserRouter = () => {
                         <Route
                             key={childKey}
                             path={child.path}
-                            element={child.element} // Render children inside layout
+                            element={child.element}
                         />
                     ))}
                 </Route>
