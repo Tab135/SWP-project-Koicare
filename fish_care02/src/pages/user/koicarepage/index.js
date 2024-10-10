@@ -20,7 +20,7 @@ const KoiCare = () => {
                     <span>Koi</span>
                 </>
             ),
-            path: "#",
+            path: ROUTERS.USER.LIST_KOI_FISH,
         },
         {
             name: (

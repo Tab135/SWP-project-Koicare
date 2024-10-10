@@ -1,5 +1,9 @@
 .food-cal-page{
     padding: 10px;
+    .food-cal-page-h1{
+        color: white;
+        text-align: center;
+        }
 }
 .pond-name{
     h3{
@@ -13,13 +17,16 @@
     align-items: center;     
     height: 100%;            
     text-align: center;
+    
 }
 .desired-growth {
     padding: 5px;
     margin: 5px;
     span{
+        color: white;
         padding: 5px;
         margin: 5px;
+        text-align: center;
     }
     .desired-growth-menu{
         padding: 5px;
@@ -33,10 +40,12 @@
         button {
             width: 65px;
             height: 65px;
-            background-color: white; 
-            border: none;
-            border-radius: 5px;
-            color: #333;
+            background: rgba( 255, 255, 255, 0.1 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13px );
+            -webkit-backdrop-filter: blur( 13px );
+            border-radius: 10px;
+            color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
             font-size: 14px;
@@ -44,11 +53,12 @@
                 padding: 0;
                 margin: -15px;
                 font-weight: bold;
+                color: white;
             }
             
             p{
-                font-size: 20px;
-                ;
+                color: white;
+                font-size: 20px;;
                 font-weight: bold;
             }
         }
@@ -74,32 +84,41 @@
     }
 }
 .water-parameter {
+    span{
+        color: white;
+        padding: 5px;
+        margin: 5px;
+        text-align: center;
+    }
     .water-parameter-menu{
         display: flex;       
         justify-content: center;
         align-items: center;
-        height: 97px;
-        width: 456px;
+        // height: 97px;
+        // width: 456px;
         box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         border-radius: 5px;
         button {
             width: 90px;
             height: 90px;
-            background-color: white; 
-            border: none;
-            border-radius: 5px;
-            color: #333;
+            background: rgba( 255, 255, 255, 0.1 );
+            box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+            backdrop-filter: blur( 13px );
+            -webkit-backdrop-filter: blur( 13px );
+            border-radius: 10px;
+            color: white;
             cursor: pointer;
             transition: background-color 0.3s ease;
             span{
+                color: white;
                 padding: 0;
                 margin: 0;
                 font-weight: bold;
             }
             
             p{
-                font-size: 20px;
-                ;
+                color: white;
+                font-size: 20px;;
                 font-weight: bold;
             }
         }
@@ -124,25 +143,57 @@
             }
     }
 }
-.recomend-amount {
+.recommend-amount {
     display: flex;
     justify-content: space-between; 
     align-items: center;            
-    width: 500px;                    
-    margin: 10px auto;                
+    width: 700px;                    
+    margin: 20px auto;                
     padding: 20px;
-    border-radius: 10px;             
-    background-color: rgb(31, 31, 31);       
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 13px );
+    -webkit-backdrop-filter: blur( 13px );
+    border-radius: 10px;     
+    .recommend-amount-h1{
+        color: white;
+        margin: 0;
+    }
 }
 
-.recomend-amount-text h1, 
-.recomend-amount-number h1 {
-    margin: 0; 
-    color: white;
-}
 .pond-name-dropdown{
     select{
+        background: rgba( 255, 255, 255, 0.1 );
+        box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+        backdrop-filter: blur( 13px );
+        -webkit-backdrop-filter: blur( 13px );
+        border-radius: 10px;
         width: 200px;
-    }
+        color: white;
+        padding: 10px;
+        font-size: 1.1em;
+        border: none;
+        option{
+            color: black;
+        }
+    }        
 
+}
+.food-cal-page-info{
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 13px );
+    -webkit-backdrop-filter: blur( 13px );
+    border-radius: 10px;
+    height: 280px;
+    h2{
+        text-align: center;
+        color: white;      
+    }
+    p{
+        color: white;
+        display: block;
+        text-align: start;
+        padding: 0 90px;
+    }
 }
