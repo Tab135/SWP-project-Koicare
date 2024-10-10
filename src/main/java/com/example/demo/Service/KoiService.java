@@ -120,28 +120,15 @@ public void deleteKoi(int koiId, int pondId){
     return res;
   }
 
-  public ResReqKoi getKoi(int pondId, int koiId){
-    List<KoiFishModel> kList = getAllKoiByPondId(pondId).getKoiList();
+  public ResReqKoi getKoi(int koiId){
     ResReqKoi res = new ResReqKoi();
-
-    if(kList ==null || kList.isEmpty()){
-        res.setStatusCode(404);
-        res.setError("koi not exist");
-        return res;
-    }
-
-    for (KoiFishModel k : kList) {
-        if (k.getKoiId() == koiId) {
-
+   Optional<KoiFishModel > koi = koiR.findById(koiId);
+        if (koi.isPresent()) {
             res.setStatusCode(200);
             res.setMessage("Found koi");
-            res.setKoi(k);
+            res.setKoi(koi.get());
             return res;
         }
-
-    }
-
-
         res.setStatusCode(404);
         res.setError("Koi not exist");
 
@@ -149,9 +136,9 @@ public void deleteKoi(int koiId, int pondId){
   }
 
   public ResReqKoi updateKoi(int pondId, int koiId, ResReqKoi request){
-        KoiFishModel koi = getKoi(pondId, koiId).getKoi();
+        KoiFishModel koi = getKoi(koiId).getKoi();
        Optional<PondModel> pond = pondR.findById(pondId);
-        ResReqKoi res = getKoi(pondId, koiId);
+        ResReqKoi res = getKoi(koiId);
 
       if(!pond.isPresent()){
           ResReqKoi result = new ResReqKoi();

@@ -53,9 +53,9 @@ import java.util.Optional;
         return ResponseEntity.ok(kService.getAllKoiByPondId(pondId));
     }
 
-    @GetMapping("/koi/{pondId}/{koiId}")
-    ResponseEntity<ResReqKoi> getKoi(@PathVariable int pondId, @PathVariable int koiId){
-        return ResponseEntity.ok(kService.getKoi(pondId, koiId));
+    @GetMapping("/koi/detail/{koiId}")
+    ResponseEntity<ResReqKoi> getKoi(@PathVariable int koiId){
+        return ResponseEntity.ok(kService.getKoi(koiId));
     }
 
 
@@ -86,7 +86,7 @@ import java.util.Optional;
     @DeleteMapping("/{pondId}/{koiId}/delete")
     @Transactional
     String deleteKoi(@PathVariable int pondId, @PathVariable int koiId){
-        ResReqKoi res = kService.getKoi(pondId, koiId);
+        ResReqKoi res = kService.getKoi(koiId);
         if(res.getStatusCode() ==200 ) {
             gRepo.deleteAllByKoiFish_KoiId(koiId);
             kService.deleteKoi(koiId, pondId);
