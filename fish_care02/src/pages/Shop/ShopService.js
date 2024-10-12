@@ -2,7 +2,25 @@ import axios from "axios";
 
 class ProductService {
   static base_url = "http://localhost:8080";
-
+  static async getAllCategory() {
+    try {
+      const response = await axios.get(
+        `${ProductService.base_url}/public/category`
+      );
+      console.log("API response:", response.data); // Log API response for debugging
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (response.data && Array.isArray(response.data.categories)) {
+        return response.data.categories; // Adjust this based on the API's actual response
+      } else {
+        console.warn("Unexpected response format:", response.data);
+        return []; // Return an empty array if no categories found
+      }
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw error;
+    }
+  }
   // Fetch all products using GET request
   static async getAllProducts() {
     try {
@@ -40,27 +58,27 @@ class ProductService {
   static async addProduct(productData, imageFiles = []) {
     const formData = new FormData();
 
-    // Append product data to formData
-    for (const key in productData) {
-      formData.append(key, productData[key]);
-    }
+    // Append product data
+    Object.keys(productData).forEach((key) => {
+      if (productData[key] !== null && productData[key] !== undefined) {
+        formData.append(key, productData[key]);
+      }
+    });
 
-    // Append images to formData
+    // Append images
     if (Array.isArray(imageFiles)) {
       imageFiles.forEach((file) => {
         formData.append("productImage", file);
       });
-    } else {
-      console.error("imageFiles is not an array or undefined.");
     }
 
-    // Log FormData entries for debugging
+    // Log FormData for debugging
     for (let [key, value] of formData.entries()) {
       console.log(key, value);
     }
 
     try {
-      const token = localStorage.getItem("token"); // Ensure you get the correct token
+      const token = localStorage.getItem("token");
       const response = await axios.post(
         `${ProductService.base_url}/shop/addPro`,
         formData,
@@ -74,7 +92,7 @@ class ProductService {
       return response.data;
     } catch (error) {
       console.error(
-        "Error adding product: ",
+        "Error adding product:",
         error.response ? error.response.data : error
       );
       throw error;
@@ -83,19 +101,62 @@ class ProductService {
 
   static async deleteProduct(productId) {
     try {
-      const token = localStorage.getItem("token"); // Ensure the token is correct
+      const token = localStorage.getItem("token");
       const response = await axios.delete(
         `${ProductService.base_url}/shop/deletePro/${productId}`,
         {
           headers: {
-            
-            Authorization: `Bearer ${token}`, // Include Bearer token
+            Authorization: `Bearer ${token}`,
           },
         }
       );
       return response.data;
     } catch (error) {
-      console.error("Error deleting product: ", error);
+      console.error(
+        "Error deleting product:",
+        error.response ? error.response.data : error
+      );
+      throw error;
+    }
+  }
+  static async getProductById(productId) {
+    if (!productId) {
+      console.error("Invalid productId provided");
+      return;
+    }
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        `${ProductService.base_url}/public/product/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error fetching product details:",
+        error.response ? error.response.data : error
+      );
+      throw error;
+    }
+  }
+
+  static async getProductsByCategoryId(categoryId) {
+    if (!categoryId) {
+      console.error("Invalid categoryId provided");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `${ProductService.base_url}/public/product/search/${categoryId}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching products by category ID:", error);
       throw error;
     }
   }

@@ -12,7 +12,8 @@ import java.util.Optional;
 public interface ProductRepo extends JpaRepository<ProductModel,Integer> {
     Optional<ProductModel> findById(int id);
     void deleteById(int id);
-    @Query(value = "SELECT * FROM product WHERE LOWER(product_name) LIKE LOWER(CONCAT('%', :name, '%'))", nativeQuery = true)
-    List<ProductModel> searchProductsByName(@Param("name") String name);
 
+
+
+    List<ProductModel> findByCategory_CategoryId(int categoryId);
 }

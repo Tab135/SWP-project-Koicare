@@ -19,6 +19,7 @@ public class CategoryManagement {
     @Autowired
     private CategoryRepo cateReposity;
 
+
     public ReqResCATE addCate(ReqResCATE addcate) {
         ReqResCATE req = new ReqResCATE();
         try {

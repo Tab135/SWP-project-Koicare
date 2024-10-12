@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Form,
   Button,
@@ -16,20 +16,37 @@ import "./addProduct.css"; // We'll create this file for custom styles
 const AddProduct = () => {
   const [productData, setProductData] = useState({
     name: "",
-    price: 0,
+    price: "",
     description: "",
     categoryId: "",
-    stockQuantity: 0,
-    amount: 0,
+    stockQuantity: "",
+    amount: "",
   });
   const [imageFiles, setImageFiles] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  useEffect(() => {
+    ProductService.getAllCategory()
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setCategories(data);
+        } else {
+          setCategories([]); // Set to an empty array if no data
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching categories", error);
+        setCategories([]); // Set to empty array on error
+      });
+  }, []);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setProductData({ ...productData, [name]: value });
+    setProductData({
+      ...productData,
+      [name]: name === "categoryId" ? parseInt(value) : value,
+    });
   };
 
   const handleImageChange = (e) => {
@@ -127,14 +144,26 @@ const AddProduct = () => {
             <Row>
               <Col md={4}>
                 <Form.Group className="mb-3">
-                  <Form.Label>Category ID</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="categoryId"
-                    placeholder="Enter category ID"
-                    value={productData.categoryId}
-                    onChange={handleInputChange}
-                  />
+                  <Form.Label>Category</Form.Label>
+                  {categories.length > 0 ? (
+                    categories.map((category) => (
+                      <Form.Check
+                        type="radio"
+                        id={`category-${category.categoryId}`}
+                        key={category.categoryId}
+                        name="categoryId"
+                        label={category.categoryName}
+                        value={category.categoryId?.toString()} // Ensure categoryId exists before calling toString()
+                        checked={
+                          productData.categoryId ===
+                          category.categoryId?.toString()
+                        } // Same here
+                        onChange={handleInputChange}
+                      />
+                    ))
+                  ) : (
+                    <p>No categories available.</p> // Display message if no categories are loaded
+                  )}
                 </Form.Group>
               </Col>
               <Col md={4}>

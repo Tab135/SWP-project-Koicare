@@ -16,13 +16,31 @@ public class ReqResProduct {
     private String name;
     private float price; // CamelCase for consistency
     private String description;
-    private int categoryId; // CamelCase for consistency
+    private int categoryId;
+    private String categoryName;// CamelCase for consistency
     private int stockQuantity;
     private long amount;
-    private MultipartFile productImage;// CamelCase for consistency
+    private MultipartFile productImage;
+    private String productImageBase64; // CamelCase for consistency
     private String message;
     private ProductModel productM;
     private List<ProductModel> productList;
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    public String getProductImageBase64() {
+        return productImageBase64;
+    }
+
+    public void setProductImageBase64(String productImageBase64) {
+        this.productImageBase64 = productImageBase64;
+    }
 
     public MultipartFile getProductImage() {
         return productImage;

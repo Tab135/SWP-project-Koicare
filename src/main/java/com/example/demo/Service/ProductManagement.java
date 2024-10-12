@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
  @Service
 public class ProductManagement {
@@ -24,40 +21,51 @@ public class ProductManagement {
     private ProductRepo proRepository;
     @Autowired
     private CategoryRepo cateRepo;
-    public ReqResProduct searchName(ReqResProduct searchPro) {
+
+     public ReqResProduct searchByCategoryId(int categoryId) {
         ReqResProduct req = new ReqResProduct();
 
         try {
-            // Use custom query method from repository
-            List<ProductModel> matchingProducts = proRepository.searchProductsByName(searchPro.getName());
+            // Check if the category exists before searching for products
+            Optional<CategoryModel> category = cateRepo.findByCategoryId(categoryId);
 
-            if (matchingProducts.isEmpty()) {
-                req.setMessage("No products found");
+            if (!category.isPresent()) {
+                req.setMessage("Category not found");
                 req.setStatusCode(404);
             } else {
-                req.setProductList(matchingProducts);  // Set matching products in the response
-                req.setMessage("Products found successfully");
-                req.setStatusCode(200);
+                List<ProductModel> matchingProducts = proRepository.findByCategory_CategoryId(categoryId);
+
+                if (matchingProducts.isEmpty()) {
+                    req.setMessage("No products found for this category");
+                    req.setStatusCode(404);
+                } else {
+                    req.setProductList(matchingProducts);
+                    req.setMessage("Products found successfully");
+                    req.setStatusCode(200);
+                }
             }
         } catch (RuntimeException e) {
-            req.setMessage("Error while searching for product: " + e.getMessage());
+            req.setMessage("Error while searching for products: " + e.getMessage());
             req.setStatusCode(500);
         }
 
         return req;
     }
 
+
      public ReqResProduct addPro(ReqResProduct addPro, MultipartFile imageFile) {
          ReqResProduct req = new ReqResProduct();
 
              try {
+                 System.out.println(addPro.getCategoryId());
+                 System.out.println(addPro.getAmount());
+                 System.out.println(addPro.getPrice());
+                 System.out.println(addPro.getStockQuantity());
+                 System.out.println(addPro.getName());
              if (addPro.getName() == null || addPro.getPrice() <= 0 || addPro.getStockQuantity() <= 0 || addPro.getCategoryId() <= 0 ||
                      addPro.getAmount() <= 0) {
-                 System.out.println(addPro.getName());
-                 System.out.println(addPro.getPrice());
-                 System.out.println(addPro.getCategoryId());
-                 System.out.println(addPro.getStockQuantity());
-                 System.out.println(addPro.getAmount());
+
+
                  req.setMessage("Invalid product data");
                  req.setStatusCode(400); // Bad Request
                  return req;
@@ -120,18 +128,14 @@ public class ProductManagement {
     @Transactional
     public ReqResProduct updatePro(int id, ProductModel detail) {
         ReqResProduct req = new ReqResProduct();
-
         try {
             Optional<ProductModel> pm = proRepository.findById(id);
-
             if (!pm.isPresent()) {
                 req.setMessage("Product not found");
                 req.setStatusCode(404);
                 return req;
             }
-
             ProductModel newProduct = pm.get();
-
             // Only update fields if they are not null or not zero in the request
             if (detail.getProductName() != null) {
                 newProduct.setProductName(detail.getProductName());
@@ -189,10 +193,40 @@ public class ProductManagement {
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 
+     public ReqResProduct getProductById(int id) {
+         ReqResProduct reqResProduct = new ReqResProduct();
 
-}
+         // Fetch the product by ID
+         Optional<ProductModel> optionalProduct = proRepository.findById(id);
+
+         if (!optionalProduct.isPresent()) {
+             reqResProduct.setStatusCode(404); // Not Found
+             reqResProduct.setMessage("Product not found");
+             return reqResProduct;
+         }
+
+         // Get the product from the Optional
+         ProductModel foundProduct = optionalProduct.get();
+
+         // Populate ReqResProduct with product details
+         reqResProduct.setStatusCode(200); // OK
+         reqResProduct.setName(foundProduct.getProductName());
+         reqResProduct.setPrice(foundProduct.getPrice());
+         reqResProduct.setDescription(foundProduct.getDescription());
+         reqResProduct.setStockQuantity(foundProduct.getStockQuantity());
+         reqResProduct.setAmount(foundProduct.getAmount());
+         reqResProduct.setCategoryName(foundProduct.getCategory().getCategoryName());
+
+         // Convert product image to Base64 if present
+         if (foundProduct.getProductImage() != null && foundProduct.getProductImage().length > 0) {
+             String base64Image = Base64.getEncoder().encodeToString(foundProduct.getProductImage());
+             reqResProduct.setProductImageBase64(base64Image);// Set as Base64 string
+         }
+
+         reqResProduct.setMessage("Product details retrieved successfully");
+         return reqResProduct;
+     }
+ }

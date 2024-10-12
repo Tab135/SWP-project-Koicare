@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from "react-router-dom";
 import ProductService from "./ShopService.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
@@ -10,7 +10,6 @@ import {
   Spinner,
   Alert,
   Form,
-  InputGroup,
   Button,
   Badge,
 } from "react-bootstrap";
@@ -20,7 +19,7 @@ import {
   FaPlus,
   FaImage,
   FaTrashAlt,
-} from "react-icons/fa"; // Import FaTrashAlt for delete icon
+} from "react-icons/fa";
 import "./shop.css";
 import { ROUTERS } from "../../utis/router.js";
 
@@ -34,7 +33,8 @@ const Shop = () => {
     const fetchProducts = async () => {
       try {
         const productData = await ProductService.getAllProducts();
-        setProducts(productData);
+        console.log("Fetched products:", productData); // Log the fetched data
+        setProducts(productData); // Make sure productData is an array
         setLoading(false);
       } catch (error) {
         setError("Error fetching products: " + error.message);
@@ -44,10 +44,6 @@ const Shop = () => {
 
     fetchProducts();
   }, []);
-
-  const handleSearchInputChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
 
   const handleDelete = async (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
@@ -62,17 +58,8 @@ const Shop = () => {
     }
   };
 
-  const handleSearch = () => {
-    if (searchTerm.trim() === "") {
-      return;
-    }
-    console.log("Searching for:", searchTerm);
-  };
-
-  const handleKeyPress = (event) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
+  const handleSearchInputChange = (event) => {
+    setSearchTerm(event.target.value);
   };
 
   const filteredProducts = products.filter((product) =>
@@ -86,20 +73,17 @@ const Shop = () => {
           <h1 className="shop-title text-center mb-4">Our Products</h1>
         </Col>
       </Row>
+
       <Row className="justify-content-center mb-4">
         <Col xs={12} md={6} lg={4}>
           <div className="search-bar-container">
-            <div className="search-input-wrapper">
-              <FaSearch className="search-icon" />
-              <Form.Control
-                type="text"
-                placeholder="Search for products..."
-                value={searchTerm}
-                onChange={handleSearchInputChange}
-                onKeyPress={handleKeyPress}
-                className="search-input"
-              />
-            </div>
+            <Form.Control
+              type="text"
+              placeholder="Search for products..."
+              value={searchTerm}
+              onChange={handleSearchInputChange}
+              className="search-input"
+            />
           </div>
         </Col>
         <Col xs="auto" className="mt-3 mt-md-0">
@@ -180,6 +164,11 @@ const Shop = () => {
                     >
                       Add to Cart
                     </Button>
+                    <Link to={`/public/product/${product.id}`}>
+                      <Button variant="info" className="w-100 mb-2">
+                        Detail
+                      </Button>
+                    </Link>
                     <Button
                       variant="danger"
                       className="w-100"

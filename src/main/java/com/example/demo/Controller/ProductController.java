@@ -5,7 +5,6 @@ import com.example.demo.Service.ProductManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,13 +49,22 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @GetMapping("/public/product/search")
-    public ResponseEntity<ReqResProduct> searchByName(@RequestParam String name) {
-        ReqResProduct searchPro = new ReqResProduct();
-        searchPro.setName(name);  // Set the name for the search
-        ReqResProduct response = proM.searchName(searchPro);
-        return ResponseEntity.ok(response);
+
+    @GetMapping("/public/product/search/{id}")
+    public ResponseEntity<ReqResProduct> searchByCateId(@PathVariable int id) {
+       return ResponseEntity.ok(proM.searchByCategoryId(id));
     }
+
+
+
+    @GetMapping("/public/product/{id}")
+    public ResponseEntity<ReqResProduct> getProById(@PathVariable int id){
+        return ResponseEntity.ok(proM.getProductById(id));
+    }
+
+
+
+
 
 
 }

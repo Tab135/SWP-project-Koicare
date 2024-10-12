@@ -29,7 +29,7 @@ public class CategoryController {
         return ResponseEntity.ok(cateM.updateById(cateId,detail));
     }
 
-    @PostMapping("/auth/category")
+    @GetMapping("/public/category")
     public ResponseEntity<List<CategoryModel>> showCate()
     {
         try{
@@ -44,4 +44,5 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 }

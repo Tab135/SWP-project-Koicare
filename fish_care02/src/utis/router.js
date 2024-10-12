@@ -17,5 +17,9 @@ export const ROUTERS = {
         ADD_KOI_FISH: "/add-koi",
         LIST_KOI_FISH: "/list-koi",
         KOI_DETAILS: "/list-koi/:koiId",
+        AddProduct: "/shop/addPro",
+        ProductDetail: "/public/product/:productId"
+
+
     }
 };

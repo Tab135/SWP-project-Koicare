@@ -20,6 +20,7 @@ import LoginRegister from "./pages/user/loginpage/LoginRegister/LoginRegister";
 import AddKoiFishPage from "./pages/user/KoiPage/AddKoiFishPage/AddKoiFishPage";
 import ListKoiFishPage from "./pages/user/KoiPage/ListKoiFishPage/ListKoiFishPage";
 import KoiDetailPage from "./pages/user/KoiPage/KoiDetailPage/KoiDetailPage";
+import ProductDetail from "./pages/Shop/product/Product Detail/ProductDetail";
 const renderUserRouter = () => {
     const userRouter = [
         {
@@ -157,6 +158,14 @@ const renderUserRouter = () => {
                 </MasterLayout>
             ),
         },
+        {
+            path: ROUTERS.USER.ProductDetail,
+            element: (
+                <MasterLayout>
+                    <ProductDetail />
+                </MasterLayout>
+            ),
+        }
     ];
 
     return (

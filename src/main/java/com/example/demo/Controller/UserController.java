@@ -16,13 +16,13 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-
 public class UserController {
     @Autowired
     private UserManagement userManagement;
@@ -55,6 +55,7 @@ public class UserController {
 //
 //        return response;
 //    }
+
     @PostMapping("/auth/signup")
     public ResponseEntity<ReqResUser> sendOtpForSignup(@RequestBody ReqResUser signup) {
         return ResponseEntity.ok(userManagement.sendOtpSignUp(signup));
