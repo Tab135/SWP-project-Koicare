@@ -141,10 +141,12 @@ $logo: "/assets/image/logo.jpg";
   }
 }
 .btn-custom {
-  color: black !important; 
-  border: 2px solid black !important; 
-  background-color: transparent !important; 
-  transition: background-color 0.3s ease, color 0.3s ease !important; 
+  background-color: transparent !important;
+  border: 2px solid white !important;
+  color: white !important;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px !important;
+  transition: all 0.3s ease;
 
   &:hover {
     background-color: black !important; 

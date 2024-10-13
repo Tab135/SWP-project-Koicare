@@ -1,11 +1,4 @@
-.salt-cal-page{
-    padding: 10px;
-}
-.pond-name{
-    h3{
-        padding: 25px;
-    }
-}
+
 .salt-cal{
     display: flex;
     flex-direction: column;  
@@ -14,3 +7,137 @@
     height: 100%;            
     text-align: center;
 }
+.saltcal-pond-volume{
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 13px );
+    -webkit-backdrop-filter: blur( 13px );
+    border-radius: 10px;
+    width: 320px;
+    p{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+    }
+}
+
+.salt-calculator {
+    padding: 20px;
+
+    font-family: Arial, sans-serif;
+  
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 30px;
+    }
+  
+   
+    .salt-cal {
+    background: rgba( 255, 255, 255, 0.1 );
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 13px );
+    -webkit-backdrop-filter: blur( 13px );
+    border-radius: 10px;
+      padding: 30px;
+      width: 100%;
+      max-width: 600px;
+  
+
+    .input-group {
+        margin-bottom: 20px;
+      
+        .label-value-container {
+          display: flex;
+          justify-content: space-between; // Pushes label and value-display apart
+          align-items: center;            // Vertically centers the items
+          margin-bottom: 8px;
+          width: 100%;
+          label {
+            font-weight: bold;
+            color: #555;
+           
+          }
+      
+          .value-display {
+            font-weight: bold;
+            color:white;
+            text-align: end;
+          }
+        }
+        input[type='range'] {
+          width: 100%;
+          height: 10px;
+
+          background: #ddd;
+          border-radius: 5px;
+          outline: none;
+  
+          &::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #28a745;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+          }
+  
+          &::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #28a745;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+          }
+        }
+      }
+  
+      button {
+        display: block;
+        width: 100%;
+        background-color: #28a745;
+        color: #fff;
+        font-size: 1rem;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+  
+        &:hover {
+          background-color: #218838;
+        }
+      }
+  
+      .result {
+        margin-top: 30px;
+        padding: 15px;
+        background-color: #e9f7e1;
+        border-radius: 5px;
+        border: 1px solid #d4edda;
+  
+        h2 {
+          margin-bottom: 10px;
+          font-size: 1.5rem;
+          color: #155724;
+        }
+  
+        p {
+          font-size: 1rem;
+          color: #155724;
+        }
+      }
+  
+      .error {
+        margin-top: 20px;
+        color: #e74c3c;
+        font-weight: bold;
+      }
+    }
+  }

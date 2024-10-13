@@ -41,7 +41,7 @@ const LoginRegister = () => {
                 console.log('Login successful:', response.data);
                 const { token } = response.data;
                 localStorage.setItem("token", token);
-                navigate("/");
+                navigate("/koicare");
                 setErrorMessage('');
             } else {
                 console.error('Login failed with status code:', response.data);

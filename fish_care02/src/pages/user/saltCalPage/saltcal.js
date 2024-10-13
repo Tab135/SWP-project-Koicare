@@ -1,100 +1,98 @@
 import './saltcal.scss';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-const Saltcal = () =>{
+import PondDropdown from './PondDropdown';
+const Saltcal = () => {
     const [pond_id, setPondId] = useState(null);
-    const PondDropdown = ({ setPondId }) => {
-        const [ponds, setPonds] = useState([]);
-        const [error, setError] = useState(null);
-        const [selectedPond, setSelectedPond] = useState({ id: '', name: '' });
-        const [isPondSelected, setIsPondSelected] = useState(false);
-    
-        useEffect(() => {
-            const fetchPonds = async () => {
-                try {
-                    const token = localStorage.getItem('token');
-                    const config = {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    };
-                    const response = await axios.get('http://localhost:8080/user/pond', config);
-                    setPonds(response.data.pondList);
-    
-                    // Lấy pond_id từ localStorage nếu đã có
-                    const storedPondId = localStorage.getItem('selectedPondId');
-                    if (storedPondId) {
-                        const selectedPondName = response.data.pondList.find(pond => pond.id === parseInt(storedPondId))?.pondName || '';
-                        setSelectedPond({ id: storedPondId, name: selectedPondName });
-                        setIsPondSelected(true);
-                        setPondId(storedPondId);
-                    }
-                } catch (error) {
-                    console.error('Error fetching ponds', error);
-                    setError('Could not fetch ponds.');
-                }
+    const [pondVolume, setPondVolume] = useState(0);
+    const [concentration, setConcentration] = useState('');
+    const [waterChange, setWaterChange] = useState('');
+    const [result, setResult] = useState(null);
+    const [error, setError] = useState(null);
+    const handleCalculate = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
             };
     
-            fetchPonds();
-        }, []);
+            const payload = {
+                Concentration: parseFloat(concentration),
+                waterChange: waterChange ? parseFloat(waterChange) : 0,
+            };
     
-        const handleChange = (e) => {
-            const pond_id = e.target.value;
-            const selectedPondName = ponds.find(pond => pond.id === parseInt(pond_id))?.pondName || '';
-            setSelectedPond({ id: pond_id, name: selectedPondName });
-            setIsPondSelected(true);
-            setPondId(pond_id);
+            const response = await axios.post(
+                `http://localhost:8080/user/saltManage/${pond_id}`,
+                payload,
+                config
+            );
     
-            // Lưu pond_id vào localStorage
-            localStorage.setItem('selectedPondId', pond_id);
-        };
-        
-        return (
-            <div className='pond-name-dropdown'>
-                {error && <p>{error}</p>}
-                <select
-                    id="pond-select"
-                    onChange={handleChange}
-                    value={selectedPond.id || ''}
-                >
-                    {!isPondSelected && <option value="">Select a pond</option>}
-                    {Array.isArray(ponds) && ponds.length > 0 ? (
-                        ponds.map((pond) => (
-                            <option key={pond.id} value={pond.id}>
-                                {pond.pondName}
-                            </option>
-                        ))
-                    ) : (
-                        <option value="">Loading ponds...</option>
-                    )}
-                </select>
-            </div>
-        );
+            setResult(response.data);
+            setError(null);
+        } catch (err) {
+            console.error('Error calculating salt:', err);
+            setError('Failed to calculate salt. Please try again.');
+        }
     };
-    return(
-        <div className='salt-cal-page'>
-            <h1>Salt calculator</h1>
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-xl-6 col-lg-6 col-md-6 salt-cal'>
-                            <div className='pond-name'><PondDropdown setPondId={setPondId}/></div>
-                            <div>
-                        
+
+    return (
+        <div className="salt-calculator">
+            <h1>Salt Concentration Calculator</h1>
+            <div className="container">
+                <div className="row">
+                    <div className="col-xl-6 col-lg-6 col-md-6 salt-cal">
+                        <div className="pond-name">
+                            <PondDropdown setPondId={setPondId} setPondVolume={setPondVolume} />
+                        </div>        
+                        <div className="input-group desired">
+                        <div className="label-value-container"> 
+                            <label>Desired Concentration:</label>
+                            <div className="value-display">({concentration}%)</div>
                             </div>
-                          
-                            <div>Curent concentration</div>
-                            <div>Desired concentration</div>
-                            <div>Water change</div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="0.75"
+                                step="0.05"
+                                value={concentration}
+                                onChange={(e) => setConcentration(e.target.value)}
+                            />
                         </div>
-                        <div className='col-xl-6 col-lg-6 col-md-6'>
-                            <div>
-                                <p>info</p>
+
+                        <div className="input-group water">
+                                <div className="label-value-container">
+                                    <label>Water Change (Optional):</label>
+                                         <div className="value-display">{((pondVolume * waterChange) / 100).toFixed(2)}  ({waterChange}%)</div>
+                                    </div>
+                            <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="5"
+                                value={waterChange}
+                                onChange={(e) => setWaterChange(e.target.value)}
+                            />
+                           
+                        </div>
+
+                        <button onClick={handleCalculate}>Calculate</button>
+
+                        {result && (
+                            <div className="result">
+                                <h2>Calculation Result</h2>
+                                <p>{JSON.stringify(result)}</p>
                             </div>
-                        </div>
+                        )}
+
+                        {error && <p className="error">{error}</p>}
                     </div>
                 </div>
+            </div>
         </div>
-    )
+    );
+};
 
-}
 export default Saltcal;
