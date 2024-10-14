@@ -1,7 +1,6 @@
 package com.example.demo.Controller;
 
 import com.example.demo.DTO.KoiFishModel;
-import com.example.demo.DTO.PondModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.Repo.GrowthRecordRepo;
 import com.example.demo.Repo.KoiRepo;
@@ -9,7 +8,6 @@ import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.KoiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;

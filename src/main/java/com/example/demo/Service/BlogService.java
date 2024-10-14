@@ -62,7 +62,7 @@ public class BlogService {
         }
         return res;
     }
-//=========================================================//
+//==========================PUBLIC===============================//
     public ReqResBlog listBlog(){
         ReqResBlog res = new ReqResBlog();
         List<BlogModel> bList = blogRepo.findAllByOrderByDateDesc();
@@ -78,91 +78,84 @@ public class BlogService {
     }
 
     public ReqResBlog viewBlog(int blogId){
-    List<BlogModel> bList = listBlog().getBlogList();
     ReqResBlog res = new ReqResBlog();
-
-    boolean exist = false;
-    for(BlogModel blog: bList){
-        if(blog.getBlogId() == blogId){
-            res.setStatusCode(200);
-            res.setMessage("Found");
-            res.setBlog(blog);
-            exist = true;
-        }
+    Optional<BlogModel> blog = blogRepo.findById(blogId);
+    if(blog.isPresent()) {
+        res.setStatusCode(200);
+        res.setMessage("Found");
+        res.setBlog(blog.get());
+        return res;
     }
-    if(!exist){
         res.setStatusCode(404);
         res.setError("Not exist");
-    }
+
     return res;
     }
 
 
-//=========================================================//
+    //==========================PUBLIC===============================//
 
-    public ReqResBlog listBlogsByUserId(int userId){
-        ReqResBlog res = new ReqResBlog();
-        Optional<UserModel> user = userR.findById(userId);
-        List<BlogModel> bList = blogRepo.findAllByAuthor(user.get());
-        res.setAuthor(userId);
-        if(bList.isEmpty()){
-            res.setStatusCode(404);
-            res.setError("These is nothing here");
-        }else{
-            res.setStatusCode(200);
-            res.setMessage("Blogs");
-            res.setBlogList(bList);
-        }
-        return res;
-    }
+    //===============================================================//
+//    public ReqResBlog listBlogsByUserId(int userId){
+//        ReqResBlog res = new ReqResBlog();
+//        Optional<UserModel> user = userR.findById(userId);
+//        List<BlogModel> bList = blogRepo.findAllByAuthor(user.get());
+//        res.setAuthor(userId);
+//        if(bList.isEmpty()){
+//            res.setStatusCode(404);
+//            res.setError("These is nothing here");
+//        }else{
+//            res.setStatusCode(200);
+//            res.setMessage("Blogs");
+//            res.setBlogList(bList);
+//        }
+//        return res;
+//    }
+//
+//    public ReqResBlog viewBlogsByUserId(int blogId){
+//        ReqResBlog res = new ReqResBlog();
+//        Optional<BlogModel> blog = blogRepo.findById(blogId);
+//            if(blog.isPresent()){
+//            res.setStatusCode(200);
+//            res.setMessage("Found");
+//            res.setBlog(blog.get());
+//            return res;
+//        }
+//            res.setStatusCode(404);
+//            res.setError("Not exist");
+//
+//        return res;
+//    }
 
-    public ReqResBlog viewBlogsByUserId(int userId, int blogId){
-        ReqResBlog res = new ReqResBlog();
-        List<BlogModel> bList = listBlogsByUserId(userId).getBlogList();
-        res.setAuthor(userId);
-        boolean exist = false;
-        for(BlogModel blog: bList){
-            if(blog.getBlogId() == blogId){
-                res.setStatusCode(200);
-                res.setMessage("Found");
-                res.setBlog(blog);
-                exist = true;
-            }
-        }
-        if(!exist){
-            res.setStatusCode(404);
-            res.setError("Not exist");
-        }
-        return res;
-    }
-
-    //===================================================================//
+    //===============================================================//
     public void deleteBlog(int blogId){
         blogRepo.deleteById(blogId);
     }
 
-    public ReqResBlog updateBlog (int userId, int blogId, ReqResBlog request){
-        ReqResBlog res = viewBlogsByUserId(userId, blogId);
-        BlogModel blog = res.getBlog();
-        ReqResBlog blogList = listBlog();
-        if(blogList.getBlogList() !=null){
-        for(BlogModel bList: blogList.getBlogList()) {
-            if (bList.getTitle().equals(request.getTitle())) {
-                ReqResBlog result = new ReqResBlog();
-                result.setStatusCode(409);
-                result.setError("Title existed");
-                return result;
-            }
+    public ReqResBlog updateBlog (int blogId, ReqResBlog request) {
+        ReqResBlog res = new ReqResBlog();
+        Optional<BlogModel> updateBlog = blogRepo.findById(blogId);
+        Optional<BlogModel> checkBlog = blogRepo.findByTitle(request.getTitle());
+        if (checkBlog.isPresent() && checkBlog.get().getBlogId() != blogId) {
+            ReqResBlog result = new ReqResBlog();
+            result.setStatusCode(409);
+            result.setError("Title existed");
+            return result;
         }
-        }
-        try {
-            if (res.getStatusCode() == 200) {
-                if (request.getBlogImage() ==null) {
-                    blog.setBlogImage(null);
-                }else {
+        if (updateBlog.isEmpty()) {
+            ReqResBlog result = new ReqResBlog();
+            result.setStatusCode(404);
+            result.setError("Blog not found");
+            return result;
+        } else {
+            try {
+                BlogModel blog = updateBlog.get();
+
+
+                 if (request.getBlogImage() != null){
                     List<byte[]> imageB = new ArrayList<>();
-                    for(MultipartFile image: request.getBlogImage()){
-                        if(image !=null){
+                    for (MultipartFile image : request.getBlogImage()) {
+                        if (image != null) {
                             imageB.add(image.getBytes());
                         }
                     }
@@ -179,14 +172,13 @@ public class BlogService {
                 res.setMessage("Updated successfully");
                 res.setBlog(blog);
                 return res;
-            } else {
-                return res;
+
+            } catch (Exception ex) {
+                res.setStatusCode(500);
+                res.setError("Error: " + ex.getMessage());
             }
-        }catch (Exception ex){
-            res.setStatusCode(500);
-            res.setError("Error: "+ ex.getMessage());
+            return res;
         }
-        return res;
     }
 
     public ReqResBlog searchBlog(String keyword){

@@ -21,17 +21,11 @@ public class PondService {
     public ResReqPond createP(ResReqPond request, int userId) {
         ResReqPond res = new ResReqPond();
         Optional<UserModel> user = userR.findById(userId);
-        List<PondModel> pList = getPondsByUserId(userId).getPondList();
-        if(pList !=null) {
-            for (PondModel list : pList) {
-                if (list.getPondName().equals(request.getPondName())) {
-                    res.setUserId(userId);
-                    res.setError("Pond existed");
-                    res.setStatusCode(409);
-                    return res;
-
-                }
-            }
+        Optional<PondModel> checkPond = pondR.findByPondName(request.getPondName());
+        if(checkPond.isPresent()){
+            res.setError("Pond existed");
+            res.setStatusCode(409);
+            return res;
         }
         try {
             PondModel pondModel = new PondModel();
@@ -86,30 +80,22 @@ byte[] picByte =request.getPicture().getBytes();
     }
 
     public ResReqPond getPond(int pondId, int userId) {
-        List<PondModel> pList = getPondsByUserId(userId).getPondList();
         ResReqPond res = new ResReqPond();
-        boolean existed = false;
-        for(PondModel list: pList){
-            if(list.getId() ==pondId){
-                res.setStatusCode(200);
-                res.setMessage("Found pond");
-                res.setPond(list);
-                existed = true;
-
-            }
+        Optional<PondModel> findPond = pondR.findById(pondId);
+        if(findPond.isPresent()){
+            res.setStatusCode(200);
+            res.setMessage("Found pond");
+            res.setPond(findPond.get());
+            return res;
         }
-        if(!existed){
             res.setStatusCode(404);
             res.setError("Pond not exist");
-        }
+
         return res;
     }
 
 
     public void deletePondById (int pondId){
-
-
-
 
         pondR.deleteById(pondId);
     }
@@ -118,14 +104,15 @@ byte[] picByte =request.getPicture().getBytes();
         ResReqPond res = getPond(pondId, userId);
         PondModel pond = res.getPond();
         ResReqPond pList = getPondsByUserId(userId);
-        for(PondModel list: pList.getPondList()){
-            if(list.getPondName().equals(request.getPondName()) && list.getId() != pond.getId()){
-                ResReqPond result = new ResReqPond();
-                result.setStatusCode(409);
-                result.setError("Pond existed");
-                return result;
-            }
+        Optional<PondModel> checkName = pondR.findByPondName(request.getPondName());
+        if(checkName.isPresent() && checkName.get().getId() != pondId){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(409);
+            result.setError("Pond existed");
+            return result;
         }
+
+
     try {
         if (res.getStatusCode() == 200) {
             if (request.getPondName() != null) {

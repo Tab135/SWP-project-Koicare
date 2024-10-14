@@ -22,11 +22,11 @@ public class BlogController {
     @Autowired
     private JWTUtils jwt;
 
-    @PostMapping("/admin/blog/create")
-    public ResponseEntity<ReqResBlog> createBlog(@RequestHeader ("Authorization") String token, @ModelAttribute ReqResBlog request, @RequestParam("image") MultipartFile[] image){
+    @PostMapping("/shop/blog/create")
+    public ResponseEntity<ReqResBlog> createBlog(@RequestHeader ("Authorization") String token, @ModelAttribute ReqResBlog request, @RequestParam(value ="image", required = false) MultipartFile[] image){
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
         try{
-            if( image !=null|| image.length >0 ){
+            if( image !=null&& image.length >0 ){
                 request.setBlogImage(image);
             }else{
                 request.setBlogImage(null);
@@ -37,21 +37,10 @@ public class BlogController {
         return ResponseEntity.ok(bService.createBlog(request, userId));
     }
 
-    @GetMapping("/admin/blog/{blogId}")
-    public ResponseEntity<ReqResBlog> viewBlog(@RequestHeader ("Authorization") String token, @PathVariable int blogId){
-        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-        return ResponseEntity.ok(bService.viewBlogsByUserId(userId, blogId));
-    }
 
-    @GetMapping("/admin/blog")
-    public ResponseEntity<ReqResBlog> listBlog(@RequestHeader ("Authorization") String token){
-        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-        return ResponseEntity.ok(bService.listBlogsByUserId(userId));
-    }
-    @DeleteMapping("/admin/blog/{blogId}/delete")
+    @DeleteMapping("/shop/blog/{blogId}/delete")
     public String deleteBlog(@RequestHeader ("Authorization") String token, @PathVariable int blogId){
-        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-        ReqResBlog res = bService.viewBlogsByUserId(userId, blogId);
+        ReqResBlog res = bService.viewBlog(blogId);
         if(res.getStatusCode()==200){
             bService.deleteBlog(blogId);
             return "Delete success";
@@ -61,11 +50,10 @@ public class BlogController {
         }
     }
 
-    @PutMapping("/admin/blog/{blogId}/update")
-    public ResponseEntity<ReqResBlog> updateBlog(@RequestHeader ("Authorization") String token, @PathVariable int blogId,@ModelAttribute ReqResBlog request, @RequestParam("image") MultipartFile[] image){
-        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+    @PutMapping("/shop/blog/{blogId}/update")
+    public ResponseEntity<ReqResBlog> updateBlog(@RequestHeader ("Authorization") String token, @PathVariable int blogId,@ModelAttribute ReqResBlog request, @RequestParam(value ="image", required = false) MultipartFile[] image){
         try{
-            if(image !=null|| image.length >0){
+            if(image !=null&& image.length >0){
                 request.setBlogImage(image);
             }else{
                 request.setBlogImage(null);
@@ -74,10 +62,10 @@ public class BlogController {
             ex.printStackTrace();
         }
 
-        return ResponseEntity.ok(bService.updateBlog(userId, blogId, request));
+        return ResponseEntity.ok(bService.updateBlog(blogId, request));
     }
 
-    @GetMapping("admin/blog/{blogId}/images")
+    @GetMapping("/public/blog/{blogId}/images")
     public ResponseEntity<List<String>> listImage(@PathVariable int blogId){
         BlogModel blog = bService.viewBlog(blogId).getBlog();
         List<byte[]> imageB = blog.getBlogImage();
@@ -86,13 +74,13 @@ public class BlogController {
         }
         List<String> imageUrls = new ArrayList<>();
         for(int i =0; i<imageB.size(); i++){
-            imageUrls.add("/admin/blog/"+ blogId +"/image/" +i);
+            imageUrls.add("/public/blog/"+ blogId +"/image/" +i);
         }
         return ResponseEntity.ok(imageUrls);
 
 
     }
-    @GetMapping("admin/blog/{blogId}/image/{imageIndex}")
+    @GetMapping("/public/blog/{blogId}/image/{imageIndex}")
     public ResponseEntity<byte[]> getImage(@PathVariable int blogId, @PathVariable int imageIndex){
         BlogModel blog = bService.viewBlog(blogId).getBlog();
         List<byte[]> imageB = blog.getBlogImage();
@@ -105,9 +93,21 @@ public class BlogController {
         return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
-
-    @PostMapping("/admin/blog/{keyword}")
+    @PostMapping("/public/blog/{keyword}")
     public ResponseEntity<ReqResBlog> search (@PathVariable String keyword){
         return ResponseEntity.ok(bService.searchBlog(keyword));
     }
+
+
+//=============================================================================================//
+    @GetMapping("/public/blog")
+    public ResponseEntity<ReqResBlog> publicBLog(){
+        return ResponseEntity.ok(bService.listBlog());
+    }
+
+    @GetMapping("/public/blog/{blogId}")
+    public ResponseEntity<ReqResBlog> publicGetBlog(@PathVariable int blogId){
+        return ResponseEntity.ok(bService.viewBlog(blogId));
+    }
+
 }
