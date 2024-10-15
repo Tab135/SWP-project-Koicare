@@ -8,6 +8,7 @@ import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.UserRepo;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,13 @@ public class KoiService {
 
         Optional<UserModel> user = userR.findById(userId);
         Optional<KoiFishModel> checkKoi = koiR.findByKoiName(request.getKoiName());
+        Optional<PondModel> pond = pondR.findById(pondId);
+        if(pond.isPresent() && !pond.get().getUser().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
+
         if(checkKoi.isPresent()){
             res.setError("Koi's name existed");
             res.setStatusCode(409);
@@ -101,10 +109,22 @@ public class KoiService {
 
     }
 
-    public ResReqKoi getAllKoiByPondId(int pondId) {
+    public ResReqKoi getAllKoiByPondId(int pondId, int userId) {
         ResReqKoi res = new ResReqKoi();
+        Optional<UserModel> user = userR.findById(userId);
         Optional<PondModel> pondFind = pondR.findById(pondId);
         List<KoiFishModel> kList = koiR.findAllByPondId(pondFind.orElse(null));
+        if(pondFind.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("Pond not found");
+            return res;
+        }
+        if(!pondFind.get().getUser().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
+
         if (kList.isEmpty()) {
             res.setStatusCode(404);
             res.setMessage("Koi's list empty");
@@ -117,9 +137,15 @@ public class KoiService {
         return res;
     }
 
-    public ResReqKoi getKoi(int koiId) {
+    public ResReqKoi getKoi(int koiId, int userId) {
         ResReqKoi res = new ResReqKoi();
         Optional<KoiFishModel> koi = koiR.findById(koiId);
+        Optional<UserModel> user = userR.findById(userId);
+        if(user.isPresent() &&!koi.get().getUserId().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
         if (koi.isPresent()) {
             res.setStatusCode(200);
             res.setMessage("Found koi");
@@ -132,10 +158,22 @@ public class KoiService {
         return res;
     }
 
-    public ResReqKoi updateKoi(int pondId, int koiId, ResReqKoi request) {
-        KoiFishModel koi = getKoi(koiId).getKoi();
+    public ResReqKoi updateKoi(int pondId, int koiId, ResReqKoi request, int userId) {
+        KoiFishModel koi = getKoi(koiId, userId).getKoi();
+        Optional<UserModel> user = userR.findById(userId);
         Optional<PondModel> pond = pondR.findById(pondId);
-        ResReqKoi res = getKoi(koiId);
+        ResReqKoi res = getKoi(koiId, userId);
+        if(pond.isPresent() && !pond.get().getUser().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("invalid user");
+            return res;
+        }
+        Optional<PondModel> newPond = pondR.findById(request.getPondId());
+        if(newPond.isPresent() && !newPond.get().getUser().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("invalid user");
+            return res;
+        }
 
         if (pond.isEmpty()) {
             ResReqKoi result = new ResReqKoi();
@@ -153,7 +191,7 @@ public class KoiService {
         }
 
 
-        Optional<PondModel> newPond = pondR.findById(request.getPondId());
+
         KoiFishModel checkKoi = koiR.findByKoiNameAndPondIdAndKoiIdNot(request.getKoiName(), newPond.get(), koiId);
         if (checkKoi != null) {
 

@@ -40,20 +40,21 @@ import java.util.Optional;
         } catch (Exception ex) {
 
         }
-
-
         return ResponseEntity.ok(kService.addKoi(request, pondId, userId));
     }
 
     @GetMapping("/koi/{pondId}")
-    ResponseEntity<ResReqKoi> listKoi(@PathVariable int pondId) {
-
-        return ResponseEntity.ok(kService.getAllKoiByPondId(pondId));
+    ResponseEntity<ResReqKoi> listKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(kService.getAllKoiByPondId(pondId, userId));
     }
 
     @GetMapping("/koi/detail/{koiId}")
-    ResponseEntity<ResReqKoi> getKoi(@PathVariable int koiId){
-        return ResponseEntity.ok(kService.getKoi(koiId));
+    ResponseEntity<ResReqKoi> getKoi(@RequestHeader ("Authorization") String token, @PathVariable int koiId){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+
+        return ResponseEntity.ok(kService.getKoi(koiId, userId));
     }
 
 
@@ -83,8 +84,10 @@ import java.util.Optional;
 
     @DeleteMapping("/{pondId}/{koiId}/delete")
     @Transactional
-    String deleteKoi(@PathVariable int pondId, @PathVariable int koiId){
-        ResReqKoi res = kService.getKoi(koiId);
+    String deleteKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @PathVariable int koiId){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+        ResReqKoi res = kService.getKoi(koiId, userId);
         if(res.getStatusCode() ==200 ) {
             gRepo.deleteAllByKoiFish_KoiId(koiId);
             kService.deleteKoi(koiId, pondId);
@@ -109,7 +112,7 @@ import java.util.Optional;
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
-        return ResponseEntity.ok(kService.updateKoi(pondId, koiId, request));
+        return ResponseEntity.ok(kService.updateKoi(pondId, koiId, request, userId));
     }
 
 }

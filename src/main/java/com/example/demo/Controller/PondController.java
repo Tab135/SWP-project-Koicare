@@ -105,5 +105,15 @@ public class PondController {
         }
     }
 
+    @PostMapping("/pond/{oldPondId}/moveAll")
+    public ResponseEntity<ResReqPond> moveAllFish(@PathVariable int oldPondId, @RequestParam("pondId") int newPondId){
+        return ResponseEntity.ok(pService.moveAllFish(oldPondId, newPondId));
+    }
+
+    @PostMapping("/pond/{oldPond}/move/{koiId}")
+    public ResponseEntity<ResReqPond> moveFish(@PathVariable int oldPond, @PathVariable int koiId, @RequestParam("pondId") int newPondId){
+        return ResponseEntity.ok(pService.moveFish(oldPond, newPondId, koiId));
+    }
+
 
 }

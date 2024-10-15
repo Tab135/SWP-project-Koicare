@@ -22,7 +22,7 @@ public class GrowthRecordController {
     }
 
     @GetMapping("/{koiId}/records")
-    ResponseEntity<ReqResGrowth> getRecords(@PathVariable Integer koiId, LocalDate date){
+    ResponseEntity<ReqResGrowth> getRecords(@PathVariable Integer koiId){
         return ResponseEntity.ok(growService.getrecords(koiId));
     }
     @GetMapping("/{koiId}/record/{date}")
@@ -30,16 +30,12 @@ public class GrowthRecordController {
         return  ResponseEntity.ok(growService.getRecord(koiId, date));
     }
 
-    @DeleteMapping("/{koiId}/record/delete")
-    String deleteGrowth(@PathVariable Integer koiId, @RequestBody ReqResGrowth request){
-        KoiStatisticId id = new KoiStatisticId(request.getDate(), koiId);
-        ReqResGrowth res = growService.getRecord(koiId, request.getDate());
-        if(res.getStatusCode()==200){
+    @DeleteMapping("/{userId}/{koiId}/record/delete/{date}")
+    String deleteGrowth(@PathVariable Integer koiId, @PathVariable LocalDate date){
+        KoiStatisticId id = new KoiStatisticId(date, koiId);
             growService.deleteRecord(id);
             return "Delete success";
-        }else{
-            return "Delete failed, record not found";
-        }
+
     }
 
     @PutMapping("/{koiId}/record/update/{oldDate}")
