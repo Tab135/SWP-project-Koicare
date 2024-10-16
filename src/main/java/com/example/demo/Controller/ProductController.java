@@ -23,17 +23,20 @@ public class ProductController {
         ReqResProduct response = proM.addPro(addProduct, imageFile);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @PutMapping("/shop/updatePro/{id}")
+    public ResponseEntity<ReqResProduct> updatePro(
+            @PathVariable int id,
+            @ModelAttribute ReqResProduct detail, // Use @RequestBody to map the JSON payload
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+
+        return ResponseEntity.ok(proM.updatePro(id, detail, imageFile));
+    }
     @DeleteMapping("/shop/deletePro/{id}")
     public ResponseEntity<ReqResProduct> delePro(@PathVariable int id)
     {
         return ResponseEntity.ok(proM.delePro(id));
     }
-    @PutMapping("/shop/updatePro/{id}")
-    public ResponseEntity<ReqResProduct> updatePro(@PathVariable int id, @RequestBody ProductModel detail)
-    {
-        return ResponseEntity.ok(proM.updatePro(id,detail));
-    }
-
     @GetMapping("/public/product")
     public ResponseEntity<List<ProductModel>> show()
     {

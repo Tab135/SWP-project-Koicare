@@ -1,5 +1,4 @@
 package com.example.demo.Controller;
-
 import com.example.demo.DTO.CategoryModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResCATE;
 import com.example.demo.Service.CategoryManagement;
@@ -28,21 +27,21 @@ public class CategoryController {
     public ResponseEntity<ReqResCATE> updateCate(@PathVariable int cateId , @RequestBody CategoryModel detail){
         return ResponseEntity.ok(cateM.updateById(cateId,detail));
     }
-
     @GetMapping("/public/category")
     public ResponseEntity<List<CategoryModel>> showCate()
     {
         try{
             List<CategoryModel> cm = cateM.showCate(new CategoryModel());
-                    if(cm.isEmpty()){
-                        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-                    }else{
-                        return ResponseEntity.ok(cm);
-                    }
+            if(cm.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }else{
+                return ResponseEntity.ok(cm);
+            }
         }catch (Exception e)
         {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    }
 
-}
+
