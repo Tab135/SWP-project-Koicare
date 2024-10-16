@@ -88,7 +88,7 @@ public class KoiService {
                 growthR.setLength(request.getLength());
                 growthR.setWeight(request.getWeight());
                 growthR.setDate(LocalDate.now());
-                gService.addRecord(growthR, koi.getKoiId());
+                gService.addRecord(growthR, koi.getKoiId(), userId);
                 res.setMessage("Koi added");
                 res.setStatusCode(200);
                 res.setKoi(result);

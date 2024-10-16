@@ -75,13 +75,6 @@ import java.util.Optional;
 
 
     }
-
-
-
-
-
-
-
     @DeleteMapping("/{pondId}/{koiId}/delete")
     @Transactional
     String deleteKoi(@RequestHeader ("Authorization") String token, @PathVariable int pondId, @PathVariable int koiId){
@@ -94,7 +87,7 @@ import java.util.Optional;
             return "Delete koi success";
         }
         else{
-            return "Delete failed, koi not found";
+            return "Delete failed, " +res.getStatusCode()+": " + res.getError();
         }
     }
 
