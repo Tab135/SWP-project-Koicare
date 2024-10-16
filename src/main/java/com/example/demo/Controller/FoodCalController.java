@@ -16,10 +16,9 @@ public class FoodCalController {
     @Autowired
     private FoodCalService foodCalService;
     @PostMapping("/public/foodManange/{pond_id}")
-    public ResponseEntity<ReqResFood> handleOptionSubmit(@RequestBody Map<String, Integer> payload, @PathVariable int pond_id) {
-        int desireGrowth = payload.get("desireGrowth");
-        int temperature = payload.get("temperature");
-       // int food_split = payload.get("foodSplit");
+    public ResponseEntity<ReqResFood> handleOptionSubmit(@RequestBody Map<String, String> payload, @PathVariable int pond_id) {
+        float desireGrowth = Float.parseFloat(payload.get("desireGrowth"));
+        int temperature = Integer.parseInt(payload.get("temperature"));
         return ResponseEntity.ok(foodCalService.CalculateFood(pond_id,temperature,desireGrowth));
     }
 }

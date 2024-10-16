@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.*;
 public class WaterController {
     @Autowired
     private WaterManagement waterM;
-    @PostMapping("/auth/WaterMonitor/addWater")
-    public ResponseEntity<ReqResWater> addWater(@RequestBody ReqResWater addWater)
+    @PostMapping("/user/WaterMonitor/addWater/{pond_id}")
+    public ResponseEntity<ReqResWater> addWater(@RequestBody ReqResWater addWater, @PathVariable int pond_id)
     {
-        return ResponseEntity.ok(waterM.addWaterMeasurement(addWater));
+        return ResponseEntity.ok(waterM.addWaterMeasurement(addWater,pond_id));
     }
-    @DeleteMapping("/auth/WaterMonitor/deleteWater/{id}")
+    @DeleteMapping("/user/WaterMonitor/deleteWater/{id}")
     public ResponseEntity<ReqResWater> deleteWater(@PathVariable int id){
         return ResponseEntity.ok(waterM.deleteWater(id));
     }
-    @PostMapping("/auth/WaterMonitor/updateWater/{id}")
+    @PostMapping("/user/WaterMonitor/updateWater/{id}")
     public ResponseEntity<ReqResWater> updateWater(@PathVariable int id, @RequestBody WaterModel detail)
     {
         return ResponseEntity.ok(waterM.updateWater(id,detail));

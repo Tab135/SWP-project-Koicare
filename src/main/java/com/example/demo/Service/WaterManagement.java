@@ -19,12 +19,12 @@ public class WaterManagement {
     @Autowired
     private PondRepo pondRepository;
     @Transactional
-    public ReqResWater addWaterMeasurement(ReqResWater addWater) {
+    public ReqResWater addWaterMeasurement(ReqResWater addWater, int pond_id) {
         ReqResWater req = new ReqResWater();
 
         try {
             // Retrieve pond based on ID from request
-            Optional<PondModel> pm = pondRepository.findById(addWater.getPondId());
+            Optional<PondModel> pm = pondRepository.findById(pond_id);
             if (pm.isEmpty()) {
                 req.setMessage("Pond not found");
                 req.setStatusCode(404);

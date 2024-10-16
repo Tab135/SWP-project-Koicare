@@ -19,35 +19,11 @@ public class FoodCalService {
     private KoiRepo koiRepo;
     @Autowired
     private PondRepo pondRepo;
-    public ReqResFood CalculateFood(int pond_id, int temperature, int desireGrowth ){
+    public ReqResFood CalculateFood(int pond_id, int temperature, float desiredGrowth ){
         ReqResFood resp = new ReqResFood();
-        float amount_when_split = 0;
         float amount_of_food = 0;
-        float food = 0;
         String feeding_time = "";
         String message = "";
-        if(desireGrowth == 1){
-            food = 2.0f /100.0f;
-        }
-        else if(desireGrowth == 2){
-            food = 3.0f /100.0f;
-        }
-        else if(desireGrowth == 3){
-            food = 4.0f /100.0f;
-        }
-        Optional<PondModel> pondFind = pondRepo.findById(pond_id);
-        List<KoiFishModel> koi = koiRepo.findAllByPondId(pondFind.get());
-        if(!koi.isEmpty()){
-            for (KoiFishModel koiFish : koi){
-                double weight = koiFish.getWeight();
-
-                amount_of_food += weight * food;
-            }
-        }
-        amount_of_food = Math.round(amount_of_food * 100.0f) / 100.0f;
-        resp.setFood_amount(amount_of_food);
-        //amount_when_split = amount_of_food / food_split;
-        //resp.setFood_split(amount_when_split);
 
         //temperature > 5 && temperature <= 8 ====> 1
         //temperature >= 9 && temperature <=12 ====> 2
@@ -55,19 +31,49 @@ public class FoodCalService {
         //temperature > 15 && temperature <=20 ====> 4
         //temperature >20 && temperature <=28 ====> 5
 
-        if (temperature == 1){
-            feeding_time = "every 2 - 3 days";
-            message = "It is not recommend to feed when below 5 Degree Celsius";
-        } else if (temperature == 2) {
-            feeding_time = "1 per 2 - 3 days";
-        } else if (temperature == 3) {
-            feeding_time = "1 - 2 per day";
-        }else if (temperature == 4){
-            feeding_time = "2 - 3 per day";
-        } else if (temperature == 5) {
-            feeding_time = "2 - 4 per day";
-            message = "It is not recommend to feed when above 28 Degree Celsius";
+        switch (temperature) {
+            case 1:
+                feeding_time = "every 2 - 3 days";
+                message = "It is not recommended to feed when the temperature is below 5°C.";
+                desiredGrowth -= 2 / 100.0f;
+                break;
+            case 2:
+                feeding_time = "once every 2 - 3 days";
+                message = "Feeding less frequently at this temperature helps prevent overfeeding.";
+                desiredGrowth -= 1.5 / 100.0f;
+                break;
+            case 3:
+                feeding_time = "1 - 2 times per day";
+                message = "This temperature range is suitable for moderate feeding.";
+                desiredGrowth -= 1 / 100.0f;
+                break;
+            case 4:
+                feeding_time = "2 - 3 times per day";
+                message = "Optimal temperature for more frequent feeding.";
+                desiredGrowth -= 0.5 / 100.0f;
+                break;
+            case 5:
+                feeding_time = "2 - 4 times per day";
+                message = "It is not recommended to feed when the temperature is above 28°C.";
+                break;
+            default:
+                message = "Invalid temperature range provided.";
+                return resp;
         }
+
+        Optional<PondModel> pondFind = pondRepo.findById(pond_id);
+        List<KoiFishModel> koi = koiRepo.findAllByPondId(pondFind.get());
+        if(!koi.isEmpty()){
+            for (KoiFishModel koiFish : koi){
+                double weight = koiFish.getWeight();
+
+                amount_of_food += (float) (weight * desiredGrowth);
+            }
+        }
+        amount_of_food = Math.round(amount_of_food * 100.0f) / 100.0f;
+        resp.setFood_amount(amount_of_food);
+
+
         resp.setMessage(message);
         resp.setFeeding_time(feeding_time);
         return resp;

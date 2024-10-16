@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Component
 public class JWTUtils {
     private final SecretKey Key;
-    private static final long Expiration_Time = 172800000;
+    private static final long Expiration_Time = 2592000000L;
 
     public JWTUtils(){
         String serectString ="b25nY25nY2Fub25nY2Fub25nY2FubFub225nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fu";
@@ -37,8 +37,7 @@ public class JWTUtils {
 
     public String generateRefreshToken(HashMap<String,Object> claims, UserDetails userDetails){
         return Jwts.builder()
-                .claims(claims)
-                .subject(userDetails.getUsername())
+                .claim("email",userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + Expiration_Time ))
                 .signWith(Key)

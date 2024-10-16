@@ -309,4 +309,24 @@ public class UserManagement {
         return resp;
     }
 
+    public ReqResUser refreshToken(ReqResUser token){
+        ReqResUser resp = new ReqResUser();
+        try {
+            String email = jwtUtils.extractUsername(token.getToken());
+            UserModel users = userRepo.findByEmail(email).orElseThrow();
+            if (jwtUtils.isTokenValid(token.getToken(),users)){
+
+                var jwt = jwtUtils.generateToken(users,users.getId());
+                resp.setToken(jwt);
+                resp.setRefreshToken(token.getToken());
+                resp.setMessage("Successfully refreshed token");
+            }
+
+        }catch (Exception e){
+            resp.setMessage(e.getMessage());
+        }
+        resp.setStatusCode(200);
+        return resp;
+    }
+
 }

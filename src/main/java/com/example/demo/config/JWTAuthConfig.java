@@ -1,15 +1,14 @@
 package com.example.demo.config;
 
-
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.UserService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -51,23 +50,29 @@ public class JWTAuthConfig extends OncePerRequestFilter {
         // Extract the JWT token from the Authorization header
         jwtToken = authHeader.substring(7);
 
-        // Extract the username (or email) from the JWT token
-        userEmails = jwtUtils.extractUsername(jwtToken);
+        try {
+            // Extract the username (or email) from the JWT token
+            userEmails = jwtUtils.extractUsername(jwtToken);
 
-        // If the user is authenticated and no SecurityContext is set, authenticate the user
-        if (userEmails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userService.loadUserByUsername(userEmails);
+            // If the user is authenticated and no SecurityContext is set, authenticate the user
+            if (userEmails != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userService.loadUserByUsername(userEmails);
 
-            // Validate the token and authenticate the user
-            if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
-                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-                UsernamePasswordAuthenticationToken token =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                // Validate the token and authenticate the user
+                if (jwtUtils.isTokenValid(jwtToken, userDetails)) {
+                    UsernamePasswordAuthenticationToken token =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-                token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                securityContext.setAuthentication(token);
-                SecurityContextHolder.setContext(securityContext);
+                    token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(token);
+                }
             }
+
+        } catch (ExpiredJwtException ex) {
+            // JWT token has expired, send 401 Unauthorized status
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT Token has expired");
+            return;
         }
 
         // Continue with the request filter chain

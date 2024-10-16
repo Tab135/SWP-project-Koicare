@@ -105,4 +105,11 @@ public class UserController {
     public ResponseEntity<ReqResUser> updateUser(@PathVariable int userID, @RequestBody UserModel update){
         return  ResponseEntity.ok(userManagement.updateUser(userID,update));
     }
+
+    @PostMapping("/auth/refresh-token")
+    public ResponseEntity<ReqResUser> refreshToken(@RequestBody ReqResUser refreshTokenRequest) {
+        return ResponseEntity.ok(userManagement.refreshToken(refreshTokenRequest));
+    }
+
+
 }

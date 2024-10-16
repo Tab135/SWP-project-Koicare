@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class ReqResWater {
     private int statusCode;
     private String error;
+    
     private int pondId;
     private Float nitrite;
     private Float nitrate;

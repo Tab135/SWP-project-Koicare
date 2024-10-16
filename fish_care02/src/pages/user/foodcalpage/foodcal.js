@@ -24,9 +24,9 @@ const Foodcal = () =>{
                         }
                     };
                     const growthMapping = {
-                        'Low': 1,
-                        'Medium': 2,
-                        'High': 3,
+                        'Low': 0.02,
+                        'Medium': 0.03,
+                        'High': 0.04,
                     };
                     const temperatureMapping= {
                         '6-8': 1,
