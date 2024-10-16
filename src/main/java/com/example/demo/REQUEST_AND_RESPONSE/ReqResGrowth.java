@@ -1,11 +1,13 @@
 package com.example.demo.REQUEST_AND_RESPONSE;
 
 import com.example.demo.DTO.GrowthRecord;
+import com.example.demo.DTO.KoiStatisticId;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,15 +21,15 @@ public class ReqResGrowth {
     private Double length;
     private Double weightRate;
     private Double lengthRate;
-
+    private LocalDate date;
+    private int koiFishId;
     private String physique;
-    private Integer koiFishId;
     private GrowthRecord growthRecord;
     private List<GrowthRecord> growthRecordList;
-    private LocalDate date;
     public Integer getKoiFishId() {
         return koiFishId;
     }
+    private LocalDateTime updateAt;
 
     public void setKoiFishId(Integer koiFishId) {
         this.koiFishId = koiFishId;
@@ -121,19 +123,32 @@ public class ReqResGrowth {
         this.weightRate = weightRate;
     }
 
-    public ReqResGrowth(Integer koiFishId, Integer statusCode, String error, String message, Double weight, Double length, Double weightRate, Double lengthRate, String physique, GrowthRecord growthRecord, List<GrowthRecord> growthRecordList, LocalDate date) {
+    public void setKoiFishId(int koiFishId) {
         this.koiFishId = koiFishId;
+    }
+
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public ReqResGrowth(Double lengthRate, Integer statusCode, String error, String message, Double weight, Double length, Double weightRate, LocalDate date, int koiFishId, String physique, GrowthRecord growthRecord, List<GrowthRecord> growthRecordList, LocalDateTime updateAt) {
+        this.lengthRate = lengthRate;
         this.statusCode = statusCode;
         this.error = error;
         this.message = message;
         this.weight = weight;
         this.length = length;
         this.weightRate = weightRate;
-        this.lengthRate = lengthRate;
+        this.date = date;
+        this.koiFishId = koiFishId;
         this.physique = physique;
         this.growthRecord = growthRecord;
         this.growthRecordList = growthRecordList;
-        this.date = date;
+        this.updateAt = updateAt;
     }
 
     public ReqResGrowth() {

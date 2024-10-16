@@ -3,13 +3,16 @@ package com.example.demo.Service;
 import com.example.demo.DTO.GrowthRecord;
 import com.example.demo.DTO.KoiFishModel;
 import com.example.demo.DTO.KoiStatisticId;
+import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResGrowth;
 import com.example.demo.Repo.GrowthRecordRepo;
 import com.example.demo.Repo.KoiRepo;
+import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,24 +22,41 @@ public class GrowthRecordService {
     private GrowthRecordRepo growRepo;
     @Autowired
     private KoiRepo koiRepo;
+    @Autowired
+    private UserRepo userR;
 
-    public ReqResGrowth addRecord(ReqResGrowth growth, Integer koiFishId){
+    public ReqResGrowth addRecord(ReqResGrowth growth, Integer koiFishId, int userId){
         ReqResGrowth res = new ReqResGrowth();
-        KoiStatisticId koiId = new KoiStatisticId(growth.getDate(), koiFishId);
+        KoiStatisticId koiId = new KoiStatisticId(LocalDate.now(), koiFishId);
+        Optional<UserModel> user = userR.findById(userId);
+        Optional<KoiFishModel> koi = koiRepo.findById(koiFishId);
+        if(koi.isPresent() && user.isPresent() && !koi.get().getUserId().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
+        if(koi.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("Koi fish not found");
+            return res;
+        }
+        if(user.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("User not exist");
+            return res;
+        }
         if(growRepo.existsByKoiId(koiId)){
             res.setError("Record existed");
             res.setStatusCode(409);
             return res;
         }
-        try{
-            KoiFishModel koiFish = koiRepo.findById(koiFishId).orElseThrow(null);
-            if(koiFish ==null){
-                res.setError("Koi fish not found");
-                res.setStatusCode(404);
-                return res;
-            }
 
-            Optional<GrowthRecord> preRecord = growRepo.findFirstByKoiFish_KoiIdAndKoiId_DateLessThanOrderByKoiId_DateDesc(koiFishId, growth.getDate());
+        try{
+
+            KoiFishModel koiFish = koi.get();
+
+
+            Optional<GrowthRecord> preRecord = growRepo.findFirstByKoiFish_KoiIdAndKoiId_DateLessThanOrderByKoiId_DateDesc(koiFishId, LocalDate.now());
             Double preWeight = null;
             Double preLength = null;
 
@@ -46,9 +66,9 @@ public class GrowthRecordService {
             }
 
             GrowthRecord record = new GrowthRecord();
-            record.setKoiId(new KoiStatisticId(growth.getDate(), koiFishId));
+            record.setKoiId(new KoiStatisticId(LocalDate.now(), koiFishId));
 
-
+            record.setUpdateAt(LocalDateTime.now());
             record.setWeight(growth.getWeight());
             record.setLength(growth.getLength());
             record.setPhysique(growth.getPhysique());
@@ -77,7 +97,7 @@ public class GrowthRecordService {
 
             Optional<GrowthRecord> latestRecord = growRepo.findFirstByKoiFish_KoiIdOrderByKoiId_DateDesc(koiFishId);
 
-            if (latestRecord.isPresent() && !growth.getDate().isBefore(latestRecord.get().getKoiId().getDate())) {
+            if (latestRecord.isPresent() && !result.getKoiId().getDate().isBefore(latestRecord.get().getKoiId().getDate())) {
                 koiFish.setWeight(growth.getWeight());
                 koiFish.setLength(growth.getLength());
                 koiFish.setPhysique(growth.getPhysique());
@@ -90,7 +110,7 @@ public class GrowthRecordService {
                 koiRepo.save(koiFish);
             }
 
-            Optional<GrowthRecord> nextRecord = growRepo.findFirstByKoiFish_KoiIdAndKoiId_DateGreaterThanOrderByKoiId_DateAsc(koiFishId, growth.getDate());
+            Optional<GrowthRecord> nextRecord = growRepo.findFirstByKoiFish_KoiIdAndKoiId_DateGreaterThanOrderByKoiId_DateAsc(koiFishId, result.getKoiId().getDate());
             if(nextRecord.isPresent()){
                 Double weightRate = ((nextRecord.get().getWeight()-growth.getWeight())/growth.getWeight())*100;
                 Double lengthRate = ((nextRecord.get().getLength()-growth.getLength())/growth.getLength())*100;
@@ -114,8 +134,23 @@ public class GrowthRecordService {
     return res;
     }
 
-    public ReqResGrowth getrecords(Integer koiFishId){
+    public ReqResGrowth getRecords(Integer koiFishId, int userId){
         ReqResGrowth res = new ReqResGrowth();
+        Optional<KoiFishModel> koi = koiRepo.findById(koiFishId);
+        Optional<UserModel> user = userR.findById(userId);
+        if(koi.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("Koi not found");
+            return res;
+        }
+        if(!koi.get().getUserId().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
+
+
+
         List<GrowthRecord> gList = growRepo.findByKoiFish_KoiIdOrderByKoiId_DateDesc(koiFishId);
 
         if(gList.isEmpty()){
@@ -132,10 +167,29 @@ public class GrowthRecordService {
         return res;
     }
 
-    public ReqResGrowth getRecord(Integer koiFishId, LocalDate date){
+    public ReqResGrowth getRecord(Integer koiFishId, LocalDate date, int userId){
         ReqResGrowth res = new ReqResGrowth();
         KoiStatisticId id = new KoiStatisticId(date, koiFishId);
         boolean exist = false;
+        Optional<UserModel> user = userR.findById(userId);
+        Optional<KoiFishModel> koi = koiRepo.findById(koiFishId);
+        if(koi.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("Koi not found");
+            return res;
+        }
+        if(user.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("User not exist");
+            return res;
+        }
+        if(!koi.get().getUserId().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
+
+
         Optional<GrowthRecord> growth = growRepo.findById(id);
         if(growth.isPresent()){
             res.setStatusCode(200);
@@ -152,8 +206,10 @@ public class GrowthRecordService {
     }
 
     public void deleteRecord(KoiStatisticId id){
-        KoiFishModel koi = koiRepo.findById(id.getKoiId()).orElseThrow(null);
-        GrowthRecord delRecord = getRecord(id.getKoiId(), id.getDate()).getGrowthRecord();
+        Optional<KoiFishModel> koiCheck = koiRepo.findById(id.getKoiId());
+        KoiFishModel koi = koiCheck.get();
+//        GrowthRecord delRecord = getRecord(id.getKoiId(), id.getDate(), userId).getGrowthRecord();
+        GrowthRecord delRecord = growRepo.findById(id).get();
         Optional<GrowthRecord> newest = growRepo.findFirstByKoiFish_KoiIdOrderByKoiId_DateDesc(id.getKoiId());
         Optional<GrowthRecord> oldest = growRepo.findFirstByKoiFish_KoiIdOrderByKoiId_DateAsc(id.getKoiId());
         if(delRecord.getKoiId().getDate().equals(newest.get().getKoiId().getDate())){
@@ -193,11 +249,19 @@ public class GrowthRecordService {
         growRepo.deleteById(id);
     }
 
-    public ReqResGrowth updateRecord(ReqResGrowth request, Integer koiFishId, LocalDate oldDate){
-        ReqResGrowth res = getRecord(koiFishId, oldDate);
+    public ReqResGrowth updateRecord(ReqResGrowth request, Integer koiFishId, LocalDate date, int userId){
+        ReqResGrowth res = getRecord(koiFishId, date, userId);
         GrowthRecord growth = res.getGrowthRecord();
-        KoiStatisticId koiId = new KoiStatisticId(oldDate, koiFishId);
+        KoiStatisticId koiId = new KoiStatisticId(date, koiFishId);
         KoiFishModel koi = koiRepo.findById(koiFishId).orElseThrow();
+        Optional<UserModel> user = userR.findById(userId);
+        if(user.isPresent() && !koi.getUserId().equals(user.get())){
+            ReqResGrowth result = new ReqResGrowth();
+            result.setStatusCode(403);
+            result.setError("Invalid user");
+            return result;
+        }
+
         if(growRepo.existsByKoiId(new KoiStatisticId(request.getDate(), koiFishId))){
             ReqResGrowth result = new ReqResGrowth();
             result.setStatusCode(409);
@@ -206,10 +270,6 @@ public class GrowthRecordService {
         }
         try{
             if(res.getStatusCode()==200){
-
-
-
-
                 if(request.getWeight() !=null){
                     growth.setWeight(request.getWeight());
 
@@ -223,9 +283,10 @@ public class GrowthRecordService {
                     growth.setPhysique(request.getPhysique());
                 }
 
-                if(request.getDate() !=null && !request.getDate().equals(oldDate)){
-                    deleteRecord(koiId);
-                    addRecord(request, koiFishId);
+                if(request.getUpdateAt() !=null && !request.getUpdateAt().equals(growth.getUpdateAt())){
+                   // deleteRecord(koiId);
+                   // addRecord(request, koiFishId, userId);
+                    growth.setUpdateAt(request.getUpdateAt());
                     res.setStatusCode(200);
                     res.setMessage("Updated successfully");
                     res.setGrowthRecord(growth);
@@ -248,6 +309,14 @@ public class GrowthRecordService {
                     koi.setLength(result.getLength());
                     koi.setPhysique(result.getPhysique());
                     koiRepo.save(koi);
+                }
+                Optional<GrowthRecord> preRecord = growRepo.findFirstByKoiFish_KoiIdAndKoiId_DateLessThanOrderByKoiId_DateDesc(koiFishId, result.getKoiId().getDate());
+                if(preRecord.isPresent()){
+                    Double weightRate = ((growth.getWeight()-preRecord.get().getWeight())/preRecord.get().getWeight())*100;
+                    Double lengthRate = ((growth.getLength()-preRecord.get().getLength())/preRecord.get().getLength())*100;
+                    growth.setWeightRate(weightRate);
+                    growth.setLengthRate(lengthRate);
+                    growRepo.save(growth);
                 }
 
             }else{

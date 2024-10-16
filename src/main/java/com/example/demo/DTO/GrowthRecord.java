@@ -5,11 +5,14 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
 public class GrowthRecord {
     @EmbeddedId
+    @JoinColumn(name="growth_record_id")
     private KoiStatisticId koiId;
 
     private Double weight;
@@ -22,6 +25,7 @@ public class GrowthRecord {
     @ManyToOne
     @MapsId("koiId")
     private KoiFishModel koiFish;
+    private LocalDateTime updateAt;
 
     public Double getLength() {
         return length;
@@ -89,7 +93,15 @@ public class GrowthRecord {
         this.koiFish = koiFish;
     }
 
-    public GrowthRecord(Double lengthRate, KoiStatisticId koiId, Double weight, Double length, String physique, Double weightRate, KoiFishModel koiFish) {
+    public LocalDateTime getUpdateAt() {
+        return updateAt;
+    }
+
+    public void setUpdateAt(LocalDateTime updateAt) {
+        this.updateAt = updateAt;
+    }
+
+    public GrowthRecord(Double lengthRate, KoiStatisticId koiId, Double weight, Double length, String physique, Double weightRate, KoiFishModel koiFish, LocalDateTime updateAt) {
         this.lengthRate = lengthRate;
         this.koiId = koiId;
         this.weight = weight;
@@ -97,6 +109,7 @@ public class GrowthRecord {
         this.physique = physique;
         this.weightRate = weightRate;
         this.koiFish = koiFish;
+        this.updateAt = updateAt;
     }
 
     public GrowthRecord() {
