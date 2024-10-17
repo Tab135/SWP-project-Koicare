@@ -10,7 +10,10 @@ const PondDropdown = ({ setPondId, setPondVolume }) => {
     useEffect(() => {
         const fetchPonds = async () => {
             try {
-                const token = localStorage.getItem('token');
+                let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`,

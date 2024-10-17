@@ -6,7 +6,10 @@ import DropdownMenu from "./DropdownMenu";
 
 const UserProfile = ({ setUserId, userId }) => {
     useEffect(() => {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem('token');
+      if (!token) {
+          token = sessionStorage.getItem('token');
+      }
       const storedUserId = localStorage.getItem("userId");
       if (storedUserId) {
         setUserId(storedUserId);

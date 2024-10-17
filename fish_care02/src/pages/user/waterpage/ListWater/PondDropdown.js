@@ -11,9 +11,9 @@ const PondDropdown = ({ setPondId }) => {
         const fetchPonds = async () => {
             try {
                 let token = localStorage.getItem('token');
-                if (!token) {
-                    token = sessionStorage.getItem('token');
-                }
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`,

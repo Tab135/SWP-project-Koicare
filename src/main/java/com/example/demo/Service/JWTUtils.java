@@ -16,8 +16,8 @@ import java.util.function.Function;
 @Component
 public class JWTUtils {
     private final SecretKey Key;
-    private static final long Expiration_Time = 2592000000L;
-
+    private static final long Expiration_Time = 7200000;
+    private static final long Expiration_Time_Refresh = 2592000000L;
     public JWTUtils(){
         String serectString ="b25nY25nY2Fub25nY2Fub25nY2FubFub225nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fu";
         byte[] keyBytes = Base64.getDecoder().decode(serectString.getBytes(StandardCharsets.UTF_8));
@@ -39,7 +39,7 @@ public class JWTUtils {
         return Jwts.builder()
                 .claim("email",userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + Expiration_Time ))
+                .expiration(new Date(System.currentTimeMillis() + Expiration_Time_Refresh ))
                 .signWith(Key)
                 .compact();
     }

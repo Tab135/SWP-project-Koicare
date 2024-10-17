@@ -22,6 +22,8 @@ import ListKoiFishPage from "./pages/user/KoiPage/ListKoiFishPage/ListKoiFishPag
 import KoiDetailPage from "./pages/user/KoiPage/KoiDetailPage/KoiDetailPage";
 import ProductDetail from "./pages/Shop/product/Product Detail/ProductDetail";
 import UpdateProduct from "./pages/Shop/product/Update Product/UpdateProduct";
+import ProtectedRoute from "./component/private-route/protect";
+import WaterPage from "./pages/user/waterpage/ListWater/waterpage";
 const renderUserRouter = () => {
   const userRouter = [
     {
@@ -34,7 +36,7 @@ const renderUserRouter = () => {
     },
     {
       path: ROUTERS.USER.KOICARE,
-      element: <PrivateRoute />,
+      element: <ProtectedRoute />,
       children: [
         {
           path: ROUTERS.USER.KOICARE,
@@ -74,11 +76,17 @@ const renderUserRouter = () => {
     },
     {
       path: ROUTERS.USER.Profile,
-      element: (
-        <MasterLayout>
-          <Profile />,
-        </MasterLayout>
-      ),
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: ROUTERS.USER.Profile,
+          element: (
+            <MasterLayout>
+              <Profile />
+            </MasterLayout>
+          ),
+        },
+      ],
     },
     {
       path: ROUTERS.USER.EDIT_POND,
@@ -103,19 +111,31 @@ const renderUserRouter = () => {
     },
     {
       path: ROUTERS.USER.FOODCAL,
-      element: (
-        <MasterLayout>
-          <Foodcal />
-        </MasterLayout>
-      ),
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: ROUTERS.USER.FOODCAL,
+          element: (
+            <MasterLayout>
+              <Foodcal />
+            </MasterLayout>
+          ),
+        },
+      ],
     },
     {
       path: ROUTERS.USER.SALTCAL,
-      element: (
-        <MasterLayout>
-          <Saltcal />
-        </MasterLayout>
-      ),
+      element: <ProtectedRoute />,
+      children: [
+        {
+          path: ROUTERS.USER.SALTCAL,
+          element: (
+            <MasterLayout>
+              <Saltcal />
+            </MasterLayout>
+          ),
+        },
+      ],
     },
     {
       path: ROUTERS.USER.Shop,
@@ -170,6 +190,14 @@ const renderUserRouter = () => {
       element: (
         <MasterLayout>
           <UpdateProduct/>
+        </MasterLayout>
+      ),
+    },
+    {
+      path: ROUTERS.USER.WATERPAGE,
+      element: (
+        <MasterLayout>
+          <WaterPage/>
         </MasterLayout>
       ),
     },

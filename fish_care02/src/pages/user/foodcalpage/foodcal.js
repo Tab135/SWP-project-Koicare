@@ -16,7 +16,10 @@ const Foodcal = () =>{
         const fetchRecommendation = async () => {
             if (growth && waterParameter && pond_id) {
                 try {
-                    const token = localStorage.getItem('token');
+                    let token = localStorage.getItem('token');
+                            if (!token) {
+                                token = sessionStorage.getItem('token');
+                            }
                     const config = {
                         headers: {
                             Authorization: `Bearer ${token}`,

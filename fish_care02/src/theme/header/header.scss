@@ -33,15 +33,24 @@ $logo: "/assets/image/logo.jpg";
     max-width: 500px; 
     margin: 0 auto;
 
-    .nav-link {
-      color: #b9b8b8 !important;
-      font-weight: 500;
-      padding: 0.5rem 1rem;
-      transition: color 0.3s ease;
-
-      &:hover,
+    .menu {
+      color: #fff; /* Text color */
+      font-weight: 500; /* Make text a bit bolder */
+      text-transform: uppercase; /* Capitalizes the menu names */
+      text-decoration: none;
+      padding: 10px 15px; /* Add spacing around links */
+      transition: color 0.3s ease, background-color 0.3s ease; 
+      border-bottom: 2px solid #ffffff;
+      
+      &:hover {
+        color: #6b6b6b; 
+        background-color: rgba(255, 255, 255, 0.1); /* Slight background color change on hover */
+        border-radius: 5px; /* Rounded corners for hover effect */
+      }
+  
       &.active {
-        color: white !important;
+        color: #6b6b6b; 
+        border-bottom: 2px solid #ffffff; 
       }
     }
   }
@@ -138,6 +147,22 @@ $logo: "/assets/image/logo.jpg";
       display: flex;
       justify-content: center;
     }
+  }
+}
+@media (max-width: 768px) {
+  .user-profile-container {
+    display: block;
+    width: 100%; 
+    text-align: center; 
+    margin-top: 10px; 
+  }
+
+  .header_logo {
+    margin-bottom: 10px; 
+  }
+
+  .header_menu {
+    text-align: center; 
   }
 }
 .btn-custom {

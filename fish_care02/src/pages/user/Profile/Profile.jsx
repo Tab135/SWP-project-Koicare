@@ -16,7 +16,10 @@ function Profile() {
 
   const fetchProfileInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
       const response = await UserService.getYourProfile(token);
       setProfileInfo(response.users);
       setUserId(response.users.id);

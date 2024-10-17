@@ -37,7 +37,7 @@ const KoiCare = () => {
                     <span>Water</span>
                 </>
             ),
-            path: "#",
+            path: ROUTERS.USER.WATERPAGE,
         },
         {
             name:(
@@ -59,7 +59,7 @@ const KoiCare = () => {
                 <span>Shop</span>
                 </>
             ),
-            path: ROUTERS.USER.LIST_PONDS,
+            path: ROUTERS.USER.Shop,
         },    {
             name: (
                     <>

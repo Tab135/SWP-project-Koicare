@@ -4,10 +4,9 @@ const [username, setUsername] = useState(null);
        
 
         useEffect(() => {
-            const token = localStorage.getItem('token');
-            if (token) {
-                const name = getUsernameFromToken(token);
-                setUsername(name);
+            let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
             }
         }, []);
 
@@ -26,9 +25,11 @@ const [username, setUsername] = useState(null);
     const LogoutButton = ({ username }) => {
 
         const handleLogout = () => {
-            localStorage.removeItem("token"); 
-            setUsername(null); 
+            sessionStorage.getItem('token');
+            sessionStorage.removeItem('token');
+            window.location.href = '/';
         };
+        
 
         return (
             <div>

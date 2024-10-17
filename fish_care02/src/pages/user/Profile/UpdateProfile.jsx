@@ -30,7 +30,10 @@ function UpdateProfile() {
 
   const fetchProfileInfo = async () => {
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem('token');
+      if (!token) {
+          token = sessionStorage.getItem('token');
+      }
       const response = await UserService.getYourProfile(token);
       const decodedToken = jwtDecode(token);
       console.log("Token information:", decodedToken);
@@ -57,7 +60,10 @@ function UpdateProfile() {
     event.preventDefault();
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem('token');
+      if (!token) {
+          token = sessionStorage.getItem('token');
+      }
       const response = await UserService.updateUser(userId, profileInfo, token);
       if (response) {
         alert("Profile updated successfully!");

@@ -11,16 +11,16 @@ export const ROUTERS = {
         Profile: "/get-profile/:userId",
         OTP_VERIFY: "/otp-verify",
         UpdateProfile: "/adminusershop/update/:userId",
-        FOODCAL:"/food-cal",
-        SALTCAL: "/salt-cal",
+        FOODCAL:"/koicare/food-cal",
+        SALTCAL: "/koicare/salt-cal",
         Shop : "/public/product",
         ADD_KOI_FISH: "/add-koi",
         LIST_KOI_FISH: "/list-koi",
         KOI_DETAILS: "/list-koi/:koiId",
         AddProduct: "/shop/addPro",
         ProductDetail: "/public/product/:productId",
-        UpdateProduct:"/shop/updatePro/:productId"
-        
+        UpdateProduct:"/shop/updatePro/:productId",
+        WATERPAGE: "/koicare/waterpage",
        
         
 

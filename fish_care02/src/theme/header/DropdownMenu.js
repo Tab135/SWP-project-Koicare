@@ -30,7 +30,8 @@ const DropdownMenu = ({ userId }) => {
   const LogoutButton = () => {
     const handleLogout = () => {
       localStorage.clear();
-      window.location.reload();
+      sessionStorage.clear();
+      window.location.href = '/';
     };
   
     return (
