@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
-import './AddKoiFishPage.css';
+import './AddKoiFishPage.scss';
 
 const AddKoiFishPage = () => {
     const [koiFish, setKoiFish] = useState({
@@ -26,9 +26,13 @@ const AddKoiFishPage = () => {
     const [previewUrl, setPreviewUrl] = useState(null);
     const [isImageUploaded, setIsImageUploaded] = useState(false);
 
+    const getToken = () => {
+        return localStorage.getItem('token') || sessionStorage.getItem('token');
+    };
+
     useEffect(() => {
         const fetchPonds = async () => {
-            const token = localStorage.getItem('token');
+            const token = getToken();
             if (!token) {
                 alert('Please login to add a fish.');
                 return;
@@ -92,7 +96,7 @@ const AddKoiFishPage = () => {
         });
         formData.append('pondId', selectedPond);
 
-        const token = localStorage.getItem('token');
+        const token = getToken();
         if (!token) {
             alert('Please login to add a fish.');
             return;
@@ -123,29 +127,29 @@ const AddKoiFishPage = () => {
     };
 
     return (
-        <div className="fish-form-container">
+        <div className="add-fish-form-container">
             <h1>Create New Koi Fish</h1>
-            <div className="image-upload-container">
+            <div className="add-image-upload-container">
                 {isImageUploaded ? (
                     <>
-                        <img src={previewUrl} alt="Preview" className="image-preview" />
+                        <img src={previewUrl} alt="Preview" className="add-image-preview" />
                         <button
                             type="button"
-                            className="change-image-button"
+                            className="add-change-image-button"
                             onClick={() => document.querySelector('input[type="file"]').click()}
                         >
                             Change Image
                         </button>
                         <button
                             type="button"
-                            className="delete-image-button"
+                            className="add-delete-image-button"
                             onClick={handleDeleteImage}
                         >
                             Delete Image
                         </button>
                     </>
                 ) : (
-                    <div className="image-upload" onClick={() => document.querySelector('input[type="file"]').click()}>
+                    <div className="add-image-upload" onClick={() => document.querySelector('input[type="file"]').click()}>
                         Select Image
                     </div>
                 )}

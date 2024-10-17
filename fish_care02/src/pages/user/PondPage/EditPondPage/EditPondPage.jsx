@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import './EditPondPage.css';
+import './EditPondPage.scss';
 
 const EditPondPage = () => {
     const { pondId } = useParams();
@@ -25,7 +25,10 @@ const EditPondPage = () => {
     useEffect(() => {
         const fetchPond = async () => {
             try {
-                const token = localStorage.getItem('token');
+                let token = localStorage.getItem('token');
+                if (!token) {
+                    token = sessionStorage.getItem('token');
+                }
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -65,7 +68,10 @@ const EditPondPage = () => {
         e.preventDefault();
 
         try {
-            const token = localStorage.getItem('token');
+            let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`,

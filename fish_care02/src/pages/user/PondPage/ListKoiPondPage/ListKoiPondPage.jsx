@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './ListKoiPondPage.css';
+import './ListKoiPondPage.scss';
 import { Link } from "react-router-dom";
 
 const PondListPage = () => {
@@ -11,7 +11,10 @@ const PondListPage = () => {
     useEffect(() => {
         const fetchPonds = async () => {
             try {
-                const token = localStorage.getItem('token');
+                let token = localStorage.getItem('token');
+                if (!token) {
+                    token = sessionStorage.getItem('token');
+                }
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -37,7 +40,10 @@ const PondListPage = () => {
         if (!confirmDelete) return;
 
         try {
-            const token = localStorage.getItem('token');
+            let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
             const config = {
                 headers: {
                     Authorization: `Bearer ${token}`

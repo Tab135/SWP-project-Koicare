@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';  // Fix incorrect import
-import './AddKoiPondPage.css';
+import { jwtDecode } from 'jwt-decode';
+import './AddKoiPondPage.scss';
 
 const AddKoiPondPage = () => {
     const [pond, setPond] = useState({
@@ -53,7 +53,10 @@ const AddKoiPondPage = () => {
             formData.append(key, pond[key]);
         });
 
-        const token = localStorage.getItem('token');
+        let token = localStorage.getItem('token');
+        if (!token) {
+            token = sessionStorage.getItem('token');
+        }
         if (!token) {
             alert('Please login to add a pond.');
             return;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import "./ListKoiFishPage.css";
+import "./ListKoiFishPage.scss";
 
 const ListKoiFishPage = () => {
     const [koiFishList, setKoiFishList] = useState([]);
@@ -11,9 +11,12 @@ const ListKoiFishPage = () => {
 
     useEffect(() => {
         const fetchPonds = async () => {
-            const token = localStorage.getItem('token');
+            let token = localStorage.getItem('token');
             if (!token) {
-                alert('Please login to view your fish.');
+                token = sessionStorage.getItem('token');
+            }
+            if (!token) {
+                alert('Please login to view the Koi details.');
                 return;
             }
 
@@ -32,7 +35,10 @@ const ListKoiFishPage = () => {
     }, []);
 
     const fetchKoiFish = async (pondId) => {
-        const token = localStorage.getItem('token');
+        let token = localStorage.getItem('token');
+        if (!token) {
+            token = sessionStorage.getItem('token');
+        }
         if (!token) {
             alert('Please login to view the fish.');
             return;
@@ -80,7 +86,13 @@ const ListKoiFishPage = () => {
             };
             await axios.delete(`http://localhost:8080/user/${selectedPond}/${koiId}/delete`, config);
             alert('Koi fish deleted successfully!');
-            fetchKoiFish(selectedPond);
+
+            const updatedKoiList = koiFishList.filter(koi => koi.koiId !== koiId);
+            setKoiFishList(updatedKoiList);
+
+            if (updatedKoiList.length === 0) {
+                setMessage('No koi fish found for this pond.');
+            }
         } catch (error) {
             console.error('Error deleting koi fish', error);
             alert('Failed to delete koi fish.');
@@ -105,6 +117,7 @@ const ListKoiFishPage = () => {
             {message && <p>{message}</p>}
 
             {koiFishList.length > 0 && !message ? (
+
                 <div className="koi-fish-list">
                     {koiFishList.map((koi) => (
                         <div key={koi.id} className="koi-fish-card">
@@ -115,23 +128,31 @@ const ListKoiFishPage = () => {
                             />
                             <div className="koi-fish-info">
                                 <h3>{koi.koiName}</h3>
-                                <p>Variety: {koi.variety}</p>
-                                <p>Length: {koi.length} cm</p>
-                                <p>Age: {koi.age} years</p>
+                                <p><strong>Variety:</strong> {koi.variety}</p>
+                                <p><strong>Length: </strong> {koi.length} cm</p>
+                                <p><strong>Age:</strong> {koi.age} years</p>
 
-                                <div className="koi-actions">
+                                <div className={`koi-actions ${koiFishList.length === 1 ? 'single-button' : ''}`}>
                                     <Link to={`/list-koi/${koi.koiId}`}>
-                                        <button>Detail</button>
+                                        <button className="details-koi-button">Detail</button>
                                     </Link>
-                                    <button onClick={() => handleDeleteKoi(koi.koiId)}>
-                                        Delete
-                                    </button>
+
+                                    {koiFishList.length > 1 && (
+                                        <button className="delete-koi-button"
+                                                onClick={() => handleDeleteKoi(koi.koiId)}>
+                                            Delete
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : null}
+
+            <Link to="/add-koi">
+                <button className="add-koi-button">Add New Koi Fish</button>
+            </Link>
         </div>
     );
 };

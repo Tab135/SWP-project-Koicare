@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './OtpVerify.css';
+import './OtpVerify.scss';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 

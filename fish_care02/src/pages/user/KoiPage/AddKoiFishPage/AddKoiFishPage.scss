@@ -1,0 +1,118 @@
+.add-fish-form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+h1 {
+  color: #007bff;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.add-image-upload-container {
+  background-color: #eaeaea;
+  padding: 60px 30px;
+  border: 3px dashed #00aaff;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666;
+  width: 100%;
+  text-align: center;
+
+  .add-image-preview {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+
+  .add-change-image-button,
+  .add-delete-image-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 16px;
+    margin: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+
+  .add-delete-image-button {
+    background-color: #dc3545;
+
+    &:hover {
+      background-color: #c82333;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #495057;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease;
+    width: 100%;
+
+    &:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+  }
+
+  input[type="date"] {
+    cursor: pointer;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+  select {
+    background-color: #fff;
+    cursor: pointer;
+  }
+
+  button[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}

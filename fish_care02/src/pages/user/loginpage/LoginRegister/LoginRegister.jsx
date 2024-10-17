@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './LoginRegister.css';
+import './LoginRegister.scss';
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 import { memo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,6 +10,7 @@ const LoginRegister = () => {
     const [action, setAction] = useState('');
     const [userDetails, setUserDetails] = useState({ email: '', password: '', username: '' });
     const [errorMessage, setErrorMessage] = useState('');
+    const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
 
     const registerLink = () => {
@@ -30,6 +31,10 @@ const LoginRegister = () => {
         }));
     };
 
+    const handleRememberMeChange = (e) => {
+        setRememberMe(e.target.checked);
+    };
+
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -40,7 +45,13 @@ const LoginRegister = () => {
             if (response.data.statusCode === 200) {
                 console.log('Login successful:', response.data);
                 const { token } = response.data;
-                localStorage.setItem("token", token);
+
+                if (rememberMe) {
+                    localStorage.setItem("token", token);
+                } else {
+                    sessionStorage.setItem("token", token);
+                }
+
                 navigate("/koicare");
                 setErrorMessage('');
             } else {
@@ -121,7 +132,14 @@ const LoginRegister = () => {
                         </div>
 
                         <div className="remember-forgot">
-                            <label><input type='checkbox' />Remember</label>
+                            <label>
+                                <input
+                                    type='checkbox'
+                                    checked={rememberMe}
+                                    onChange={handleRememberMeChange}
+                                />
+                                Remember
+                            </label>
                             <Link to="/forgot-password">Forgot Password?</Link>
                         </div>
 
@@ -176,10 +194,6 @@ const LoginRegister = () => {
                                 required
                             />
                             <FaLock className='icon' />
-                        </div>
-
-                        <div className="remember-forgot">
-                            <label><input type='checkbox' />I agree to the terms & conditions</label>
                         </div>
 
                         {errorMessage && <p className="error-message">{errorMessage}</p>}
