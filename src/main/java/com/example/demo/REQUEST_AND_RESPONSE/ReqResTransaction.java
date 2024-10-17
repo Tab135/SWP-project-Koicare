@@ -3,6 +3,7 @@ package com.example.demo.REQUEST_AND_RESPONSE;
 import java.io.Serializable;
 
 public class ReqResTransaction implements Serializable {
+
     private String status;
     private String message;
     private String data;

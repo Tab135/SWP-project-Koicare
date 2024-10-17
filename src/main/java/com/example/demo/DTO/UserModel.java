@@ -2,7 +2,6 @@ package com.example.demo.DTO;
 import java.util.*;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -35,8 +34,8 @@ public class UserModel implements UserDetails {
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
 
-    @OneToOne(mappedBy = "user")
-    private ShopModel shopModel;
+//    @OneToOne(mappedBy = "user")
+//    private ShopPaymentModel shopPaymentModel;
     @Override
     public String getUsername() {
         return email;

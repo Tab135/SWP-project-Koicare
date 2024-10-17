@@ -3,20 +3,16 @@ package com.example.demo.Service;
 import com.example.demo.DTO.*;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
 import com.example.demo.Repo.RoleRepo;
-import com.example.demo.Repo.SignUpRepo;
 import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class UserManagement {
@@ -25,8 +21,7 @@ public class UserManagement {
     private UserRepo userRepo;
     @Autowired
     private  RoleRepo roleRepo;
-    @Autowired
-    private SignUpRepo signUpRepo;
+
     @Autowired
     private JWTUtils jwtUtils;
 
@@ -39,10 +34,10 @@ public class UserManagement {
     @Autowired
     private EmailService emailService;
 
+    private final Map<String, SignupOTP> otpStorage = new ConcurrentHashMap<>();
+
     public ReqResUser sendOtpSignUp(ReqResUser email) {
         ReqResUser resp = new ReqResUser();
-        Optional<SignupOTP> existingOtp = signUpRepo.findByEmail(email.getEmail());
-        existingOtp.ifPresent(otp -> signUpRepo.deleteById(otp.getId()));
         Optional<UserModel> existingUser = userRepo.findByEmail(email.getEmail());
 
         if (existingUser.isPresent()) {
@@ -50,21 +45,17 @@ public class UserManagement {
             return resp;
         }
         int otp = OtpGen();
+        Date expirationTime = new Date(System.currentTimeMillis() + 120000);
         MailDTO mailDTO = MailDTO.builder()
                 .to(email.getEmail())
                 .text("OTP to verify sign up : " + otp)
                 .subject("KoiFish Control sign up request")
                 .build();
 
-        SignupOTP suOtp = SignupOTP.builder()
-                .otp(otp)
-                .expirationTime(new Date(System.currentTimeMillis() + 120000))
-                .email(email.getEmail())
-                .verified(0)
-                .build();
+        SignupOTP otpData = new SignupOTP(otp, expirationTime);
+        otpStorage.put(email.getEmail(), otpData);
 
         emailService.sendSimpleMessage(mailDTO);
-        signUpRepo.save(suOtp);
 
         resp.setMessage("Otp sent to " + email.getEmail());
         return resp;
@@ -73,19 +64,17 @@ public class UserManagement {
     public ReqResUser verifyOtpAndSignup(int otp, String email, String name, String password) {
         ReqResUser resp = new ReqResUser();
 
-        SignupOTP su = signUpRepo.findByOtpAndEmail(otp, email)
-                .orElseThrow(() -> new RuntimeException("Invalid OTP"));
+        SignupOTP su = otpStorage.get(email);
+        if (su == null || su.getOtp() != otp) {
+            throw new RuntimeException("Invalid OTP");
+        }
 
-        if (su.getExpirationTime().before(Date.from(Instant.now()))) {
-            signUpRepo.deleteById(su.getId());
+        if (su.getExpirationTime().before(new Date())) {
+            otpStorage.remove(email);
             throw new RuntimeException("OTP has expired");
         }
 
-        su.setVerified(1);
-        signUpRepo.save(su);
-
-
-
+        otpStorage.remove(email);
         RoleModel userRole = roleRepo.findByName("USER");
         UserModel newUser = new UserModel();
 

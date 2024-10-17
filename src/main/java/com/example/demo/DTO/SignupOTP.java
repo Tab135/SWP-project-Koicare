@@ -6,40 +6,17 @@ import lombok.*;
 
 import java.util.Date;
 
-@Entity
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@Builder
 public class SignupOTP {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @Column(nullable = false)
+    public SignupOTP(int otp, Date expirationTime) {
+        this.otp = otp;
+        this.expirationTime = expirationTime;
+    }
+
     private int otp;
-    @Column(nullable = false)
     private Date expirationTime;
-    @Column(nullable = false)
     private int verified;
-    @Column(nullable = false)
-    private String email;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getOtp() {
         return otp;
@@ -55,14 +32,6 @@ public class SignupOTP {
 
     public void setExpirationTime(Date expirationTime) {
         this.expirationTime = expirationTime;
-    }
-
-    public int getVerified() {
-        return verified;
-    }
-
-    public void setVerified(int verified) {
-        this.verified = verified;
     }
 
 }

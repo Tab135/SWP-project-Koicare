@@ -1,5 +1,6 @@
 package com.example.demo.DTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,44 +16,25 @@ public class WaterModel {
 
     @ManyToOne(fetch = FetchType.LAZY) // Define the relationship with PondModel
     @JoinColumn(name = "pond_id", nullable = false) // Define foreign key column
+    @JsonIgnore
     private PondModel pond;
     private LocalDateTime date_time;
-    private Float nitrite;                // Nitrite (NO2) mg/l
-    private Float nitrate;                // Nitrate (NO3) mg/l
-    private Float phosphate;              // Phosphate (PO4) mg/l
-    private Float ammonium;               // Ammonium (NH4) mg/l
-    private Float hardnessGH;             // Hardness (GH) °dH
-    private Float oxygen;                 // Oxygen (O2) mg/l
-    private Integer temperature;          // Temperature °C
-    private Float pH;                     // pH-Value
-    private Float carbonHardnessKH;       // Carbon hardness (KH) °dH
-    private Float salt;                   // Salt %
-    private Float CO2;                    // CO2 mg/l
-    private Float totalChlorine;          // Total chlorines mg/l
-    private Integer outdoorTemperature;   // Outdoor temperature °C
-    private Float amountFed;              // Amount fed g
+    private float nitrite;                // Nitrite (NO2) mg/l
+    private float nitrate;                // Nitrate (NO3) mg/l
+    private float phosphate;              // Phosphate (PO4) mg/l
+    private float ammonium;               // Ammonium (NH4) mg/l
+    private float hardnessGH;             // Hardness (GH) °dH
+    private float oxygen;                 // Oxygen (O2) mg/l
+    private int temperature;          // Temperature °C
+    private float pH;                     // pH-Value
+    private float carbonHardnessKH;       // Carbon hardness (KH) °dH
+    private float salt;                   // Salt %
+    private float CO2;                    // CO2 mg/l
+    private float totalChlorine;          // Total chlorines mg/l
+    private int outdoorTemperature;   // Outdoor temperature °C
+    private float amountFed;              // Amount fed g
 
     public WaterModel(){}
-
-    public WaterModel(long id, PondModel pond, LocalDateTime date_time, Float nitrite, Float nitrate, Float phosphate, Float ammonium, Float hardnessGH, Float oxygen, Integer temperature, Float pH, Float carbonHardnessKH, Float salt, Float CO2, Float totalChlorine, Integer outdoorTemperature, Float amountFed) {
-        this.id = id;
-        this.pond = pond;
-        this.date_time = date_time;
-        this.nitrite = nitrite;
-        this.nitrate = nitrate;
-        this.phosphate = phosphate;
-        this.ammonium = ammonium;
-        this.hardnessGH = hardnessGH;
-        this.oxygen = oxygen;
-        this.temperature = temperature;
-        this.pH = pH;
-        this.carbonHardnessKH = carbonHardnessKH;
-        this.salt = salt;
-        this.CO2 = CO2;
-        this.totalChlorine = totalChlorine;
-        this.outdoorTemperature = outdoorTemperature;
-        this.amountFed = amountFed;
-    }
 
     public long getId() {
         return id;
@@ -78,115 +60,115 @@ public class WaterModel {
         this.date_time = date_time;
     }
 
-    public Float getNitrite() {
+    public float getNitrite() {
         return nitrite;
     }
 
-    public void setNitrite(Float nitrite) {
+    public void setNitrite(float nitrite) {
         this.nitrite = nitrite;
     }
 
-    public Float getNitrate() {
+    public float getNitrate() {
         return nitrate;
     }
 
-    public void setNitrate(Float nitrate) {
+    public void setNitrate(float nitrate) {
         this.nitrate = nitrate;
     }
 
-    public Float getPhosphate() {
+    public float getPhosphate() {
         return phosphate;
     }
 
-    public void setPhosphate(Float phosphate) {
+    public void setPhosphate(float phosphate) {
         this.phosphate = phosphate;
     }
 
-    public Float getAmmonium() {
+    public float getAmmonium() {
         return ammonium;
     }
 
-    public void setAmmonium(Float ammonium) {
+    public void setAmmonium(float ammonium) {
         this.ammonium = ammonium;
     }
 
-    public Float getHardnessGH() {
+    public float getHardnessGH() {
         return hardnessGH;
     }
 
-    public void setHardnessGH(Float hardnessGH) {
+    public void setHardnessGH(float hardnessGH) {
         this.hardnessGH = hardnessGH;
     }
 
-    public Float getOxygen() {
+    public float getOxygen() {
         return oxygen;
     }
 
-    public void setOxygen(Float oxygen) {
+    public void setOxygen(float oxygen) {
         this.oxygen = oxygen;
     }
 
-    public Integer getTemperature() {
+    public int getTemperature() {
         return temperature;
     }
 
-    public void setTemperature(Integer temperature) {
+    public void setTemperature(int temperature) {
         this.temperature = temperature;
     }
 
-    public Float getpH() {
+    public float getpH() {
         return pH;
     }
 
-    public void setpH(Float pH) {
+    public void setpH(float pH) {
         this.pH = pH;
     }
 
-    public Float getCarbonHardnessKH() {
+    public float getCarbonHardnessKH() {
         return carbonHardnessKH;
     }
 
-    public void setCarbonHardnessKH(Float carbonHardnessKH) {
+    public void setCarbonHardnessKH(float carbonHardnessKH) {
         this.carbonHardnessKH = carbonHardnessKH;
     }
 
-    public Float getSalt() {
+    public float getSalt() {
         return salt;
     }
 
-    public void setSalt(Float salt) {
+    public void setSalt(float salt) {
         this.salt = salt;
     }
 
-    public Float getCO2() {
+    public float getCO2() {
         return CO2;
     }
 
-    public void setCO2(Float CO2) {
+    public void setCO2(float CO2) {
         this.CO2 = CO2;
     }
 
-    public Float getTotalChlorine() {
+    public float getTotalChlorine() {
         return totalChlorine;
     }
 
-    public void setTotalChlorine(Float totalChlorine) {
+    public void setTotalChlorine(float totalChlorine) {
         this.totalChlorine = totalChlorine;
     }
 
-    public Integer getOutdoorTemperature() {
+    public int getOutdoorTemperature() {
         return outdoorTemperature;
     }
 
-    public void setOutdoorTemperature(Integer outdoorTemperature) {
+    public void setOutdoorTemperature(int outdoorTemperature) {
         this.outdoorTemperature = outdoorTemperature;
     }
 
-    public Float getAmountFed() {
+    public float getAmountFed() {
         return amountFed;
     }
 
-    public void setAmountFed(Float amountFed) {
+    public void setAmountFed(float amountFed) {
         this.amountFed = amountFed;
     }
 }

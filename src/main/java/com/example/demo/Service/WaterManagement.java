@@ -9,6 +9,8 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 
@@ -133,8 +135,15 @@ public class WaterManagement {
 
         return req;
     }
+    public ReqResWater getWater(int pondId){
+        ReqResWater resp = new ReqResWater();
 
-
+        List<WaterModel> water = waterRepository.findAllByPondId(pondId);
+        if(!water.isEmpty()){
+            resp.setWaterModelList(water);
+        }
+        return resp;
+    }
 }
 
 

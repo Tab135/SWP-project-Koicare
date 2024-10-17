@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
+import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.UserManagement;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,6 +29,8 @@ public class UserController {
     private UserManagement userManagement;
     @Autowired
     private OAuth2AuthorizedClientService clientService;
+    @Autowired
+    private JWTUtils jwt;
 //
 //    @PostMapping("/oauth2/logout")
 //    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
@@ -106,6 +109,10 @@ public class UserController {
         return  ResponseEntity.ok(userManagement.updateUser(userID,update));
     }
 
+    @PostMapping("/auth/check-token-expired")
+    public ResponseEntity<Boolean> checkToken(@RequestBody ReqResUser token) {
+        return ResponseEntity.ok(jwt.isTokenExpired(token.getToken()));
+    }
     @PostMapping("/auth/refresh-token")
     public ResponseEntity<ReqResUser> refreshToken(@RequestBody ReqResUser refreshTokenRequest) {
         return ResponseEntity.ok(userManagement.refreshToken(refreshTokenRequest));

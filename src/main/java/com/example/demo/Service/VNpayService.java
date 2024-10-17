@@ -13,7 +13,7 @@ import java.util.*;
 
 @Service
 public class VNpayService {
-    public ReqResPayment createPayment(HttpServletRequest req, long amount, String orderInfo) throws UnsupportedEncodingException {
+    public ReqResPayment createPayment(HttpServletRequest req, long amount, String orderInfo, int userId) throws UnsupportedEncodingException {
         String vnp_TxnRef = VNpayConfig.getRandomNumber(8);
         String vnp_IpAddr = VNpayConfig.getIpAddress(req);
 
@@ -31,7 +31,7 @@ public class VNpayService {
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_OrderType", "220000");
-        vnp_Params.put("vnp_ReturnUrl", "http://localhost:8080/public/payment/vn-pay-callback");
+        vnp_Params.put("vnp_ReturnUrl", "http://localhost:8080/public/payment/vn-pay-callback/" + userId);
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");

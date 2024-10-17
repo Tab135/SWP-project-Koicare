@@ -1,37 +1,42 @@
 package com.example.demo.REQUEST_AND_RESPONSE;
 
+import com.example.demo.DTO.WaterModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
+@JsonInclude(JsonInclude.Include.NON_DEFAULT)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ReqResWater {
     private int statusCode;
     private String error;
     
     private int pondId;
-    private Float nitrite;
-    private Float nitrate;
-    private Float phosphate;
-    private Float ammonium;
-    private Float hardnessGH;
-    private Float oxygen;
-    private Integer temperature;
-    private Float pH;
-    private Float carbonHardnessKH;
-    private Float salt;
-    private Float CO2;
-    private Float totalChlorine;
-    private Integer outdoorTemperature;
-    private Float amountFed;
+    private float nitrite;
+    private float nitrate;
+    private float phosphate;
+    private float ammonium;
+    private float hardnessGH;
+    private float oxygen;
+    private int temperature;
+    private float pH;
+    private float carbonHardnessKH;
+    private float salt;
+    private float CO2;
+    private float totalChlorine;
+    private int outdoorTemperature;
+    private float amountFed;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime date;
     private String message;
+    private List<WaterModel> waterModelList;
 
     public int getStatusCode() {
         return statusCode;
@@ -57,115 +62,115 @@ public class ReqResWater {
         this.pondId = pondId;
     }
 
-    public Float getNitrite() {
+    public float getNitrite() {
         return nitrite;
     }
 
-    public void setNitrite(Float nitrite) {
+    public void setNitrite(float nitrite) {
         this.nitrite = nitrite;
     }
 
-    public Float getNitrate() {
+    public float getNitrate() {
         return nitrate;
     }
 
-    public void setNitrate(Float nitrate) {
+    public void setNitrate(float nitrate) {
         this.nitrate = nitrate;
     }
 
-    public Float getPhosphate() {
+    public float getPhosphate() {
         return phosphate;
     }
 
-    public void setPhosphate(Float phosphate) {
+    public void setPhosphate(float phosphate) {
         this.phosphate = phosphate;
     }
 
-    public Float getAmmonium() {
+    public float getAmmonium() {
         return ammonium;
     }
 
-    public void setAmmonium(Float ammonium) {
+    public void setAmmonium(float ammonium) {
         this.ammonium = ammonium;
     }
 
-    public Float getOxygen() {
-        return oxygen;
-    }
-
-    public void setOxygen(Float oxygen) {
-        this.oxygen = oxygen;
-    }
-
-    public Integer getTemperature() {
-        return temperature;
-    }
-
-    public void setTemperature(Integer temperature) {
-        this.temperature = temperature;
-    }
-
-    public Float getHardnessGH() {
+    public float getHardnessGH() {
         return hardnessGH;
     }
 
-    public void setHardnessGH(Float hardnessGH) {
+    public void setHardnessGH(float hardnessGH) {
         this.hardnessGH = hardnessGH;
     }
 
-    public Float getpH() {
+    public float getOxygen() {
+        return oxygen;
+    }
+
+    public void setOxygen(float oxygen) {
+        this.oxygen = oxygen;
+    }
+
+    public int getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(int temperature) {
+        this.temperature = temperature;
+    }
+
+    public float getpH() {
         return pH;
     }
 
-    public void setpH(Float pH) {
+    public void setpH(float pH) {
         this.pH = pH;
     }
 
-    public Float getCarbonHardnessKH() {
+    public float getCarbonHardnessKH() {
         return carbonHardnessKH;
     }
 
-    public void setCarbonHardnessKH(Float carbonHardnessKH) {
+    public void setCarbonHardnessKH(float carbonHardnessKH) {
         this.carbonHardnessKH = carbonHardnessKH;
     }
 
-    public Float getSalt() {
+    public float getSalt() {
         return salt;
     }
 
-    public void setSalt(Float salt) {
+    public void setSalt(float salt) {
         this.salt = salt;
     }
 
-    public Float getCO2() {
+    public float getCO2() {
         return CO2;
     }
 
-    public void setCO2(Float CO2) {
+    public void setCO2(float CO2) {
         this.CO2 = CO2;
     }
 
-    public Float getTotalChlorine() {
+    public float getTotalChlorine() {
         return totalChlorine;
     }
 
-    public void setTotalChlorine(Float totalChlorine) {
+    public void setTotalChlorine(float totalChlorine) {
         this.totalChlorine = totalChlorine;
     }
 
-    public Integer getOutdoorTemperature() {
+    public int getOutdoorTemperature() {
         return outdoorTemperature;
     }
 
-    public void setOutdoorTemperature(Integer outdoorTemperature) {
+    public void setOutdoorTemperature(int outdoorTemperature) {
         this.outdoorTemperature = outdoorTemperature;
     }
 
-    public Float getAmountFed() {
+    public float getAmountFed() {
         return amountFed;
     }
 
-    public void setAmountFed(Float amountFed) {
+    public void setAmountFed(float amountFed) {
         this.amountFed = amountFed;
     }
 
@@ -183,5 +188,13 @@ public class ReqResWater {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<WaterModel> getWaterModelList() {
+        return waterModelList;
+    }
+
+    public void setWaterModelList(List<WaterModel> waterModelList) {
+        this.waterModelList = waterModelList;
     }
 }
