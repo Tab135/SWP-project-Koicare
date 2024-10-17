@@ -1,18 +1,16 @@
-package com.example.demo.Service;
+package com.example.demo.Service.Shop;
 
-import com.example.demo.DTO.CategoryModel;
-import com.example.demo.DTO.ProductModel;
-import com.example.demo.REQUEST_AND_RESPONSE.ReqResProduct;
-import com.example.demo.Repo.CategoryRepo;
-import com.example.demo.Repo.ProductRepo;
+import com.example.demo.DTO.Shop.CategoryModel;
+import com.example.demo.DTO.Shop.ProductModel;
+import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResProduct;
+import com.example.demo.Repo.Shop.CategoryRepo;
+import com.example.demo.Repo.Shop.ProductRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;

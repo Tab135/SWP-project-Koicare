@@ -1,6 +1,6 @@
-package com.example.demo.Repo;
+package com.example.demo.Repo.Shop;
 
-import com.example.demo.DTO.CategoryModel;
+import com.example.demo.DTO.Shop.CategoryModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

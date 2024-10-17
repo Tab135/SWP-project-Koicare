@@ -1,5 +1,5 @@
-package com.example.demo.REQUEST_AND_RESPONSE;
-import com.example.demo.DTO.ProductModel;
+package com.example.demo.REQUEST_AND_RESPONSE.Shop;
+import com.example.demo.DTO.Shop.ProductModel;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

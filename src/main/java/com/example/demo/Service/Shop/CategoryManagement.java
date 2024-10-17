@@ -1,8 +1,8 @@
-package com.example.demo.Service;
+package com.example.demo.Service.Shop;
 
-import com.example.demo.DTO.CategoryModel;
-import com.example.demo.REQUEST_AND_RESPONSE.ReqResCATE;
-import com.example.demo.Repo.CategoryRepo;
+import com.example.demo.DTO.Shop.CategoryModel;
+import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResCATE;
+import com.example.demo.Repo.Shop.CategoryRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;

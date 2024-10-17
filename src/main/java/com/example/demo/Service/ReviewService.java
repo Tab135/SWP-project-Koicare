@@ -1,11 +1,11 @@
 package com.example.demo.Service;
 
 
-import com.example.demo.DTO.ProductModel;
+import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.DTO.ReviewModel;
 import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResReview;
-import com.example.demo.Repo.ProductRepo;
+import com.example.demo.Repo.Shop.ProductRepo;
 import com.example.demo.Repo.ReviewRepo;
 import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;

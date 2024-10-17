@@ -1,7 +1,7 @@
-package com.example.demo.Controller;
-import com.example.demo.DTO.CategoryModel;
-import com.example.demo.REQUEST_AND_RESPONSE.ReqResCATE;
-import com.example.demo.Service.CategoryManagement;
+package com.example.demo.Controller.Shop;
+import com.example.demo.DTO.Shop.CategoryModel;
+import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResCATE;
+import com.example.demo.Service.Shop.CategoryManagement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

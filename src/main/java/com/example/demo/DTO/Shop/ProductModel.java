@@ -1,10 +1,8 @@
 
-        package com.example.demo.DTO;
+        package com.example.demo.DTO.Shop;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.Getter;
 import jakarta.persistence.*;
-        import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -63,7 +61,7 @@ public class ProductModel {
         this.amount = amount;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 

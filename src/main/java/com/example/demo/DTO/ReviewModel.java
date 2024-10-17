@@ -1,5 +1,6 @@
 package com.example.demo.DTO;
 
+import com.example.demo.DTO.Shop.ProductModel;
 import jakarta.persistence.*;
 import lombok.Data;
 

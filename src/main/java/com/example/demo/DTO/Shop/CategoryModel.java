@@ -1,4 +1,4 @@
-package com.example.demo.DTO;
+package com.example.demo.DTO.Shop;
 import lombok.*;
 import jakarta.persistence.*;
 @Table (name = "Category")
