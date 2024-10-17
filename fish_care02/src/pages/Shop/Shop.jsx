@@ -19,6 +19,7 @@ import {
   FaPlus,
   FaImage,
   FaTrashAlt,
+  FaEdit, // Import the edit icon for the button
 } from "react-icons/fa";
 import "./shop.css";
 import { ROUTERS } from "../../utis/router.js";
@@ -169,6 +170,15 @@ const Shop = () => {
                         Detail
                       </Button>
                     </Link>
+
+                    {/* Update Product Button */}
+                    <Link to={`/shop/updatePro/${product.id}`}>
+                      <Button variant="warning" className="w-100 mb-2">
+                        <FaEdit className="me-2" />
+                        Update Product
+                      </Button>
+                    </Link>
+
                     <Button
                       variant="danger"
                       className="w-100"

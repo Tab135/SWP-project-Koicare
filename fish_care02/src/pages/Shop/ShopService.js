@@ -8,17 +8,21 @@ class ProductService {
         `${ProductService.base_url}/public/category`
       );
       console.log("API response:", response.data); // Log API response for debugging
+
       if (Array.isArray(response.data)) {
         return response.data;
       } else if (response.data && Array.isArray(response.data.categories)) {
-        return response.data.categories; // Adjust this based on the API's actual response
+        return response.data.categories;
       } else {
         console.warn("Unexpected response format:", response.data);
-        return []; // Return an empty array if no categories found
+        return [];
       }
     } catch (error) {
-      console.error("Error fetching categories:", error);
-      throw error;
+      console.error(
+        "Error fetching categories:",
+        error.response ? error.response.data : error
+      );
+      throw error; // Rethrow the error for further handling
     }
   }
   // Fetch all products using GET request
@@ -157,6 +161,26 @@ class ProductService {
       return response.data;
     } catch (error) {
       console.error("Error fetching products by category ID:", error);
+      throw error;
+    }
+  }
+  // In ProductService.js
+  static async updateProduct(productId, formData) {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.put(
+        `${ProductService.base_url}/shop/updatePro/${productId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("Error updating product:", error);
       throw error;
     }
   }

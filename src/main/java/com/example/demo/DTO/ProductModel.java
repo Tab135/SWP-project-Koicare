@@ -6,7 +6,9 @@ import lombok.Getter;
 import jakarta.persistence.*;
         import lombok.NoArgsConstructor;
 
-@Entity
+import java.math.BigDecimal;
+
+        @Entity
 @Table(name = "Product")
 @Data
 
@@ -24,7 +26,7 @@ public class ProductModel {
 
     private String productName;
 
-    private float price;
+    private BigDecimal price;
 
     private String description;
     @Lob
@@ -41,7 +43,7 @@ public class ProductModel {
     public ProductModel() {
     }
 
-    public ProductModel(int id, long amount, double productRating, int stockQuantity, byte[] productImage, String description, float price, String productName, CategoryModel category) {
+    public ProductModel(int id, long amount, double productRating, int stockQuantity, byte[] productImage, String description, BigDecimal price, String productName, CategoryModel category) {
         this.id = id;
         this.amount = amount;
         this.productRating = productRating;
@@ -93,15 +95,15 @@ public class ProductModel {
         this.productImage = productImage;
     }
 
-    public float getPrice() {
-        return price;
-    }
+            public BigDecimal getPrice() {
+                return price;
+            }
 
-    public void setPrice(float price) {
-        this.price = price;
-    }
+            public void setPrice(BigDecimal price) {
+                this.price = price;
+            }
 
-    public String getDescription() {
+            public String getDescription() {
         return description;
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -14,7 +15,7 @@ public class ReqResProduct {
     private int statusCode;
     private String error;
     private String name;
-    private float price; // CamelCase for consistency
+    private BigDecimal price; // CamelCase for consistency
     private String description;
     private int categoryId;
     private String categoryName;// CamelCase for consistency
@@ -114,11 +115,11 @@ public class ReqResProduct {
         this.description = description;
     }
 
-    public float getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
