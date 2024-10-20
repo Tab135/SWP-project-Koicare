@@ -179,7 +179,6 @@ public class CartService implements ICartService {
     }
 
 
-
     public ReqResCart mapToReqResCart(Cart cart) {
         ReqResCart reqResCart = new ReqResCart();
         reqResCart.setCartId(cart.getId());
@@ -192,7 +191,6 @@ public class CartService implements ICartService {
 
         return reqResCart;
     }
-
 
 
     @Override

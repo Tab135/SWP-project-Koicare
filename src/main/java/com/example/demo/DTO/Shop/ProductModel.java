@@ -1,12 +1,13 @@
 
-        package com.example.demo.DTO.Shop;
+package com.example.demo.DTO.Shop;
+
 import jakarta.persistence.Table;
 import lombok.Data;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 
-        @Entity
+@Entity
 @Table(name = "Product")
 @Data
 
@@ -21,14 +22,13 @@ public class ProductModel {
     private CategoryModel category;  // Use CategoryModel for proper relationship mapping
 
 
-
     private String productName;
 
     private BigDecimal price;
 
     private String description;
     @Lob
-    @Column( columnDefinition = "VARBINARY(MAX)")
+    @Column(columnDefinition = "VARBINARY(MAX)")
     private byte[] productImage;
 
     private int stockQuantity;
@@ -93,15 +93,15 @@ public class ProductModel {
         this.productImage = productImage;
     }
 
-            public BigDecimal getPrice() {
-                return price;
-            }
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-            public void setPrice(BigDecimal price) {
-                this.price = price;
-            }
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-            public String getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -116,7 +116,6 @@ public class ProductModel {
     public void setProductName(String productName) {
         this.productName = productName;
     }
-
 
 
     public CategoryModel getCategory() {
