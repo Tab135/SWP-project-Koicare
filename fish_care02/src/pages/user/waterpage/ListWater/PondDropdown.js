@@ -22,7 +22,7 @@ const PondDropdown = ({ setPondId }) => {
                 const response = await axios.get('http://localhost:8080/user/pond', config);
                 setPonds(response.data.pondList);
 
-                const storedPondId = localStorage.getItem('selectedPondId');
+                const storedPondId = sessionStorage.getItem('selectedPondId');
                 if (storedPondId) {
                     const selectedPondName = response.data.pondList.find(pond => pond.id === parseInt(storedPondId))?.pondName || '';
                     setSelectedPond({ id: storedPondId, name: selectedPondName });

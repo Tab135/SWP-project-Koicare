@@ -16,6 +16,7 @@
     border: 1px solid #888;
     width: 30%;
     border-radius: 5px;
+    text-align: start;
   }
   
   .close {
@@ -34,3 +35,92 @@
   .chart-container{
     background-color: #fefefe;
   }
+.add-water{
+  text-align: end;
+}
+.addWater-button{
+  padding: 0 40px;
+  color: white;
+}
+.water-contentheader{
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  .water-date{
+    padding: 10px 50px 0 ;
+    margin: -10px;
+  }
+}
+.water-list-container {
+    text-align: center;
+    padding: 30px 20px;
+    .water-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+    }
+    .water-card {
+      background-color: white;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      max-width: 400px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .water-content {
+      display: flex;
+      flex-direction: column;
+  }
+  
+  .water-contentheader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+  }
+  
+  .water-date p {
+      font-weight: bold;
+      color: #333;
+  }
+  
+  .water_close_button .close {
+      font-size: 20px;
+      color: #e74c3c;
+      cursor: pointer;
+  }
+  
+  .water-details {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+  }
+  
+  .water-details1, .water-details2 {
+      display: flex;
+      flex-direction: column;
+      text-align: start;
+  }
+  
+  .water-details1 p, .water-details2 p {
+      margin: 5px 0;
+      font-size: 14px;
+  }
+  
+  .water-details1 p strong, .water-details2 p strong {
+      font-weight: bold;
+      color: #333;
+  }
+  
+  .water-details1 p, .water-details2 p {
+      font-weight: bold;
+  }
+.error-message, .success-message {
+  text-align: center;
+  color: #f44336; 
+  color: #4caf50; 
+}
+}
+
