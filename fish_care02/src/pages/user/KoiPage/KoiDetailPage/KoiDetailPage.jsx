@@ -24,7 +24,10 @@
 
         useEffect(() => {
             const fetchKoiDetails = async () => {
-                const token = localStorage.getItem('token');
+                let token = localStorage.getItem('token');
+                if (!token) {
+                    token = sessionStorage.getItem('token');
+                }
                 if (!token) {
                     alert('Please login to view the Koi details.');
                     return;
@@ -36,7 +39,7 @@
                     };
                     const response = await axios.get(`http://localhost:8080/user/koi/detail/${koiId}`, config);
                     setKoiDetails(response.data.koi);
-                    setKoiEditData(response.data.koi); // Initialize Koi edit data
+                    setKoiEditData(response.data.koi);
                 } catch (error) {
                     console.error('Error fetching koi details', error);
                     setErrorMessage('Failed to fetch koi details.');
@@ -44,7 +47,10 @@
             };
 
             const fetchGrowthRecords = async () => {
-                const token = localStorage.getItem('token');
+                let token = localStorage.getItem('token');
+                if (!token) {
+                    token = sessionStorage.getItem('token');
+                }
                 if (!token) {
                     return;
                 }
@@ -93,7 +99,6 @@
                 await axios.put(`http://localhost:8080/user/koi/update/${koiId}`, koiEditData, config);
                 alert('Koi details updated successfully');
                 setShowKoiModal(false);
-                // Refetch koi details after updating
                 const response = await axios.get(`http://localhost:8080/user/koi/detail/${koiId}`, config);
                 setKoiDetails(response.data.koi);
             } catch (error) {
@@ -119,7 +124,10 @@
                 return;
             }
 
-            const token = localStorage.getItem('token');
+            let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
@@ -128,6 +136,7 @@
                 if (editMode) {
                     await axios.put(`http://localhost:8080/user/${koiId}/record/update/${currentRecordDate}`, growthRecord, config);
                     alert('Growth record updated successfully');
+
                 } else {
                     await axios.post(`http://localhost:8080/user/${koiId}/addRecord`, growthRecord, config);
                     alert('Growth record added successfully');
@@ -143,6 +152,7 @@
                 setCurrentRecordId(null);
                 resetGrowthRecordForm();
                 setCurrentRecordDate(null);
+                window.location.reload();
                 const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
                 setGrowthRecords(response.data.growthRecordList);
             } catch (error) {
@@ -182,7 +192,10 @@
                 return;
             }
 
-            const token = localStorage.getItem('token');
+            let token = localStorage.getItem('token');
+            if (!token) {
+                token = sessionStorage.getItem('token');
+            }
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
@@ -298,10 +311,6 @@
                                 <label>
                                 Physique:
                                     <input type="text" name="physique" value={growthRecord.physique} onChange={handleInputChange} required />
-                                </label>
-                                <label>
-                                    Date:
-                                    <input type="date" name="date" value={growthRecord.date} onChange={handleInputChange} required />
                                 </label>
                                 <button type="submit">{editMode ? 'Update Record' : 'Add Record'}</button>
                                 <button type="button" onClick={() => setShowGrowthModal(false)}>Cancel</button>
