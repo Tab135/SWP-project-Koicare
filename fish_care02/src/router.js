@@ -24,200 +24,59 @@ import ProductDetail from "./pages/Shop/product/Product Detail/ProductDetail";
 import UpdateProduct from "./pages/Shop/product/Update Product/UpdateProduct";
 import ProtectedRoute from "./component/private-route/protect";
 import WaterPage from "./pages/user/waterpage/ListWater/waterpage";
-const renderUserRouter = () => {
-  const userRouter = [
-    {
-      path: ROUTERS.USER.HOME,
-      element: (
-        <MasterLayout>
-          <Homepage />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.KOICARE,
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: ROUTERS.USER.KOICARE,
-          element: (
-            <MasterLayout>
-              <Koicarepage />
-            </MasterLayout>
-          ),
-        },
-      ],
-    },
-    {
-      path: ROUTERS.USER.LOGIN,
-      element: <LoginRegister />,
-      useLayout: false,
-    },
-    {
-      path: ROUTERS.USER.FORGOT_PASSWORD,
-      element: <ForgotPassword />,
-      useLayout: false,
-    },
-    {
-      path: ROUTERS.USER.ADD_POND,
-      element: (
-        <MasterLayout>
-          <AddKoiPondPage />,
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.LIST_PONDS,
-      element: (
-        <MasterLayout>
-          <ListKoiPondPage />,
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.Profile,
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: ROUTERS.USER.Profile,
-          element: (
-            <MasterLayout>
-              <Profile />
-            </MasterLayout>
-          ),
-        },
-      ],
-    },
-    {
-      path: ROUTERS.USER.EDIT_POND,
-      element: (
-        <MasterLayout>
-          <EditPondPage />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.OTP_VERIFY,
-      element: <OtpVerify />,
-      useLayout: false,
-    },
-    {
-      path: ROUTERS.USER.UpdateProfile,
-      element: (
-        <MasterLayout>
-          <UpdateProfile />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.FOODCAL,
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: ROUTERS.USER.FOODCAL,
-          element: (
-            <MasterLayout>
-              <Foodcal />
-            </MasterLayout>
-          ),
-        },
-      ],
-    },
-    {
-      path: ROUTERS.USER.SALTCAL,
-      element: <ProtectedRoute />,
-      children: [
-        {
-          path: ROUTERS.USER.SALTCAL,
-          element: (
-            <MasterLayout>
-              <Saltcal />
-            </MasterLayout>
-          ),
-        },
-      ],
-    },
-    {
-      path: ROUTERS.USER.Shop,
-      element: (
-        <MasterLayout>
-          <Shop />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.AddProduct,
-      element: (
-        <MasterLayout>
-          <AddProduct />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.ADD_KOI_FISH,
-      element: (
-        <MasterLayout>
-          <AddKoiFishPage />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.LIST_KOI_FISH,
-      element: (
-        <MasterLayout>
-          <ListKoiFishPage />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.KOI_DETAILS,
-      element: (
-        <MasterLayout>
-          <KoiDetailPage />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.ProductDetail,
-      element: (
-        <MasterLayout>
-          <ProductDetail />
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.UpdateProduct,
-      element: (
-        <MasterLayout>
-          <UpdateProduct/>
-        </MasterLayout>
-      ),
-    },
-    {
-      path: ROUTERS.USER.WATERPAGE,
-      element: (
-        <MasterLayout>
-          <WaterPage/>
-        </MasterLayout>
-      ),
-    },
+const RouterControl = () => {
+  const publicRoutes = [
+    { path: ROUTERS.USER.HOME, element: <Homepage /> },
+    { path: ROUTERS.USER.LOGIN, element: <LoginRegister />, useLayout: false },
+    { path: ROUTERS.USER.FORGOT_PASSWORD, element: <ForgotPassword />, useLayout: false },
+    { path: ROUTERS.USER.OTP_VERIFY, element: <OtpVerify />, useLayout: false },
+    { path: ROUTERS.USER.Shop, element: <Shop /> },
+    { path: ROUTERS.USER.ProductDetail, element: <ProductDetail /> },
+  ];
+
+  const protectedRoutes = [
+    { path: ROUTERS.USER.KOICARE, element: <Koicarepage /> },
+    { path: ROUTERS.USER.ADD_POND, element: <AddKoiPondPage /> },
+    { path: ROUTERS.USER.LIST_PONDS, element: <ListKoiPondPage /> },
+    { path: ROUTERS.USER.Profile, element: <Profile /> },
+    { path: ROUTERS.USER.EDIT_POND, element: <EditPondPage /> },
+    { path: ROUTERS.USER.UpdateProfile, element: <UpdateProfile /> },
+    { path: ROUTERS.USER.FOODCAL, element: <Foodcal /> },
+    { path: ROUTERS.USER.SALTCAL, element: <Saltcal /> },
+    { path: ROUTERS.USER.AddProduct, element: <AddProduct /> },
+    { path: ROUTERS.USER.ADD_KOI_FISH, element: <AddKoiFishPage /> },
+    { path: ROUTERS.USER.LIST_KOI_FISH, element: <ListKoiFishPage /> },
+    { path: ROUTERS.USER.KOI_DETAILS, element: <KoiDetailPage /> },
+    { path: ROUTERS.USER.UpdateProduct, element: <UpdateProduct /> },
+    { path: ROUTERS.USER.WATERPAGE, element: <WaterPage /> },
   ];
 
   return (
     <Routes>
-      {userRouter.map((item, key) => (
-        <Route key={key} path={item.path} element={item.element}>
-          {item.children?.map((child, childKey) => (
-            <Route key={childKey} path={child.path} element={child.element} />
-          ))}
-        </Route>
+      {publicRoutes.map((route, index) => (
+        <Route
+          key={index}
+          path={route.path}
+          element={
+            route.useLayout === false ? (
+              route.element
+            ) : (
+              <MasterLayout>{route.element}</MasterLayout>
+            )
+          }
+        />
       ))}
+      <Route element={<ProtectedRoute />}>
+        {protectedRoutes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            element={<MasterLayout>{route.element}</MasterLayout>}
+          />
+        ))}
+      </Route>
     </Routes>
   );
-};
-
-const RouterControl = () => {
-  return renderUserRouter();
 };
 
 export default RouterControl;

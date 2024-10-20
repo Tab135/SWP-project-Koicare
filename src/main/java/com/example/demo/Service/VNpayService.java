@@ -13,7 +13,7 @@ import java.util.*;
 
 @Service
 public class VNpayService {
-    public ReqResPayment createPayment(HttpServletRequest req, long amount, String orderInfo, int userId) throws UnsupportedEncodingException {
+    public ReqResPayment createPayment(HttpServletRequest req, ReqResPayment order, int userId) throws UnsupportedEncodingException {
         String vnp_TxnRef = VNpayConfig.getRandomNumber(8);
         String vnp_IpAddr = VNpayConfig.getIpAddress(req);
 
@@ -23,11 +23,11 @@ public class VNpayService {
         vnp_Params.put("vnp_Version", VNpayConfig.vnp_Version);
         vnp_Params.put("vnp_Command", VNpayConfig.vnp_Command);
         vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
-        vnp_Params.put("vnp_Amount", String.valueOf(amount));
+        vnp_Params.put("vnp_Amount", String.valueOf(order.getAmount()));
         vnp_Params.put("vnp_CurrCode", "VND");
         vnp_Params.put("vnp_BankCode", "");
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", orderInfo);
+        vnp_Params.put("vnp_OrderInfo", order.getOrderInfo());
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_OrderType", "220000");

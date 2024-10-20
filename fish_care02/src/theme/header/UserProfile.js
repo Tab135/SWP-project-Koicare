@@ -35,7 +35,12 @@ const UserProfile = ({ setUserId, userId }) => {
           const userData = await response.json();
           const userName = userData.users.name;
           setUserId(userName);
+          if(localStorage.getItem('token') == null){
+            sessionStorage.setItem("userId", userName);
+          }
+          else{
           localStorage.setItem("userId", userName);
+          }
         } else {
           console.error("Failed to fetch user details:", response.statusText);
         }

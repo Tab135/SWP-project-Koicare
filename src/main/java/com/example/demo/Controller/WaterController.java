@@ -32,4 +32,8 @@ public class WaterController {
     public ResponseEntity<ReqResWater> getWater(@PathVariable int pondId) {
         return ResponseEntity.ok(waterM.getWater(pondId));
     }
+    @GetMapping("/user/WaterMonitor/WaterDetail/{waterId}")
+    public ResponseEntity<ReqResWater> getWaterDetails(@PathVariable int waterId){
+        return ResponseEntity.ok(waterM.detailsWater(waterId));
+    }
 }

@@ -44,10 +44,11 @@ const LoginRegister = () => {
             });
             if (response.data.statusCode === 200) {
                 console.log('Login successful:', response.data);
-                const { token } = response.data;
+                const { token, refreshToken } = response.data;
 
                 if (rememberMe) {
                     localStorage.setItem("token", token);
+                    localStorage.setItem("refreshToken", refreshToken);
                 } else {
                     sessionStorage.setItem("token", token);
                 }

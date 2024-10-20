@@ -144,6 +144,19 @@ public class WaterManagement {
         }
         return resp;
     }
+
+    public  ReqResWater detailsWater(int waterId){
+        ReqResWater resp = new ReqResWater();
+
+        Optional<WaterModel> water = waterRepository.findById(waterId);
+        if(water.isPresent()){
+            resp.setWaterModel(water.get());
+            resp.setMessage("ok");
+        }else {
+            resp.setError("error water parameter not found");
+        }
+        return  resp;
+    }
 }
 
 

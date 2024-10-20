@@ -2,7 +2,7 @@ package com.example.demo.Controller;
 
 
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResPayment;
-import com.example.demo.REQUEST_AND_RESPONSE.ReqResTransaction;
+import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.VNpayService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,14 @@ public class VNpayController {
     @Autowired
     private VNpayService vnpayService;
 
-    @GetMapping("/create_payment/{userId}")
+    @Autowired
+    private JWTUtils jwt;
+    @GetMapping("/create_payment")
     public ResponseEntity<?> createPayment(HttpServletRequest req,
-                                           @RequestParam long amount,
-                                           @RequestParam String orderInfo,
-                                           @PathVariable int userId) throws UnsupportedEncodingException {
-        ReqResPayment payment = vnpayService.createPayment(req, amount, orderInfo, userId);
+                                           @RequestBody ReqResPayment order,
+                                           @RequestHeader ("Authorization") String token) throws UnsupportedEncodingException {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        ReqResPayment payment = vnpayService.createPayment(req, order,userId);
         return ResponseEntity.status(HttpStatus.OK).body(payment);
     }
 
@@ -34,18 +36,9 @@ public class VNpayController {
             @RequestParam(value = "vnp_OrderInfo", required = false) String order,
             @RequestParam(value = "vnp_ResponseCode", required = false) String responseCode,
             @PathVariable int userId) {
-
-        ReqResTransaction transaction = new ReqResTransaction();
-        if (responseCode.equals("00")) {
-            transaction.setStatus("OK");
-            transaction.setMessage("Successfully");
-            transaction.setData("Money amount: " + amount);
-
-        } else {
-            transaction.setStatus("No");
-            transaction.setMessage("Failed");
-            transaction.setData("");
-        }
+        ReqResPayment transaction = new ReqResPayment();
+        transaction.setAmount(Long.parseLong(amount));
+        transaction.setOrderInfo(order);
         return ResponseEntity.status(HttpStatus.OK).body(transaction);
     }
 }

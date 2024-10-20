@@ -37,6 +37,15 @@ public class ReqResWater {
     private LocalDateTime date;
     private String message;
     private List<WaterModel> waterModelList;
+    private WaterModel waterModel;
+
+    public WaterModel getWaterModel() {
+        return waterModel;
+    }
+
+    public void setWaterModel(WaterModel waterModel) {
+        this.waterModel = waterModel;
+    }
 
     public int getStatusCode() {
         return statusCode;
