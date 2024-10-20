@@ -13,7 +13,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReqResBlog {
-    private MultipartFile[] blogImage;
+    private MultipartFile blogImage;
     private String blogContent;
     private LocalDate date;
     private int author;
@@ -96,16 +96,16 @@ public class ReqResBlog {
         this.blogList = blogList;
     }
 
-    public MultipartFile[] getBlogImage() {
+    public MultipartFile getBlogImage() {
         return blogImage;
     }
 
-    public void setBlogImage(MultipartFile[] blogImage) {
+    public void setBlogImage(MultipartFile blogImage) {
         this.blogImage = blogImage;
     }
 
-    public ReqResBlog(BlogModel blog, MultipartFile[] blogImage, String blogContent, LocalDate date, int author, String title, int statusCode, String error, String message, List<BlogModel> blogList) {
-        this.blog = blog;
+    public ReqResBlog(String message, MultipartFile blogImage, String blogContent, LocalDate date, int author, String title, int statusCode, String error, BlogModel blog, List<BlogModel> blogList) {
+        this.message = message;
         this.blogImage = blogImage;
         this.blogContent = blogContent;
         this.date = date;
@@ -113,7 +113,7 @@ public class ReqResBlog {
         this.title = title;
         this.statusCode = statusCode;
         this.error = error;
-        this.message = message;
+        this.blog = blog;
         this.blogList = blogList;
     }
 

@@ -15,8 +15,8 @@ public class BlogModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int blogId;
     @Lob
-    @ElementCollection
-    private List<byte[]> blogImage;
+    @Column(name = "image", columnDefinition = "VARBINARY(MAX)")
+    private byte[] blogImage;
     @Column (columnDefinition = "TEXT")
     private String blogContent;
     private LocalDate date;
@@ -50,11 +50,11 @@ public class BlogModel {
         this.blogContent = blogContent;
     }
 
-    public List<byte[]> getBlogImage() {
+    public byte[] getBlogImage() {
         return blogImage;
     }
 
-    public void setBlogImage(List<byte[]> blogImage) {
+    public void setBlogImage(byte[] blogImage) {
         this.blogImage = blogImage;
     }
 
@@ -74,13 +74,13 @@ public class BlogModel {
         this.author = author;
     }
 
-    public BlogModel(String title, UserModel author, LocalDate date, String blogContent, List<byte[]> blogImage, int blogId) {
-        this.title = title;
+    public BlogModel(UserModel author, int blogId, byte[] blogImage, String blogContent, LocalDate date, String title) {
         this.author = author;
-        this.date = date;
-        this.blogContent = blogContent;
-        this.blogImage = blogImage;
         this.blogId = blogId;
+        this.blogImage = blogImage;
+        this.blogContent = blogContent;
+        this.date = date;
+        this.title = title;
     }
 
     public BlogModel() {

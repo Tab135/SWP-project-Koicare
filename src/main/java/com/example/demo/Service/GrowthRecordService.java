@@ -30,11 +30,7 @@ public class GrowthRecordService {
         KoiStatisticId koiId = new KoiStatisticId(LocalDate.now(), koiFishId);
         Optional<UserModel> user = userR.findById(userId);
         Optional<KoiFishModel> koi = koiRepo.findById(koiFishId);
-        if(koi.isPresent() && user.isPresent() && !koi.get().getUserId().equals(user.get())){
-            res.setStatusCode(403);
-            res.setError("Invalid user");
-            return res;
-        }
+
         if(koi.isEmpty()){
             res.setStatusCode(404);
             res.setError("Koi fish not found");
@@ -50,7 +46,11 @@ public class GrowthRecordService {
             res.setStatusCode(409);
             return res;
         }
-
+        if(!koi.get().getUserId().equals(user.get())){
+            res.setStatusCode(403);
+            res.setError("Invalid user");
+            return res;
+        }
         try{
 
             KoiFishModel koiFish = koi.get();
@@ -252,7 +252,6 @@ public class GrowthRecordService {
     public ReqResGrowth updateRecord(ReqResGrowth request, Integer koiFishId, LocalDate date, int userId){
         ReqResGrowth res = getRecord(koiFishId, date, userId);
         GrowthRecord growth = res.getGrowthRecord();
-        KoiStatisticId koiId = new KoiStatisticId(date, koiFishId);
         KoiFishModel koi = koiRepo.findById(koiFishId).orElseThrow();
         Optional<UserModel> user = userR.findById(userId);
         if(user.isPresent() && !koi.getUserId().equals(user.get())){
@@ -262,12 +261,7 @@ public class GrowthRecordService {
             return result;
         }
 
-        if(growRepo.existsByKoiId(new KoiStatisticId(request.getDate(), koiFishId))){
-            ReqResGrowth result = new ReqResGrowth();
-            result.setStatusCode(409);
-            result.setError("Record existed");
-            return result;
-        }
+
         try{
             if(res.getStatusCode()==200){
                 if(request.getWeight() !=null){
@@ -284,8 +278,6 @@ public class GrowthRecordService {
                 }
 
                 if(request.getUpdateAt() !=null && !request.getUpdateAt().equals(growth.getUpdateAt())){
-                   // deleteRecord(koiId);
-                   // addRecord(request, koiFishId, userId);
                     growth.setUpdateAt(request.getUpdateAt());
                     res.setStatusCode(200);
                     res.setMessage("Updated successfully");

@@ -33,11 +33,10 @@ public class BlogService {
             BlogModel blog = new BlogModel();
             try {
                 if(request.getBlogImage() !=null){
-                    List<byte[]> imageB = new ArrayList<>();
-                    for(MultipartFile image: request.getBlogImage()){
-                        imageB.add(image.getBytes());
-                    }
-                    blog.setBlogImage(imageB);
+                    byte[] imageByte = request.getBlogImage().getBytes();
+                    blog.setBlogImage(imageByte);
+                }else{
+                    blog.setBlogImage(null);
                 }
 
 
@@ -153,13 +152,8 @@ public class BlogService {
 
 
                  if (request.getBlogImage() != null){
-                    List<byte[]> imageB = new ArrayList<>();
-                    for (MultipartFile image : request.getBlogImage()) {
-                        if (image != null) {
-                            imageB.add(image.getBytes());
-                        }
-                    }
-                    blog.setBlogImage(imageB);
+                     byte[] imageByte = request.getBlogImage().getBytes();
+                     blog.setBlogImage(imageByte);
                 }
                 if (request.getBlogContent() != null) {
                     blog.setBlogContent(request.getBlogContent());
