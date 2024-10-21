@@ -32,7 +32,38 @@ const ListKoiFishPage = () => {
         };
 
         fetchPonds();
+
+        fetchAllKoiFish();
     }, []);
+
+    const fetchAllKoiFish = async () => {
+        let token = localStorage.getItem('token');
+        if (!token) {
+            token = sessionStorage.getItem('token');
+        }
+        if (!token) {
+            alert('Please login to view the fish.');
+            return;
+        }
+
+        try {
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            const response = await axios.get('http://localhost:8080/user/koi', config);
+            const koiList = response.data.koiList;
+
+            if (koiList.length === 0) {
+                setMessage('No koi fish found.');
+            } else {
+                setMessage('');
+            }
+            setKoiFishList(koiList);
+        } catch (error) {
+            console.error('Error fetching koi fish', error);
+            setMessage('Error fetching koi fish.');
+        }
+    };
 
     const fetchKoiFish = async (pondId) => {
         let token = localStorage.getItem('token');
@@ -50,6 +81,7 @@ const ListKoiFishPage = () => {
             };
             const response = await axios.get(`http://localhost:8080/user/koi/${pondId}`, config);
             const koiList = response.data.koiList;
+
             if (koiList.length === 0) {
                 setMessage('No koi fish found for this pond.');
             } else {
@@ -67,9 +99,7 @@ const ListKoiFishPage = () => {
         setSelectedPond(pondId);
         if (pondId) {
             fetchKoiFish(pondId);
-        } else {
-            setKoiFishList([]);
-            setMessage('');
+            fetchAllKoiFish();
         }
     };
 
@@ -117,10 +147,9 @@ const ListKoiFishPage = () => {
             {message && <p>{message}</p>}
 
             {koiFishList.length > 0 && !message ? (
-
                 <div className="koi-fish-list">
                     {koiFishList.map((koi) => (
-                        <div key={koi.id} className="koi-fish-card">
+                        <div key={koi.koiId} className="koi-fish-card">
                             <img
                                 src={`data:image/jpeg;base64,${koi.image}`}
                                 alt={koi.koiName}

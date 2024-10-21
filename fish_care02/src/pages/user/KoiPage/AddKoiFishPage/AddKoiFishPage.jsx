@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import './AddKoiFishPage.scss';
+import {useNavigate} from "react-router-dom";
 
 const AddKoiFishPage = () => {
     const [koiFish, setKoiFish] = useState({
@@ -21,6 +22,7 @@ const AddKoiFishPage = () => {
     });
 
     const [ponds, setPonds] = useState([]);
+    const navigate = useNavigate();
     const [selectedPond, setSelectedPond] = useState('');
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -126,6 +128,10 @@ const AddKoiFishPage = () => {
         }
     };
 
+    const handleBackToList = () => {
+        navigate("/list-koi");
+    };
+
     return (
         <div className="add-fish-form-container">
             <h1>Create New Koi Fish</h1>
@@ -165,23 +171,23 @@ const AddKoiFishPage = () => {
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 <div>
                     <label>Koi Name:</label>
-                    <input type="text" name="koiName" value={koiFish.koiName} onChange={handleChange} required />
+                    <input type="text" name="koiName" value={koiFish.koiName} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Age:</label>
-                    <input type="number" name="age" value={koiFish.age} onChange={handleChange} required />
+                    <input type="number" name="age" value={koiFish.age} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Weight:</label>
-                    <input type="number" name="weight" value={koiFish.weight} onChange={handleChange} required />
+                    <input type="number" name="weight" value={koiFish.weight} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Length:</label> {/* Added length input */}
-                    <input type="number" name="length" value={koiFish.length} onChange={handleChange} required />
+                    <input type="number" name="length" value={koiFish.length} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Variety:</label>
-                    <input type="text" name="variety" value={koiFish.variety} onChange={handleChange} required />
+                    <input type="text" name="variety" value={koiFish.variety} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Sex:</label>
@@ -193,28 +199,29 @@ const AddKoiFishPage = () => {
                 </div>
                 <div>
                     <label>Feeding Schedule:</label>
-                    <input type="text" name="feedingSchedule" value={koiFish.feedingSchedule} onChange={handleChange} required />
+                    <input type="text" name="feedingSchedule" value={koiFish.feedingSchedule} onChange={handleChange}
+                           required/>
                 </div>
                 <div>
                     <label>Price:</label>
-                    <input type="number" name="price" value={koiFish.price} onChange={handleChange} required />
+                    <input type="number" name="price" value={koiFish.price} onChange={handleChange} required/>
                 </div>
-                {/* Additional fields */}
+
                 <div>
                     <label>Physique:</label>
-                    <input type="text" name="physique" value={koiFish.physique} onChange={handleChange} required />
+                    <input type="text" name="physique" value={koiFish.physique} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>In Pond Since:</label>
-                    <input type="date" name="inPondSince" value={koiFish.inPondSince} onChange={handleChange} required />
+                    <input type="date" name="inPondSince" value={koiFish.inPondSince} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Breeder:</label>
-                    <input type="text" name="breeder" value={koiFish.breeder} onChange={handleChange} required />
+                    <input type="text" name="breeder" value={koiFish.breeder} onChange={handleChange} required/>
                 </div>
                 <div>
                     <label>Origin:</label>
-                    <input type="text" name="origin" value={koiFish.origin} onChange={handleChange} required />
+                    <input type="text" name="origin" value={koiFish.origin} onChange={handleChange} required/>
                 </div>
 
                 <div>
@@ -230,6 +237,9 @@ const AddKoiFishPage = () => {
                 </div>
 
                 <button type="submit">Add Koi Fish</button>
+                <button className="back-to-list-button" onClick={handleBackToList}>
+                    Back to List
+                </button>
             </form>
         </div>
     );

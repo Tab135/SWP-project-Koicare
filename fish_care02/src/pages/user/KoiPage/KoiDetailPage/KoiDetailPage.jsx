@@ -40,6 +40,7 @@
                     const response = await axios.get(`http://localhost:8080/user/koi/detail/${koiId}`, config);
                     setKoiDetails(response.data.koi);
                     setKoiEditData(response.data.koi);
+                    console.log(response.data.koi);
                 } catch (error) {
                     console.error('Error fetching koi details', error);
                     setErrorMessage('Failed to fetch koi details.');
@@ -235,6 +236,7 @@
                     />
                     <div className="koi-info-grid">
                         <div className="koi-info-column">
+                            <p><strong>Koi Name:</strong> {koiDetails.koiName}</p>
                             <p><strong>Variety:</strong> {koiDetails.variety}</p>
                             <p><strong>Length:</strong> {koiDetails.length} cm</p>
                             <p><strong>Age:</strong> {koiDetails.age} years</p>
@@ -242,9 +244,11 @@
                             <p><strong>Sex:</strong> {koiDetails.sex}</p>
                         </div>
                         <div className="koi-info-column">
+                            <p><strong>Pond:</strong> {koiDetails.pondId.pondName}</p>
                             <p><strong>Price:</strong> ${koiDetails.price}</p>
                             <p><strong>Physique:</strong> {koiDetails.physique}</p>
-                            <p><strong>In Pond Since:</strong> {new Date(koiDetails.inPondSince).toLocaleDateString()}</p>
+                            <p><strong>In Pond Since:</strong> {new Date(koiDetails.inPondSince).toLocaleDateString()}
+                            </p>
                             <p><strong>Breeder:</strong> {koiDetails.breeder}</p>
                             <p><strong>Origin:</strong> {koiDetails.origin}</p>
                         </div>
@@ -263,19 +267,32 @@
                                         <div>
                                             <strong>Date:</strong> {new Date(record.koiId.date).toLocaleDateString()}
                                         </div>
-                                        <div>
-                                            <strong>Length:</strong> {record.length} cm
+                                        <div className="record-details">
+                                            <div>
+                                                <strong>Length:</strong> {record.length} cm
+                                            </div>
+                                            <div>
+                                                <strong>Weight:</strong> {record.weight} kg
+                                            </div>
                                         </div>
-                                        <div>
-                                            <strong>Weight:</strong> {record.weight} kg
-                                        </div>
-                                        <div>
-                                            <strong>Physique:</strong> {record.physique}
+                                        <div className="record-details">
+                                            <div>
+                                                <strong>Physique:</strong> {record.physique}
+                                            </div>
+                                            <div>
+                                                <strong>Weight
+                                                    Rate:</strong> {record.weightRate ? record.weightRate.toFixed(2) + '%' : '0'}
+                                            </div>
+                                            <div>
+                                                <strong>Length
+                                                    Rate:</strong> {record.lengthRate ? record.lengthRate.toFixed(2) + '%' : '0'}
+                                            </div>
                                         </div>
                                         <div className="button-container">
                                             <button className="edit-koi-button" onClick={() => handleEdit(record)}>Edit
                                             </button>
-                                            <button className="delete-button" onClick={() => handleDelete(record)}>Delete
+                                            <button className="delete-button"
+                                                    onClick={() => handleDelete(record)}>Delete
                                             </button>
                                         </div>
                                     </li>
@@ -284,13 +301,13 @@
                         ) : (
                             <p>No growth records available.</p>
                         )}
-                        <button className="Add-Growth" onClick={handleAddGrowthRecord}>
-                            Add Growth Record
-                        </button>
-                        <button className="back-to-list-button" onClick={handleBackToList}>
-                            Back to List
-                        </button>
                     </div>
+                    <button className="Add-Growth" onClick={handleAddGrowthRecord}>
+                        Add Growth Record
+                    </button>
+                    <button className="back-to-list-button" onClick={handleBackToList}>
+                        Back to List
+                    </button>
                 </div>
 
                 {showGrowthModal && (
