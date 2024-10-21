@@ -273,6 +273,28 @@ public class KoiService {
             }
 
         }
+
+        public ResReqKoi listKoi(int userId){
+        ResReqKoi res = new ResReqKoi();
+        Optional<UserModel> user = userR.findById(userId);
+        if(user.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("Invalid user");
+            return res;
+        }
+        List<KoiFishModel> kList  = koiR.findALlByUserId(user.get());
+            if(kList.isEmpty()){
+                res.setStatusCode(404);
+                res.setError("Empty");
+                return res;
+            }
+            res.setStatusCode(200);
+            res.setMessage("Found");
+            res.setKoiList(kList);
+            return res;
+
+        }
+
     }
 
 

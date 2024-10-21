@@ -49,6 +49,11 @@ import java.util.Optional;
         return ResponseEntity.ok(kService.getAllKoiByPondId(pondId, userId));
     }
 
+    @GetMapping("/koi")
+    ResponseEntity<ResReqKoi> getAllKoi(@RequestHeader ("Authorization") String token){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+    return ResponseEntity.ok((kService.listKoi(userId)));}
+
     @GetMapping("/koi/detail/{koiId}")
     ResponseEntity<ResReqKoi> getKoi(@RequestHeader ("Authorization") String token, @PathVariable int koiId){
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
