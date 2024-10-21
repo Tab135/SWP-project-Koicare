@@ -46,7 +46,7 @@ const KoiCare = () => {
                  <span>Statistics</span>
                 </>
             ),
-            path: "#",
+            path: ROUTERS.USER.STATITIC,
         },
         
         
