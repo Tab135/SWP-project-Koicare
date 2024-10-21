@@ -306,8 +306,8 @@ public class GrowthRecordService {
                 if(preRecord.isPresent()){
                     Double weightRate = ((growth.getWeight()-preRecord.get().getWeight())/preRecord.get().getWeight())*100;
                     Double lengthRate = ((growth.getLength()-preRecord.get().getLength())/preRecord.get().getLength())*100;
-                    growth.setWeightRate(weightRate);
-                    growth.setLengthRate(lengthRate);
+                    growth.setWeightRate(Math.max(weightRate, 0.0));
+                    growth.setLengthRate(Math.max(lengthRate, 0.0));
                     growRepo.save(growth);
                 }
 

@@ -31,19 +31,19 @@ public class NewsService {
         }
         try{
             NewsModel newsModel = new NewsModel();
-            try {
-                if(request.getNewsImage() !=null){
-                    List<byte[]> imageB = new ArrayList<>();
-                    for(MultipartFile image: request.getNewsImage()){
-                        imageB.add(image.getBytes());
-                    }
-                    newsModel.setNewsImage(imageB);
+
+                if(request.getNewsImage() !=null) {
+                    byte[] imageByte = request.getNewsImage().getBytes();
+                    newsModel.setNewsImage(imageByte);
+
+                    newsModel.setNewsImage(imageByte);
+
+                }else{
+                    newsModel.setNewsImage(null);
                 }
 
 
-            }catch (Exception ex){
-                ex.printStackTrace();
-            }
+
 
             newsModel.setNewsContent(request.getNewsContent());
             newsModel.setDate(LocalDate.now());
@@ -145,16 +145,12 @@ public class NewsService {
         try {
             if (checkNews.isPresent()) {
                 NewsModel news = checkNews.get();
-                if (request.getNewsImage() ==null) {
-                    news.setNewsImage(null);
-                }else {
-                    List<byte[]> imageB = new ArrayList<>();
-                    for(MultipartFile image: request.getNewsImage()){
-                        if(image !=null){
-                            imageB.add(image.getBytes());
-                        }
-                    }
-                    news.setNewsImage(imageB);
+                if (request.getNewsImage() !=null) {
+
+
+                    byte[] imageByte = request.getNewsImage().getBytes();
+                    news.setNewsImage(imageByte);
+                    news.setNewsImage(imageByte);
                 }
                 if (request.getNewsContent() != null) {
                     news.setNewsContent(request.getNewsContent());

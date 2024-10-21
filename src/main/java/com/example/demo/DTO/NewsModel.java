@@ -13,8 +13,8 @@ public class NewsModel {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private int newsId;
     @Lob
-    @ElementCollection
-    private List<byte[]> newsImage;
+    @Column(name = "image", columnDefinition = "VARBINARY(MAX)")
+    private byte[] newsImage;
 
     @Column (columnDefinition = "TEXT")
     private String newsContent;
@@ -40,13 +40,7 @@ public class NewsModel {
         this.newsId = newsId;
     }
 
-    public List<byte[]> getNewsImage() {
-        return newsImage;
-    }
 
-    public void setNewsImage(List<byte[]> newsImage) {
-        this.newsImage = newsImage;
-    }
 
     public LocalDate getDate() {
         return date;
@@ -72,13 +66,21 @@ public class NewsModel {
         this.author = author;
     }
 
-    public NewsModel(String headline, int newsId, List<byte[]> newsImage, String newsContent, LocalDate date, UserModel author) {
-        this.headline = headline;
-        this.newsId = newsId;
+    public byte[] getNewsImage() {
+        return newsImage;
+    }
+
+    public void setNewsImage(byte[] newsImage) {
         this.newsImage = newsImage;
-        this.newsContent = newsContent;
-        this.date = date;
+    }
+
+    public NewsModel(UserModel author, String headline, LocalDate date, String newsContent, byte[] newsImage, int newsId) {
         this.author = author;
+        this.headline = headline;
+        this.date = date;
+        this.newsContent = newsContent;
+        this.newsImage = newsImage;
+        this.newsId = newsId;
     }
 
     public NewsModel() {

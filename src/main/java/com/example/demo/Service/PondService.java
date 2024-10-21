@@ -85,11 +85,19 @@ byte[] picByte =request.getPicture().getBytes();
     public ResReqPond getPond(int pondId, int userId) {
         ResReqPond res = new ResReqPond();
         Optional<PondModel> findPond = pondR.findById(pondId);
-        if(findPond.isPresent()){
-            res.setStatusCode(200);
-            res.setMessage("Found pond");
-            res.setPond(findPond.get());
-            return res;
+        Optional<UserModel> user = userR.findById(userId);
+        if(findPond.isPresent()) {
+            if (!findPond.get().getUser().equals(user.get())) {
+                res.setStatusCode(403);
+                res.setError("Invalid user");
+                return res;
+            }
+
+                res.setStatusCode(200);
+                res.setMessage("Found pond");
+                res.setPond(findPond.get());
+                return res;
+
         }
             res.setStatusCode(404);
             res.setError("Pond not exist");
@@ -106,8 +114,22 @@ byte[] picByte =request.getPicture().getBytes();
     public ResReqPond updatePond(int userId, int pondId, ResReqPond request){
         ResReqPond res = getPond(pondId, userId);
         PondModel pond = res.getPond();
-        ResReqPond pList = getPondsByUserId(userId);
         Optional<PondModel> checkName = pondR.findByPondName(request.getPondName());
+        Optional<UserModel> user = userR.findById(userId);
+        if(user.isEmpty()){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(404);
+            result.setError("User not found");
+            return result;
+        }
+        if(checkName.isPresent() && !checkName.get().getUser().equals(user.get())){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(403);
+            result.setError("Invalid user");
+            return result;
+        }
+
+
         if(checkName.isPresent() && checkName.get().getId() != pondId){
             ResReqPond result = new ResReqPond();
             result.setStatusCode(409);
@@ -167,11 +189,30 @@ byte[] picByte =request.getPicture().getBytes();
 
     }
 
-    public ResReqPond moveAllFish (int pondId, int newPondId){
+    public ResReqPond moveAllFish (int pondId, int newPondId, int userId){
         ResReqPond res = new ResReqPond();
         Optional<PondModel> oldPond = pondR.findById(pondId);
         Optional<PondModel> newPond = pondR.findById(newPondId);
-        if(newPond.isPresent() && oldPond.isPresent() &&newPondId != pondId) {
+        Optional<UserModel> user = userR.findById(userId);
+        if(oldPond.isEmpty()){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(404);
+            result.setError("Pond not found");
+            return result;
+        } else if (newPond.isEmpty()) {
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(404);
+            result.setError("Pond not found");
+            return result;
+        }
+
+        if(!oldPond.get().getUser().equals(user.get()) || !newPond.get().getUser().equals(user.get())){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(403);
+            result.setError("Invalid user");
+            return result;
+        }
+        if(newPondId != pondId) {
             List<KoiFishModel> koiList = koiR.findAllByPondId(oldPond.get());
 
             for (KoiFishModel koi : koiList) {
@@ -193,16 +234,41 @@ byte[] picByte =request.getPicture().getBytes();
 
             return res;
         }
-        res.setStatusCode(404);
-        res.setError("Pond not found");
+
         return  res;
     }
 
-public ResReqPond moveFish (int oldPondId, int newPondId, int fishId){
+public ResReqPond moveFish (int oldPondId, int newPondId, int fishId, int userId){
     Optional<PondModel> oldPond = pondR.findById(oldPondId);
     Optional<PondModel> newPond = pondR.findById(newPondId);
+    Optional<UserModel> user = userR.findById(userId);
     Optional<KoiFishModel> koi = koiR.findById(fishId);
-    if(oldPond.isPresent() && newPond.isPresent() && koi.isPresent()){
+    if(oldPond.isEmpty()){
+        ResReqPond result = new ResReqPond();
+        result.setStatusCode(404);
+        result.setError("Pond not found");
+        return result;
+    }
+    if(newPond.isEmpty()){
+        ResReqPond result = new ResReqPond();
+        result.setStatusCode(404);
+        result.setError("Pond not found");
+        return result;
+    }
+    if(!oldPond.get().getUser().equals(user.get()) || !newPond.get().equals(user.get())){
+        ResReqPond result = new ResReqPond();
+        result.setStatusCode(403);
+        result.setError("Invalid user");
+        return result;
+    }
+    if(koi.isEmpty()){
+        ResReqPond res = new ResReqPond();
+        res.setStatusCode(404);
+        res.setError("Koi not found");
+        return res;
+    }
+
+
         koi.get().setPondId(newPond.get());
         oldPond.get().setNumberOfFish(oldPond.get().getNumberOfFish()-1);
         newPond.get().setNumberOfFish(newPond.get().getNumberOfFish()+1);
@@ -214,23 +280,6 @@ public ResReqPond moveFish (int oldPondId, int newPondId, int fishId){
         res.setStatusCode(200);
         res.setMessage("Move success");
         return res;
-    }
-    if(koi.isEmpty()){
-        ResReqPond res = new ResReqPond();
-        res.setStatusCode(404);
-        res.setError("Koi not found");
-        return res;
-    }
-    if(oldPond.isEmpty()){
-        ResReqPond res = new ResReqPond();
-        res.setStatusCode(404);
-        res.setError("Pond not exist");
-        return res;
-    }
-    ResReqPond res = new ResReqPond();
-    res.setStatusCode(404);
-    res.setError("Pond not found");
-    return res;
 }
 
 

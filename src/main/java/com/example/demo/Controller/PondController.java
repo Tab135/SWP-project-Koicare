@@ -106,13 +106,17 @@ public class PondController {
     }
 
     @PostMapping("/pond/{oldPondId}/moveAll")
-    public ResponseEntity<ResReqPond> moveAllFish(@PathVariable int oldPondId, @RequestParam("pondId") int newPondId){
-        return ResponseEntity.ok(pService.moveAllFish(oldPondId, newPondId));
+    public ResponseEntity<ResReqPond> moveAllFish(@RequestHeader("Authorization") String token, @PathVariable int oldPondId, @RequestParam("pondId") int newPondId){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+        return ResponseEntity.ok(pService.moveAllFish(oldPondId, newPondId, userId));
     }
 
     @PostMapping("/pond/{oldPond}/move/{koiId}")
-    public ResponseEntity<ResReqPond> moveFish(@PathVariable int oldPond, @PathVariable int koiId, @RequestParam("pondId") int newPondId){
-        return ResponseEntity.ok(pService.moveFish(oldPond, newPondId, koiId));
+    public ResponseEntity<ResReqPond> moveFish(@RequestHeader("Authorization") String token, @PathVariable int oldPond, @PathVariable int koiId, @RequestParam("pondId") int newPondId){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+        return ResponseEntity.ok(pService.moveFish(oldPond, newPondId, koiId, userId));
     }
 
 

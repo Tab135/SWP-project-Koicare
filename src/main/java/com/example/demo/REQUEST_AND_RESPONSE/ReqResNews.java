@@ -13,7 +13,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ReqResNews {
-    private MultipartFile[] newsImage;
+    private MultipartFile newsImage;
     private String newsContent;
     private LocalDate date;
     private String headline;
@@ -91,15 +91,15 @@ public class ReqResNews {
         this.message = message;
     }
 
-    public MultipartFile[] getNewsImage() {
+    public MultipartFile getNewsImage() {
         return newsImage;
     }
 
-    public void setNewsImage(MultipartFile[] newsImage) {
+    public void setNewsImage(MultipartFile newsImage) {
         this.newsImage = newsImage;
     }
 
-    public ReqResNews(int statusCode, MultipartFile[] newsImage, String newsContent, LocalDate date, String headline, NewsModel news, List<NewsModel> newsList, String error, String message) {
+    public ReqResNews(int statusCode, MultipartFile newsImage, String newsContent, LocalDate date, String headline, NewsModel news, List<NewsModel> newsList, String error, String message) {
         this.statusCode = statusCode;
         this.newsImage = newsImage;
         this.newsContent = newsContent;

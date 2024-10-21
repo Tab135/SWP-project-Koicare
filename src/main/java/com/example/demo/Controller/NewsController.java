@@ -4,6 +4,7 @@ import com.example.demo.DTO.BlogModel;
 import com.example.demo.DTO.NewsModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResBlog;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResNews;
+import com.example.demo.Repo.NewsRepo;
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.NewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 
@@ -24,11 +27,13 @@ public class NewsController {
     private NewsService newsService;
     @Autowired
     private JWTUtils jwt;
+    @Autowired
+    private NewsRepo newsR;
     @PostMapping("/shop/news/create")
-    public ResponseEntity<ReqResNews> createNews(@RequestHeader ("Authorization") String token, @ModelAttribute ReqResNews request, @RequestParam(value ="image", required = false) MultipartFile[] image){
+    public ResponseEntity<ReqResNews> createNews(@RequestHeader ("Authorization") String token, @ModelAttribute ReqResNews request, @RequestParam(value ="image", required = false) MultipartFile image){
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
         try{
-            if( image !=null&& image.length >0 ){
+            if( image !=null&& !image.isEmpty()){
                 request.setNewsImage(image);
             }else{
                 request.setNewsImage(null);
@@ -61,9 +66,9 @@ public class NewsController {
         }
     }
     @PutMapping ("/shop/news/{newsId}/update")
-    ResponseEntity<ReqResNews> updatePond(@RequestHeader ("Authorization") String token, @PathVariable int newsId, @ModelAttribute ReqResNews request, @RequestParam(value ="image", required = false) MultipartFile[] image){
+    ResponseEntity<ReqResNews> updatePond(@RequestHeader ("Authorization") String token, @PathVariable int newsId, @ModelAttribute ReqResNews request, @RequestParam(value ="image", required = false) MultipartFile image){
         try{
-            if(image !=null&& image.length >0){
+            if(image !=null&& !image.isEmpty()){
                 request.setNewsImage(image);
             }else{
                 request.setNewsImage(null);
@@ -81,32 +86,21 @@ public class NewsController {
 
     //========================image==============================//
 
-    @GetMapping("/public/news/{newsId}/images")
-    public ResponseEntity<List<String>> listImage(@PathVariable int newsId){
-        NewsModel news = newsService.viewNews(newsId).getNews();
-        List<byte[]> imageB = news.getNewsImage();
-        if(imageB ==null || imageB.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    @GetMapping("/public/news/{newsId}/image")
+    public ResponseEntity<String> getNewsImage(@PathVariable int newsId) {
+        Optional<NewsModel> news = newsR.findById(newsId);
+
+        if (news.isPresent() && news.get().getNewsImage() != null) {
+            byte[] imageData = news.get().getNewsImage();
+
+            String base64Image = Base64.getEncoder().encodeToString(imageData);
+
+            return ResponseEntity.ok(base64Image);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found");
         }
-        List<String> imageUrls = new ArrayList<>();
-        for(int i =0; i<imageB.size(); i++){
-            imageUrls.add("/public/news/"+ newsId +"/image/" +i);
-        }
-        return ResponseEntity.ok(imageUrls);
 
 
-    }
-    @GetMapping("/public/news/{newsId}/image/{imageIndex}")
-    public ResponseEntity<byte[]> getImage(@PathVariable int newsId, @PathVariable int imageIndex){
-        NewsModel news = newsService.viewNews(newsId).getNews();
-        List<byte[]> imageB = news.getNewsImage();
-        if (imageB == null || imageIndex < 0 || imageIndex >= imageB.size()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        byte[] image = imageB.get(imageIndex);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.IMAGE_PNG);
-        return new ResponseEntity<>(image, headers, HttpStatus.OK);
     }
 
 
