@@ -25,6 +25,8 @@ import UpdateProduct from "./pages/Shop/product/Update Product/UpdateProduct";
 import ProtectedRoute from "./component/private-route/protect";
 import WaterPage from "./pages/user/waterpage/ListWater/waterpage";
 import Statitic from "./pages/user/statiticpage/statitic";
+import CreateBlogPage from "./pages/Shop/Blogs/CreateBlogsPage/CreateBlogsPage";
+import ListBlogsPage from "./pages/Shop/Blogs/ListBlogsPage/ListBlogsPage";
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
@@ -51,6 +53,8 @@ const RouterControl = () => {
     { path: ROUTERS.USER.UpdateProduct, element: <UpdateProduct /> },
     { path: ROUTERS.USER.WATERPAGE, element: <WaterPage /> },
     { path: ROUTERS.USER.STATITIC, element: <Statitic/> },
+    { path: ROUTERS.USER.CREATE_BLOG, element: <CreateBlogPage /> },
+    { path: ROUTERS.USER.LIST_BLOGS, element: <ListBlogsPage /> },
   ];
 
   return (

@@ -21,8 +21,9 @@ export const ROUTERS = {
         ProductDetail: "/public/product/:productId",
         UpdateProduct:"/shop/updatePro/:productId",
         WATERPAGE: "/koicare/waterpage",
-        STATITIC: "/koicare/statitic"
-        
+        STATITIC: "/koicare/statitic",
+        CREATE_BLOG: '/shop/blog/create',
+        LIST_BLOGS: '/shop/blog/list',
 
 
     }
