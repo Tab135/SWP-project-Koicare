@@ -1,0 +1,9 @@
+/* Toast.css */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050; /* Bootstrap default z-index for toasts */
+    width: 300px; /* Set a fixed width */
+  }
+  

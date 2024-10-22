@@ -16,7 +16,7 @@ import java.util.function.Function;
 @Component
 public class JWTUtils {
     private final SecretKey Key;
-    private static final long Expiration_Time = 7200000;
+    private static final long Expiration_Time = 74000000;
     private static final long Expiration_Time_Refresh = 2592000000L;
     public JWTUtils(){
         String serectString ="b25nY25nY2Fub25nY2Fub25nY2FubFub225nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fub25nY2Fu";

@@ -82,7 +82,10 @@ class ProductService {
     }
 
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      if (!token) {
+        token = sessionStorage.getItem("token");
+      }
       const response = await axios.post(
         `${ProductService.base_url}/shop/addPro`,
         formData,
@@ -105,7 +108,10 @@ class ProductService {
 
   static async deleteProduct(productId) {
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      if (!token) {
+        token = sessionStorage.getItem("token");
+      }
       const response = await axios.delete(
         `${ProductService.base_url}/shop/deletePro/${productId}`,
         {
@@ -129,7 +135,10 @@ class ProductService {
       return;
     }
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      if (!token) {
+        token = sessionStorage.getItem("token");
+      }
       const response = await axios.get(
         `${ProductService.base_url}/public/product/${productId}`,
         {
@@ -167,7 +176,10 @@ class ProductService {
   // In ProductService.js
   static async updateProduct(productId, formData) {
     try {
-      const token = localStorage.getItem("token");
+      let token = localStorage.getItem("token");
+      if (!token) {
+        token = sessionStorage.getItem("token");
+      }
       const response = await axios.put(
         `${ProductService.base_url}/shop/updatePro/${productId}`,
         formData,

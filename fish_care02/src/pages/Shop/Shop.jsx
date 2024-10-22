@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import ProductService from "./ShopService.js";
+import CartService from "./Cart/CartService.js";
+import { jwtDecode } from "jwt-decode";
+import { ROUTERS } from "../../utis/router.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
   Container,
@@ -15,30 +18,53 @@ import {
 } from "react-bootstrap";
 import {
   FaShoppingCart,
-  FaSearch,
   FaPlus,
   FaImage,
   FaTrashAlt,
-  FaEdit, // Import the edit icon for the button
+  FaEdit,
 } from "react-icons/fa";
+import AddToCart from "./Cart/AddToCart/AddToCart.jsx";
+import ToastNotification from "./Cart/AddToCart/ToastNotification.jsx"; // Import the Toast component
 import "./shop.css";
-import { ROUTERS } from "../../utis/router.js";
+
+// Function to extract user ID from token
+const extractUserId = (token) => {
+  try {
+    const decoded = jwtDecode(token);
+    return decoded ? decoded.userId : null;
+  } catch (error) {
+    console.error("Failed to decode token:", error);
+    return null;
+  }
+};
 
 const Shop = () => {
+  const [Id, setId] = useState(null);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [cartItemCount, setCartItemCount] = useState(0);
+  const [showToast, setShowToast] = useState(false); // State to control toast visibility
+  const [toastMessage, setToastMessage] = useState(""); // State for toast message
+
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const userId = extractUserId(token.replace("Bearer ", ""));
+      setId(userId);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const productData = await ProductService.getAllProducts();
-        console.log("Fetched products:", productData); // Log the fetched data
-        setProducts(productData); // Make sure productData is an array
-        setLoading(false);
+        setProducts(productData);
       } catch (error) {
         setError("Error fetching products: " + error.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -46,11 +72,32 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
+  const handleAddToCart = async (productId) => {
+    console.log("Attempting to add product ID:", productId);
+    try {
+      const response = await CartService.addProductToCart(productId, 1);
+      setCartItemCount(prevCount => prevCount + 1);
+      console.log("Product added to cart:", response);
+      setToastMessage("Product added to cart successfully!"); // Set success message
+      setShowToast(true); // Show the toast
+
+      // Auto-close the toast after 2 seconds
+      setTimeout(() => {
+        setShowToast(false);
+      }, 2000);
+    } catch (error) {
+      console.error(
+        "Failed to add product to cart:",
+        error.response ? error.response.data : error
+      );
+      alert("Failed to add product to cart: " + error.message);
+    }
+  };
+
   const handleDelete = async (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await ProductService.deleteProduct(productId);
-        // Filter out the deleted product from the list
         setProducts(products.filter((product) => product.id !== productId));
         alert("Product deleted successfully");
       } catch (error) {
@@ -69,12 +116,12 @@ const Shop = () => {
 
   return (
     <Container fluid className="shop-container py-5">
-      <Row className="mb-4">
-        <Col>
-          <h1 className="shop-title text-center mb-4">Our Products</h1>
-        </Col>
-      </Row>
-
+      {showToast && (
+        <ToastNotification
+          message={toastMessage}
+          onClose={() => setShowToast(false)} // Close the toast manually if needed
+        />
+      )}
       <Row className="justify-content-center mb-4">
         <Col xs={12} md={6} lg={4}>
           <div className="search-bar-container">
@@ -88,31 +135,24 @@ const Shop = () => {
           </div>
         </Col>
         <Col xs="auto" className="mt-3 mt-md-0">
-          <Button
-            variant="outline-primary"
-            className="rounded-circle p-2 position-relative"
-          >
-            <FaShoppingCart size={24} />
-            <Badge
-              bg="danger"
-              className="position-absolute top-0 start-100 translate-middle rounded-pill"
+          {/* Make the cart icon a link to the cart page */}
+          <Link to="/user/cart/getCartByUser">
+            <Button
+              variant="outline-primary"
+              className="rounded-circle p-2 position-relative"
             >
-              0
-            </Badge>
-          </Button>
-        </Col>
-      </Row>
-
-      <Row className="justify-content-end mb-4">
-        <Col xs="auto">
-          <Link to={ROUTERS.USER.AddProduct}>
-            <Button variant="success" className="d-flex align-items-center">
-              <FaPlus className="me-2" /> Add New Product
+              <FaShoppingCart size={24} />
+              <Badge
+                bg="danger"
+                className="position-absolute top-0 start-100 translate-middle rounded-pill"
+              >
+                {cartItemCount}
+              </Badge>
             </Button>
           </Link>
         </Col>
       </Row>
-
+      {/* Render products */}
       {loading ? (
         <div className="text-center">
           <Spinner animation="border" variant="primary" role="status">
@@ -158,27 +198,23 @@ const Shop = () => {
                     </Card.Text>
                   )}
                   <div className="mt-auto">
-                    <Button
-                      variant="outline-primary"
-                      onClick={() => console.log("Add to cart clicked")}
-                      className="w-100 mb-2"
-                    >
-                      Add to Cart
-                    </Button>
+                    {/* Add to Cart Button */}
+                    <AddToCart
+                      userId={Id}
+                      productId={product.id}
+                      onAdd={handleAddToCart}
+                    />
                     <Link to={`/public/product/${product.id}`}>
                       <Button variant="info" className="w-100 mb-2">
                         Detail
                       </Button>
                     </Link>
-
-                    {/* Update Product Button */}
                     <Link to={`/shop/updatePro/${product.id}`}>
                       <Button variant="warning" className="w-100 mb-2">
                         <FaEdit className="me-2" />
                         Update Product
                       </Button>
                     </Link>
-
                     <Button
                       variant="danger"
                       className="w-100"

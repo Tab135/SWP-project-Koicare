@@ -1,6 +1,7 @@
 package com.example.demo.DTO.Shop;
 
 import com.example.demo.DTO.UserModel;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,8 +27,9 @@ public class Cart {
     @JoinColumn(name = "cart_id")
     private List<CartItem> items = new ArrayList<>();  // Initialize items list
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonIgnore
     private UserModel user;
 
     @Transient  // This ensures the field is not persisted to the DB

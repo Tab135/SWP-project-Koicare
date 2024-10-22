@@ -42,15 +42,16 @@ public class CartService implements ICartService {
         Optional<UserModel> um = userRepository.findById(userId);
 
         if (pm.isEmpty()) {
+            System.out.println("Product ID: " + productId + " not found.");
             response.setStatusCode(404);
             response.setError("Product not found");
             return response;
         }
-        if (um.isEmpty()) {
-            response.setStatusCode(404);
-            response.setError("User not found");
-            return response;
+        Optional<UserModel> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            throw new RuntimeException("User not found"); // or handle this case differently
         }
+        UserModel user = userOptional.get();
 
         Optional<Cart> cart = cartRepo.findByUserId(userId);
         Cart userCart = cart.orElse(new Cart(um.get(), new Date()));
@@ -124,6 +125,19 @@ public class CartService implements ICartService {
 
     }
 
+    public ReqResCart mapToReqResCart(Cart cart) {
+        ReqResCart reqResCart = new ReqResCart();
+        reqResCart.setCartId(cart.getId());
+        reqResCart.setDate(cart.getDate());
+        reqResCart.setTotalPrice(cart.getTotalPrice());
+        reqResCart.setItemNumber(cart.getItemNumber());
+
+        // Directly map CartItem list
+        reqResCart.setItems(cart.getItems());  // Assuming you just need the CartItem data
+
+        return reqResCart;
+    }
+
     @Override
     public ReqResCart updateItemQuantity(int userId, int productId, int quantity) {
         ReqResCart req = new ReqResCart();
@@ -176,20 +190,6 @@ public class CartService implements ICartService {
             req.setError("Cart item not found");
         }
         return req;
-    }
-
-
-    public ReqResCart mapToReqResCart(Cart cart) {
-        ReqResCart reqResCart = new ReqResCart();
-        reqResCart.setCartId(cart.getId());
-        reqResCart.setDate(cart.getDate());
-        reqResCart.setTotalPrice(cart.getTotalPrice());
-        reqResCart.setItemNumber(cart.getItemNumber());
-
-        // Directly map CartItem list
-        reqResCart.setItems(cart.getItems());  // Assuming you just need the CartItem data
-
-        return reqResCart;
     }
 
 
