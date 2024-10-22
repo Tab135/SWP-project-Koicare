@@ -24,12 +24,6 @@ public class PondService {
     public ResReqPond createP(ResReqPond request, int userId) {
         ResReqPond res = new ResReqPond();
         Optional<UserModel> user = userR.findById(userId);
-        Optional<PondModel> checkPond = pondR.findByPondName(request.getPondName());
-        if(checkPond.isPresent()){
-            res.setError("Pond existed");
-            res.setStatusCode(409);
-            return res;
-        }
         try {
             PondModel pondModel = new PondModel();
             pondModel.setUser(user.get());
@@ -126,14 +120,6 @@ byte[] picByte =request.getPicture().getBytes();
             ResReqPond result = new ResReqPond();
             result.setStatusCode(403);
             result.setError("Invalid user");
-            return result;
-        }
-
-
-        if(checkName.isPresent() && checkName.get().getId() != pondId){
-            ResReqPond result = new ResReqPond();
-            result.setStatusCode(409);
-            result.setError("Pond existed");
             return result;
         }
 

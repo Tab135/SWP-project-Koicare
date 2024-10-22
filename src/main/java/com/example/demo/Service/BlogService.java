@@ -24,11 +24,6 @@ public class BlogService {
     public ReqResBlog createBlog(ReqResBlog request, int userId){
         ReqResBlog res = new ReqResBlog();
         Optional<UserModel> user = userR.findById(userId);
-        if(blogRepo.existsByTitle(request.getTitle())){
-            res.setError("Blog's title existed");
-            res.setStatusCode(409);
-            return res;
-        }
         try{
             BlogModel blog = new BlogModel();
             try {
@@ -134,13 +129,7 @@ public class BlogService {
     public ReqResBlog updateBlog (int blogId, ReqResBlog request) {
         ReqResBlog res = new ReqResBlog();
         Optional<BlogModel> updateBlog = blogRepo.findById(blogId);
-        Optional<BlogModel> checkBlog = blogRepo.findByTitle(request.getTitle());
-        if (checkBlog.isPresent() && checkBlog.get().getBlogId() != blogId) {
-            ReqResBlog result = new ReqResBlog();
-            result.setStatusCode(409);
-            result.setError("Title existed");
-            return result;
-        }
+
         if (updateBlog.isEmpty()) {
             ReqResBlog result = new ReqResBlog();
             result.setStatusCode(404);

@@ -23,12 +23,7 @@ public class NewsService {
 
     public ReqResNews createNews(ReqResNews request, int userId){
         ReqResNews res = new ReqResNews();
-        Optional<UserModel> authhor = userR.findById(userId);
-        if(newsRepo.existsByHeadline(request.getHeadline())){
-            res.setError("News existed");
-            res.setStatusCode(409);
-            return res;
-        }
+        Optional<UserModel> author = userR.findById(userId);
         try{
             NewsModel newsModel = new NewsModel();
 
@@ -48,7 +43,7 @@ public class NewsService {
             newsModel.setNewsContent(request.getNewsContent());
             newsModel.setDate(LocalDate.now());
             newsModel.setHeadline(request.getHeadline());
-            newsModel.setAuthor(authhor.get());
+            newsModel.setAuthor(author.get());
 
             NewsModel result = newsRepo.save(newsModel);
             if(result.getNewsId() >0){
@@ -135,12 +130,6 @@ public class NewsService {
         ReqResNews res = new ReqResNews();
         Optional<NewsModel> checkNews = newsRepo.findById(newsId);
         Optional<NewsModel> checkHeadline = newsRepo.findByHeadline(request.getHeadline());
-        if(checkHeadline.isPresent() && checkHeadline.get().getNewsId() != newsId){
-            ReqResNews result = new ReqResNews();
-            result.setStatusCode(409);
-            result.setError("Headline existed");
-            return result;
-        }
 
         try {
             if (checkNews.isPresent()) {

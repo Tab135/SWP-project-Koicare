@@ -39,12 +39,6 @@ public class KoiService {
             return res;
         }
 
-        if(checkKoi.isPresent()){
-            res.setError("Koi's name existed");
-            res.setStatusCode(409);
-            return res;
-        }
-
         if (!pondR.existsById(pondId)) {
             res.setStatusCode(404);
             res.setError("Pond not found");
@@ -141,6 +135,11 @@ public class KoiService {
         ResReqKoi res = new ResReqKoi();
         Optional<KoiFishModel> koi = koiR.findById(koiId);
         Optional<UserModel> user = userR.findById(userId);
+        if(koi.isEmpty()){
+            res.setStatusCode(404);
+            res.setError("Empty");
+            return res;
+        }
         if(user.isPresent() &&!koi.get().getUserId().equals(user.get())){
             res.setStatusCode(403);
             res.setError("Invalid user");
@@ -190,23 +189,6 @@ public class KoiService {
             return result;
         }
 
-
-
-        KoiFishModel checkKoi = koiR.findByKoiNameAndPondIdAndKoiIdNot(request.getKoiName(), newPond.get(), koiId);
-        if (checkKoi != null) {
-
-            ResReqKoi result = new ResReqKoi();
-            result.setStatusCode(409);
-            result.setMessage("Koi with the same name already in pond");
-            return result;
-        }
-        Optional<KoiFishModel> checkName = koiR.findByKoiName(request.getKoiName());
-        if(checkName.isPresent()){
-            ResReqKoi result = new ResReqKoi();
-            result.setStatusCode(409);
-            result.setError("Koi existed");
-            return result;
-        }
 
             try {
                 if (res.getStatusCode() == 200) {
