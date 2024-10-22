@@ -99,6 +99,7 @@ const ListKoiFishPage = () => {
         setSelectedPond(pondId);
         if (pondId) {
             fetchKoiFish(pondId);
+        }else{
             fetchAllKoiFish();
         }
     };
