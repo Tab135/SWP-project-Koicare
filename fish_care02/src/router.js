@@ -28,12 +28,19 @@ import Statitic from "./pages/user/statiticpage/statitic";
 import CreateBlogPage from "./pages/Shop/Blogs/CreateBlogsPage/CreateBlogsPage";
 import ListBlogsPage from "./pages/Shop/Blogs/ListBlogsPage/ListBlogsPage";
 import Cart from "./pages/Shop/Cart/ListCart/ListCart";
+import OrderList from "./pages/Shop/Order/ListOrder";
+import Dashboard from "./pages/Shop/Dash board/ShopDashBoard";
+import ShopDashboard from "./pages/Shop/Dash board/ShopDashBoard";
 
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
     { path: ROUTERS.USER.LOGIN, element: <LoginRegister />, useLayout: false },
-    { path: ROUTERS.USER.FORGOT_PASSWORD, element: <ForgotPassword />, useLayout: false },
+    {
+      path: ROUTERS.USER.FORGOT_PASSWORD,
+      element: <ForgotPassword />,
+      useLayout: false,
+    },
     { path: ROUTERS.USER.OTP_VERIFY, element: <OtpVerify />, useLayout: false },
     { path: ROUTERS.USER.Shop, element: <Shop /> },
     { path: ROUTERS.USER.ProductDetail, element: <ProductDetail /> },
@@ -54,11 +61,12 @@ const RouterControl = () => {
     { path: ROUTERS.USER.KOI_DETAILS, element: <KoiDetailPage /> },
     { path: ROUTERS.USER.UpdateProduct, element: <UpdateProduct /> },
     { path: ROUTERS.USER.WATERPAGE, element: <WaterPage /> },
-    { path: ROUTERS.USER.STATITIC, element: <Statitic/> },
+    { path: ROUTERS.USER.STATITIC, element: <Statitic /> },
     { path: ROUTERS.USER.CREATE_BLOG, element: <CreateBlogPage /> },
     { path: ROUTERS.USER.LIST_BLOGS, element: <ListBlogsPage /> },
-    {path: ROUTERS.USER.Cart, element: <Cart/> }
-
+    { path: ROUTERS.USER.Cart, element: <Cart /> },
+    { path: ROUTERS.USER.OrderList, element: <OrderList/> },
+    { path: ROUTERS.USER.ShopDashboard, element: <ShopDashboard/> },
   ];
 
   return (

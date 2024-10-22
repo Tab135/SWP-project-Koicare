@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link , useLocation } from "react-router-dom";
 import ProductService from "./ShopService.js";
 import CartService from "./Cart/CartService.js";
 import { jwtDecode } from "jwt-decode";
@@ -16,16 +16,10 @@ import {
   Button,
   Badge,
 } from "react-bootstrap";
-import {
-  FaShoppingCart,
-  FaPlus,
-  FaImage,
-  FaTrashAlt,
-  FaEdit,
-} from "react-icons/fa";
+import { FaShoppingCart, FaImage } from "react-icons/fa";
 import AddToCart from "./Cart/AddToCart/AddToCart.jsx";
 import ToastNotification from "./Cart/AddToCart/ToastNotification.jsx"; // Import the Toast component
-import "./shop.css";
+import "./_shop.scss";
 
 // Function to extract user ID from token
 const extractUserId = (token) => {
@@ -47,6 +41,7 @@ const Shop = () => {
   const [cartItemCount, setCartItemCount] = useState(0);
   const [showToast, setShowToast] = useState(false); // State to control toast visibility
   const [toastMessage, setToastMessage] = useState(""); // State for toast message
+  const location = useLocation();
 
   useEffect(() => {
     const token =
@@ -72,11 +67,27 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    // Check if the payment was successful from the URL params
+    const params = new URLSearchParams(location.search);
+    const paymentStatus = params.get("payment");
+
+    if (paymentStatus === "Successfully") {
+      setToastMessage("Payment was successful!");
+      setShowToast(true);
+
+      // Hide the toast after 3 seconds
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+    }
+  }, [location]);
+
   const handleAddToCart = async (productId) => {
     console.log("Attempting to add product ID:", productId);
     try {
       const response = await CartService.addProductToCart(productId, 1);
-      setCartItemCount(prevCount => prevCount + 1);
+      setCartItemCount((prevCount) => prevCount + 1);
       console.log("Product added to cart:", response);
       setToastMessage("Product added to cart successfully!"); // Set success message
       setShowToast(true); // Show the toast
@@ -91,18 +102,6 @@ const Shop = () => {
         error.response ? error.response.data : error
       );
       alert("Failed to add product to cart: " + error.message);
-    }
-  };
-
-  const handleDelete = async (productId) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      try {
-        await ProductService.deleteProduct(productId);
-        setProducts(products.filter((product) => product.id !== productId));
-        alert("Product deleted successfully");
-      } catch (error) {
-        setError("Failed to delete product: " + error.message);
-      }
     }
   };
 
@@ -203,26 +202,17 @@ const Shop = () => {
                       userId={Id}
                       productId={product.id}
                       onAdd={handleAddToCart}
+                      className="mb-2" // Add margin-bottom for spacing
                     />
                     <Link to={`/public/product/${product.id}`}>
-                      <Button variant="info" className="w-100 mb-2">
+                      <Button
+                        variant="info"
+                        className="w-100 mb-2"
+                        style={{ padding: "0.75rem 1rem" }}
+                      >
                         Detail
                       </Button>
                     </Link>
-                    <Link to={`/shop/updatePro/${product.id}`}>
-                      <Button variant="warning" className="w-100 mb-2">
-                        <FaEdit className="me-2" />
-                        Update Product
-                      </Button>
-                    </Link>
-                    <Button
-                      variant="danger"
-                      className="w-100"
-                      onClick={() => handleDelete(product.id)}
-                    >
-                      <FaTrashAlt className="me-2" />
-                      Delete
-                    </Button>
                   </div>
                 </Card.Body>
               </Card>

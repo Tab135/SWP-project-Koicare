@@ -11,11 +11,31 @@ public class ReqResOrder {
     private int statusCode;
     private String error;
     private String message;
+    private int id;
     private int userId;
     private LocalDateTime orderDate;
     private BigDecimal totalAmount;
     private OrderStatus orderStatus;
     private List<ReqResOrderItem> items;
+
+    public ReqResOrder() {
+    }
+
+    public ReqResOrder(int id, int userId, LocalDateTime orderDate, BigDecimal totalAmount, OrderStatus orderStatus, List<ReqResOrderItem> items) {
+        this.id = id;
+        this.userId = userId;
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.orderStatus = orderStatus;
+        this.items = items;
+    }
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getStatusCode() {
         return statusCode;

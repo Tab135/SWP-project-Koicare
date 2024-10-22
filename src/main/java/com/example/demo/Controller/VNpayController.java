@@ -20,7 +20,7 @@ public class VNpayController {
 
     @Autowired
     private JWTUtils jwt;
-    @GetMapping("/create_payment")
+    @PostMapping("/create_payment")
     public ResponseEntity<?> createPayment(HttpServletRequest req,
                                            @RequestBody ReqResPayment order,
                                            @RequestHeader ("Authorization") String token) throws UnsupportedEncodingException {

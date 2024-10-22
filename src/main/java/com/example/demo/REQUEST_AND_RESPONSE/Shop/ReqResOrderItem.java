@@ -11,6 +11,15 @@ public class ReqResOrderItem {
     private String error;
     private String message;
 
+    public ReqResOrderItem() {
+    }
+
+    public ReqResOrderItem(int productId, String productName, int quantity, BigDecimal price) {
+        this.productId = productId;
+        this.productName = productName;
+        this.quantity = quantity;
+        this.price = price;
+    }
     public String getMessage() {
         return message;
     }

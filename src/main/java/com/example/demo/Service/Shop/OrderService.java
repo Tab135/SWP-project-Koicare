@@ -66,6 +66,7 @@ public class OrderService implements IOrderService{
             // Populate the ReqResOrderItem for the response
             ReqResOrderItem reqResOrderItem = new ReqResOrderItem();
             reqResOrderItem.setProductId(cartItem.getProduct().getId());  // Use cartItem to get product
+            reqResOrderItem.setProductName(cartItem.getProduct().getProductName()); // Set product name
             reqResOrderItem.setQuantity(cartItem.getQuantity());
             reqResOrderItem.setPrice(cartItem.getProduct().getPrice());
 
@@ -75,13 +76,15 @@ public class OrderService implements IOrderService{
 
         // Set the message and order items in the response
         req.setMessage("Order created successfully");
-        req.setItems(orderItems);  // Set the populated list of order items
-        req.setUserId(userId);  // Optionally set the user ID in the response
-        req.setOrderDate(LocalDateTime.now());  // Set the order date
+        req.setId(order.getId());  // Set the ID of the newly created order
+        req.setItems(orderItems);   // Set the populated list of order items
+        req.setUserId(userId);      // Optionally set the user ID in the response
+        req.setOrderDate(order.getDate());  // Set the order date from the created order
         req.setTotalAmount(cart.getTotalPrice());  // Set the total amount
 
         return req;  // Return the populated response object
     }
+
 
     @Transactional
     @Override
@@ -201,9 +204,11 @@ public class OrderService implements IOrderService{
     @Transactional
     @Override
     public ReqResOrder getOrderById(int orderId) {
-      ReqResOrder req = new ReqResOrder();
-      Order order = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found with ID : " + orderId));
-      req.setStatusCode(200);
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+
+        ReqResOrder req = new ReqResOrder();
+        req.setStatusCode(200);
         req.setMessage("Order retrieved successfully");
         req.setUserId(order.getUser().getId());
         req.setOrderDate(order.getDate());
@@ -211,16 +216,21 @@ public class OrderService implements IOrderService{
         req.setOrderStatus(order.getOrderStatus());
 
         List<ReqResOrderItem> reqResOrderItems = order.getOrderItems().stream()
-                .map(orderItem -> {
-                    ReqResOrderItem reqResOrderItem = new ReqResOrderItem();
-                    reqResOrderItem.setProductId(orderItem.getProduct().getId());
-                    reqResOrderItem.setQuantity(orderItem.getQuantity());
-                    reqResOrderItem.setPrice(orderItem.getPrice());
-                    return reqResOrderItem;
-                }).collect(Collectors.toList());
+                .map(this::mapToReqResOrderItem)
+                .collect(Collectors.toList());
 
         req.setItems(reqResOrderItems);
-      return req;
+        return req;
+    }
+
+    private ReqResOrderItem mapToReqResOrderItem(OrderItem orderItem) {
+        ReqResOrderItem reqResOrderItem = new ReqResOrderItem();
+        reqResOrderItem.setProductId(orderItem.getProduct().getId());
+        reqResOrderItem.setProductName(orderItem.getProduct().getProductName());
+
+        reqResOrderItem.setQuantity(orderItem.getQuantity());
+        reqResOrderItem.setPrice(orderItem.getPrice());
+        return reqResOrderItem;
     }
 
     @Override

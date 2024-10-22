@@ -1,0 +1,23 @@
+.order-container {
+  padding: 20px;
+}
+
+.text-center {
+  margin-bottom: 20px;
+}
+  
+  .order-card {
+    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+  }
+  
+  .order-table th, .order-table td {
+    text-align: center;
+  }
+  
+  .order-table tr:hover {
+    background-color: #f1f1f1;
+    margin-bottom: 20px; /* Light gray on hover */
+  }

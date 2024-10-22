@@ -11,7 +11,10 @@ import {
 } from "react-bootstrap";
 import { FaImage, FaTrash } from "react-icons/fa";
 import CartService from "../CartService";
-import "./list.scss"; // Adjust the import path as necessary
+import "./_list.scss"; // Adjust the import path as necessary
+import OrderService from "../../Order/OrderService";
+import { useNavigate } from "react-router-dom";
+import { ROUTERS } from "../../../../utis/router";
 
 const extractUserId = (token) => {
   const payload = token.split(".")[1];
@@ -24,7 +27,8 @@ const ListCart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [totalPrice, setTotalPrice] = useState(0); // State to hold total price
+  const [totalPrice, setTotalPrice] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCartItems = async () => {
@@ -38,7 +42,6 @@ const ListCart = () => {
         const userId = extractUserId(token.replace("Bearer ", ""));
         const cartData = await CartService.getCartByUser();
         setCartItems(cartData.items);
-        // Fetch total price after cart items are loaded
         await handleGetTotalPrice();
       } catch (err) {
         setError(err.message);
@@ -53,7 +56,7 @@ const ListCart = () => {
   const handleGetTotalPrice = async () => {
     try {
       const response = await CartService.getTotalPrice();
-      setTotalPrice(response); // Set total price in state
+      setTotalPrice(response);
     } catch (err) {
       setError(err.message);
     }
@@ -70,10 +73,9 @@ const ListCart = () => {
       });
       const updatedItem = updatedItems.find((item) => item.id === cartItemId);
       const productId = updatedItem.product.id;
-      // Call the backend to update the quantity
       await CartService.updateCart(productId, updatedItem.quantity);
       setCartItems(updatedItems);
-      await handleGetTotalPrice(); // Update total price after quantity change
+      await handleGetTotalPrice();
     } catch (err) {
       setError(err.message);
     }
@@ -85,9 +87,24 @@ const ListCart = () => {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.id !== cartItemId)
       );
-      await handleGetTotalPrice(); // Update total price after removing an item
+      await handleGetTotalPrice();
     } catch (err) {
       setError(err.message);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      setLoading(true);
+      const orderResponse = await OrderService.createOrder();
+      const orderId = orderResponse.id; // Ensure this is correct
+      console.log("Order created with ID:", orderId);
+      navigate(`/user/order/getOrder/${orderId}`); // Use orderId here
+      alert("Order created successfully!");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -110,7 +127,7 @@ const ListCart = () => {
             {cartItems.map((item) => (
               <Card key={item.id} className="mb-3 shadow-sm cart-card">
                 <Card.Body className="d-flex align-items-start">
-                  <div className="me-3 product-image-container">
+                  <div className="me-3 product-image-containers">
                     {item.product.productImage ? (
                       <Card.Img
                         variant="top"
@@ -198,7 +215,11 @@ const ListCart = () => {
                 </strong>
               </div>
 
-              <Button variant="dark" className="w-100 mt-2">
+              <Button
+                variant="dark"
+                className="w-100 mt-2"
+                onClick={handleCheckout} // Add this line
+              >
                 Checkout
               </Button>
             </div>

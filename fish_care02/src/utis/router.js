@@ -1,3 +1,5 @@
+import ProductDashboard from "../pages/Shop/Dash board/ShopDashBoard";
+import OrderList from "../pages/Shop/Order/ListOrder";
 
 export const ROUTERS = {
     USER: {
@@ -24,7 +26,9 @@ export const ROUTERS = {
         STATITIC: "/koicare/statitic",
         CREATE_BLOG: '/shop/blog/create',
         LIST_BLOGS: '/shop/blog/list',
-        Cart: "/user/cart/getCartByUser"
+        Cart: "/user/cart/getCartByUser",
+        OrderList : "/user/order/getOrder/:orderId",
+        ShopDashboard: "/shop/product"
 
 
 

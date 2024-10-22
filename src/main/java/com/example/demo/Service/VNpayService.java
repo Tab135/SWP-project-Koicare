@@ -31,7 +31,7 @@ public class VNpayService {
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         vnp_Params.put("vnp_OrderType", "220000");
-        vnp_Params.put("vnp_ReturnUrl", "http://localhost:8080/public/payment/vn-pay-callback/" + userId);
+        vnp_Params.put("vnp_ReturnUrl", "http://localhost:3000/public/product");
 
         Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
         SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
