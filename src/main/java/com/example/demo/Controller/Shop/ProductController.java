@@ -53,6 +53,22 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/shop/product")
+    public ResponseEntity<List<ProductModel>> shopShow()
+    {
+        try {
+            List<ProductModel> pm = proM.showProduct(new ProductModel());
+            if (pm.isEmpty()) {
+                //return 204 if there no product
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            } else {
+                return ResponseEntity.ok(pm);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @GetMapping("/public/product/search/{id}")
     public ResponseEntity<ReqResProduct> searchByCateId(@PathVariable int id) {
        return ResponseEntity.ok(proM.searchByCategoryId(id));
