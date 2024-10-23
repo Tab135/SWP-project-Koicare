@@ -27,7 +27,13 @@ public class GrowthRecordService {
 
     public ReqResGrowth addRecord(ReqResGrowth growth, Integer koiFishId, int userId){
         ReqResGrowth res = new ReqResGrowth();
-        KoiStatisticId koiId = new KoiStatisticId(LocalDate.now(), koiFishId);
+        KoiStatisticId koiId = null;
+        if(growth.getDate() !=null){
+            koiId= new KoiStatisticId(growth.getDate(), koiFishId);
+        }else {
+            koiId = new KoiStatisticId(LocalDate.now(), koiFishId);
+        }
+
         Optional<UserModel> user = userR.findById(userId);
         Optional<KoiFishModel> koi = koiRepo.findById(koiFishId);
 
@@ -66,7 +72,7 @@ public class GrowthRecordService {
             }
 
             GrowthRecord record = new GrowthRecord();
-            record.setKoiId(new KoiStatisticId(LocalDate.now(), koiFishId));
+            record.setKoiId(koiId);
 
             record.setUpdateAt(LocalDateTime.now());
             record.setWeight(growth.getWeight());
@@ -76,7 +82,7 @@ public class GrowthRecordService {
         if(preRecord.isPresent()) {
             if (preRecord.get().getWeight() != null) {
                 Double weightRate = ((growth.getWeight() - preWeight) / preWeight) * 100;
-                record.setWeightRate(Math.max(weightRate,0.0)); //make sure no negative
+                record.setWeightRate(Math.max(weightRate,0.0));
             } else {
                 record.setWeightRate(0.0);
             }
@@ -277,13 +283,13 @@ public class GrowthRecordService {
                     growth.setPhysique(request.getPhysique());
                 }
 
-                if(request.getUpdateAt() !=null && !request.getUpdateAt().equals(growth.getUpdateAt())){
-                    growth.setUpdateAt(request.getUpdateAt());
-                    res.setStatusCode(200);
-                    res.setMessage("Updated successfully");
-                    res.setGrowthRecord(growth);
-                    return res;
-                }
+//                if(request.getUpdateAt() !=null && !request.getUpdateAt().equals(growth.getUpdateAt())){
+//                    growth.setUpdateAt(request.getUpdateAt());
+//                    res.setStatusCode(200);
+//                    res.setMessage("Updated successfully");
+//                    res.setGrowthRecord(growth);
+//                    return res;
+//                }
 
                 GrowthRecord result = growRepo.save(growth);
                 res.setStatusCode(200);
