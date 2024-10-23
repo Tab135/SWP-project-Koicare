@@ -113,4 +113,20 @@ import java.util.Optional;
         return ResponseEntity.ok(kService.updateKoi(pondId, koiId, request, userId));
     }
 
+    @DeleteMapping("/delete/{koiId}")
+    @Transactional
+    String deleteWithoutPondId(@RequestHeader ("Authorization") String token, @PathVariable int koiId){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+        ResReqKoi res = kService.getKoi(koiId, userId);
+        if(res.getStatusCode() ==200 ) {
+            gRepo.deleteAllByKoiFish_KoiId(koiId);
+            kService.deleteWithoutId(koiId);
+            return "Delete koi success";
+        }
+        else{
+            return "Delete failed, " +res.getStatusCode()+": " + res.getError();
+        }
+    }
+
 }

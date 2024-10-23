@@ -103,6 +103,14 @@ public class KoiService {
 
     }
 
+    public void deleteWithoutId(int koiId){
+        KoiFishModel koi = koiR.findById(koiId).get();
+        PondModel pond = koi.getPondId();
+        pond.setNumberOfFish(pond.getNumberOfFish()-1);
+        koiR.delete(koi);
+        pondR.save(pond);
+    }
+
     public ResReqKoi getAllKoiByPondId(int pondId, int userId) {
         ResReqKoi res = new ResReqKoi();
         Optional<UserModel> user = userR.findById(userId);
