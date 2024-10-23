@@ -5,8 +5,10 @@ import axios from 'axios';
 import PondDropdown from './PondDropdown';
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'chart.js'
+import KoiDropdown from './KoiDropdown';
 const Statitic = () => {
     const [PondId, setPondId] = useState(null); 
+    const [KoiId, setKoiId] = useState(null);
     const [showSecondGraph, setShowSecondGraph] = useState(false);
     const [showFirstGraph, setShowFirstGraph] = useState(true);
     const LineGraph = ({ pondId }) => {
@@ -246,11 +248,12 @@ const Statitic = () => {
             <h1>Statistics</h1>
         <div className='container'>
             <div className='row'>
-        <PondDropdown setPondId={setPondId} /> 
-                <span onClick={toggleGraph}>
+            <span onClick={toggleGraph}>
                     {showSecondGraph ? 'Water Parameter' : 'Growth record'}
                 </span>
-                {showFirstGraph && <LineGraph pondId={PondId} title="First Line Graph" />}
+            {showFirstGraph && <PondDropdown setPondId={setPondId} />}
+            {showSecondGraph && <KoiDropdown setKoiId={setKoiId} />}
+                {showFirstGraph && <LineGraph pondId={PondId} title="First Line Graph" /> }
                 {showSecondGraph && <SecondLineGraph pondId={PondId} title="Second Line Graph" />}           
         </div>
         </div>

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
 import axios from 'axios';
@@ -21,7 +22,8 @@ const ProtectedRoute = () => {
 
     if (decodedToken.exp < currentTime) {
       console.log("Token has expired, attempting to refresh...");
-      await refreshToken();
+
+          await refreshToken();
     } else {
       await validateToken(token);
     }
@@ -31,11 +33,11 @@ const ProtectedRoute = () => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
       try {
-        const refreshResponse = await axios.post('http://localhost:8080/auth/refresh-token', {
+            const refreshResponse = await axios.post('http://localhost:8080/auth/refresh-token', {
           token: refreshToken,
         });
 
-        if (refreshResponse.data.token) {
+             if (refreshResponse.data.token) {
           localStorage.setItem('token', refreshResponse.data.token);
           console.log("Token refreshed successfully.");
           setIsAuthenticated(true);
@@ -44,7 +46,7 @@ const ProtectedRoute = () => {
           setIsAuthenticated(false);
         }
       } catch (error) {
-        console.error("Error refreshing token: ", error.response ? error.response.data : error);
+               console.error("Error refreshing token: ", error.response ? error.response.data : error);
         setIsAuthenticated(false);
       }
     } else {
@@ -84,12 +86,13 @@ const ProtectedRoute = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  useEffect(() => {
+   useEffect(() => {
     if (isAuthenticated === false) {
       navigate('/login');
     }
   }, [isAuthenticated, navigate]);
 
+  
   // Render the protected content immediately
   return isAuthenticated ? <Outlet /> : null;
 };

@@ -11,33 +11,41 @@ const PondDropdown = ({ setPondId }) => {
         const fetchPonds = async () => {
             try {
                 let token = localStorage.getItem('token');
-            if (!token) {
-                token = sessionStorage.getItem('token');
-            }
+                if (!token) {
+                    token = sessionStorage.getItem('token');
+                }
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
-                setPonds(response.data.pondList);
-
+                const pondList = response.data.pondList;
+                setPonds(pondList);
+    
                 const storedPondId = sessionStorage.getItem('selectedPondId');
                 if (storedPondId) {
-                    const selectedPondName = response.data.pondList.find(pond => pond.id === parseInt(storedPondId))?.pondName || '';
+                    const selectedPondName = pondList.find(pond => pond.id === parseInt(storedPondId))?.pondName || '';
                     setSelectedPond({ id: storedPondId, name: selectedPondName });
                     setIsPondSelected(true);
                     setPondId(storedPondId);
+                } else if (pondList.length > 0) {
+                    // Select the first pond in the list if no pond is stored
+                    const firstPond = pondList[0];
+                    setSelectedPond({ id: firstPond.id, name: firstPond.pondName });
+                    setIsPondSelected(true);
+                    setPondId(firstPond.id);
+    
+                    sessionStorage.setItem('selectedPondId', firstPond.id); // Store the first pond ID
                 }
             } catch (error) {
                 console.error('Error fetching ponds', error);
                 setError('Could not fetch ponds.');
             }
         };
-
+    
         fetchPonds();
     }, []);
-
     const handleChange = (e) => {
         const pond_id = e.target.value;
         const selectedPondName = ponds.find(pond => pond.id === parseInt(pond_id))?.pondName || '';

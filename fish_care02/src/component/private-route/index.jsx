@@ -10,19 +10,9 @@ const PrivateRoute = ({ allowedRoles }) => {
         return allowedRoles.includes(userRole); 
       };
     useEffect(() => {
-        const token = localStorage.getItem("token");
-
+        let token = localStorage.getItem('token') || sessionStorage.getItem('token');
         if (!token) {
             navigate("/login"); 
-        } else {
-            try {
-                const decodedToken = jwtDecode(token);
-                const currentTime = Date.now() / 1000;
-                console.log("Currenttime: ",currentTime);
-                console.log("exp: ",decodedToken.exp);
-                } catch (error) {
-                  return false;
-            } 
         }
     }, [navigate, allowedRoles]);
 

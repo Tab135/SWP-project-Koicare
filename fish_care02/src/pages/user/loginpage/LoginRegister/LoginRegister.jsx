@@ -44,16 +44,24 @@ const LoginRegister = () => {
             });
             if (response.data.statusCode === 200) {
                 console.log('Login successful:', response.data);
-                const { token, refreshToken } = response.data;
+                const { token, refreshToken, role } = response.data;
 
                 if (rememberMe) {
                     localStorage.setItem("token", token);
                     localStorage.setItem("refreshToken", refreshToken);
+                    localStorage.setItem("role", role);
                 } else {
+                    sessionStorage.setItem("role", role);
                     sessionStorage.setItem("token", token);
                 }
 
-                navigate("/koicare");
+                if (role === 'USER') {
+                    navigate("/user/koicare"); 
+                } else if (role === 'ADMIN') {
+                    navigate("/admin/dashboard"); 
+                } else if (role === 'SHOP') {
+                    navigate("/public/product"); 
+                }
                 setErrorMessage('');
             } else {
                 console.error('Login failed with status code:', response.data);

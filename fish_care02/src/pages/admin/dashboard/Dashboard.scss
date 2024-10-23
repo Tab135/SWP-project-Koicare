@@ -1,0 +1,87 @@
+
+.dashboard {
+    display: flex;
+}
+
+.content {
+    margin-left: 250px; 
+    padding: 20px;
+    flex-grow: 1;
+}
+.sidebar {
+    width: 250px;
+    height: 100vh; /* Full height */
+    background-color: #f4f4f4; /* Light gray background */
+    padding: 20px;
+    position: fixed; /* Fixed sidebar */
+    top: 0;
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h2 {
+    text-align: center;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 15px 0;
+}
+.menu-button {
+    background: none; 
+    border: none; 
+    color: #333; 
+    padding: 10px;
+    text-align: left;
+    width: 100%; 
+    cursor: pointer; 
+    transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+    background-color: #ddd; 
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensures it appears above other content */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;  /* Adjust the width as necessary */
+    width: 100%;
+    max-height: 90vh; /* Ensures the modal doesn’t go off-screen vertically */
+    overflow-y: auto; /* Adds a scrollbar if content overflows */
+    position: relative;
+}

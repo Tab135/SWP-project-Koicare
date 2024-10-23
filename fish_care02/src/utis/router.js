@@ -31,6 +31,9 @@ export const ROUTERS = {
         ShopDashboard: "/shop/product"
 
 
-
+    },
+    ADMIN: {
+        DASHBOARD: "/admin/dashboard",
+    
     }
 }; 

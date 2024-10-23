@@ -31,7 +31,7 @@ import Cart from "./pages/Shop/Cart/ListCart/ListCart";
 import OrderList from "./pages/Shop/Order/ListOrder";
 import Dashboard from "./pages/Shop/Dash board/ShopDashBoard";
 import ShopDashboard from "./pages/Shop/Dash board/ShopDashBoard";
-
+import DashBoard from "./pages/admin/dashboard/dashboard";
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
@@ -67,6 +67,8 @@ const RouterControl = () => {
     { path: ROUTERS.USER.Cart, element: <Cart /> },
     { path: ROUTERS.USER.OrderList, element: <OrderList/> },
     { path: ROUTERS.USER.ShopDashboard, element: <ShopDashboard/> },
+    {path: ROUTERS.ADMIN.DASHBOARD, element: <DashBoard/>,  useLayout: false },
+
   ];
 
   return (
@@ -89,7 +91,13 @@ const RouterControl = () => {
           <Route
             key={index}
             path={route.path}
-            element={<MasterLayout>{route.element}</MasterLayout>}
+            element={
+              route.useLayout === false ? (
+                route.element
+              ) : (
+                <MasterLayout>{route.element}</MasterLayout>
+              )
+            }
           />
         ))}
       </Route>
