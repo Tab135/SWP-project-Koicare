@@ -45,7 +45,7 @@ const AddProduct = () => {
     const { name, value } = e.target;
     setProductData({
       ...productData,
-      [name]: name === "categoryId" ? parseInt(value) : value,
+      [name]: name === "categoryId" ? value : value, // Store categoryId as a string
     });
   };
 
@@ -149,16 +149,16 @@ const AddProduct = () => {
                     categories.map((category) => (
                       <Form.Check
                         type="radio"
-                        id={`category-${category.categoryId}`}
+                        id={`category-${category.categoryId}`} // Unique ID for each radio button
                         key={category.categoryId}
-                        name="categoryId"
+                        name="categoryId" // Same name for grouping
                         label={category.categoryName}
-                        value={category.categoryId?.toString()} // Ensure categoryId exists before calling toString()
+                        value={category.categoryId.toString()} // Ensure categoryId is a string
                         checked={
                           productData.categoryId ===
-                          category.categoryId?.toString()
-                        } // Same here
-                        onChange={handleInputChange}
+                          category.categoryId.toString()
+                        } // Ensure proper comparison
+                        onChange={handleInputChange} // Handle change event
                       />
                     ))
                   ) : (

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link , useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ProductService from "./ShopService.js";
 import CartService from "./Cart/CartService.js";
 import { jwtDecode } from "jwt-decode";
@@ -194,6 +194,11 @@ const Shop = () => {
                   {product.description && (
                     <Card.Text className="product-description">
                       {product.description}
+                    </Card.Text>
+                  )}
+                  {product.amount && (
+                    <Card.Text className="product-description">
+                      Amount: {product.amount}
                     </Card.Text>
                   )}
                   <div className="mt-auto">

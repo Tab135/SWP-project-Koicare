@@ -62,6 +62,9 @@ const ProductDetail = () => {
                     currency: "VND",
                   })}
                 </Card.Text>
+                <Card.Text className="product-description">
+                  Amount: {product.amount}
+                </Card.Text>
                 <Card.Text className="fw-bold">
                   Rating: {product.productRating}
                 </Card.Text>

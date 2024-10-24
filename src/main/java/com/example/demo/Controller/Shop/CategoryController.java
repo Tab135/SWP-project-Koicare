@@ -14,21 +14,36 @@ import java.util.List;
 public class CategoryController {
     @Autowired
     private CategoryManagement cateM;
-    @PostMapping("/auth/addCate")
+    @PostMapping("/shop/addCate")
     public ResponseEntity<ReqResCATE> addCate(@RequestBody ReqResCATE addCategory){
         return ResponseEntity.ok(cateM.addCate(addCategory));
     }
-    @DeleteMapping("/auth/deleteCate/{cateId}")
+    @DeleteMapping("/shop/deleteCate/{cateId}")
     public ResponseEntity<ReqResCATE> deleCate(@PathVariable int cateId){
         return ResponseEntity.ok(cateM.deleteCate(cateId));
     }
 
-    @PostMapping("/auth/updateCate/{cateId}")
+    @PutMapping("/shop/updateCate/{cateId}")
     public ResponseEntity<ReqResCATE> updateCate(@PathVariable int cateId , @RequestBody CategoryModel detail){
         return ResponseEntity.ok(cateM.updateById(cateId,detail));
     }
     @GetMapping("/public/category")
     public ResponseEntity<List<CategoryModel>> showCate()
+    {
+        try{
+            List<CategoryModel> cm = cateM.showCate(new CategoryModel());
+            if(cm.isEmpty()){
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+            }else{
+                return ResponseEntity.ok(cm);
+            }
+        }catch (Exception e)
+        {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+    @GetMapping("/shop/category")
+    public ResponseEntity<List<CategoryModel>> shopCate()
     {
         try{
             List<CategoryModel> cm = cateM.showCate(new CategoryModel());

@@ -1,6 +1,10 @@
 package com.example.demo.DTO.Shop;
 import lombok.*;
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 @Table (name = "Category")
 @Entity
 @Data
@@ -14,6 +18,7 @@ public class CategoryModel {
 
     @Column(name = "category_name", nullable = false, length = 100) // Adding constraints
     private String categoryName;
+
 
     public int getCategoryId() {
         return categoryId;

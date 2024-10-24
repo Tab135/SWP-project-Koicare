@@ -287,6 +287,8 @@ public class OrderService implements IOrderService{
         }).collect(Collectors.toList());
     }
 
-
+    public void removeOrderById(int orderId) {
+        orderRepo.deleteById(orderId); // Deletes order from DB
+    }
 
 }

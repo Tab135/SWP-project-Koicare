@@ -1,0 +1,79 @@
+/* Updated CSS based on new class names */
+
+.update-product-container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.card-body {
+  padding: 2rem;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #333;
+}
+
+.update-product-name .form-control,
+.update-product-price .form-control,
+.update-product-stock-quantity .form-control,
+.update-product-description .form-control,
+.update-product-amount .form-control,
+.update-product-category .form-control {
+  border-radius: 0.25rem;
+  border: 1px solid #ced4da;
+}
+
+.update-product-name .form-control:focus,
+.update-product-price .form-control:focus,
+.update-product-stock-quantity .form-control:focus,
+.update-product-description .form-control:focus,
+.update-product-amount .form-control:focus,
+.update-product-category .form-control:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.alert {
+  margin-bottom: 1rem;
+}
+
+.text-muted {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+.update-product-image-upload .form-control {
+  border: 1px solid #ced4da; /* Ensure a visible border */
+  border-radius: 0.25rem; /* Match Bootstrap styles */
+}
+
+.update-product-image-upload .form-control:focus {
+  border-color: #80bdff; /* Bootstrap focus color */
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Bootstrap focus shadow */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .update-product-container {
+    padding: 10px;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+}

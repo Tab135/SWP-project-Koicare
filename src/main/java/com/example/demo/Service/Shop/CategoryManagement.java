@@ -1,8 +1,10 @@
 package com.example.demo.Service.Shop;
 
 import com.example.demo.DTO.Shop.CategoryModel;
+import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResCATE;
 import com.example.demo.Repo.Shop.CategoryRepo;
+import com.example.demo.Repo.Shop.ProductRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -18,6 +20,8 @@ public class CategoryManagement {
 
     @Autowired
     private CategoryRepo cateReposity;
+    @Autowired
+    private ProductRepo productRepo;
 
 
     public ReqResCATE addCate(ReqResCATE addcate) {
@@ -57,15 +61,25 @@ public class CategoryManagement {
         try {
             Optional<CategoryModel> cm = cateReposity.findByCategoryId(id);
             if (cm.isPresent()) {
+                // Fetch products related to the category
+                List<ProductModel> products = productRepo.findByCategory_CategoryId(id);
+
+                // Delete associated products
+                if (!products.isEmpty()) {
+                    productRepo.deleteAll(products);
+                }
+
+                // Now delete the category
                 cateReposity.deleteByCategoryId(id);
-                req.setMessage("Category deleted successfully");
+
+                req.setMessage("Category and associated products deleted successfully");
                 req.setStatusCode(200);
             } else {
                 req.setMessage("Category not found");
                 req.setStatusCode(404);
             }
         } catch (DataAccessException e) {
-            req.setMessage("Error while deleting category: " + e.getMessage());
+            req.setMessage("Error while deleting category and products: " + e.getMessage());
             req.setStatusCode(500);
         }
         return req;

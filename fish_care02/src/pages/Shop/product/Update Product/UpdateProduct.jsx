@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Form, Button, Container, Alert, Spinner, Card } from "react-bootstrap";
 import ProductService from "../../ShopService";
 import { useParams } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./update.scss";
+import { FaUpload } from "react-icons/fa";
 
 const UpdateProduct = () => {
   const { productId } = useParams();
@@ -103,7 +106,7 @@ const UpdateProduct = () => {
   };
 
   return (
-    <Container className="mt-5 add-product-container">
+    <Container className="mt-5 update-product-container">
       <Card className="shadow-sm">
         <Card.Body>
           <h2 className="text-center mb-4">Update Product</h2>
@@ -112,7 +115,7 @@ const UpdateProduct = () => {
 
           <Form onSubmit={handleSubmit}>
             {/* Product Name */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 update-product-name">
               <Form.Label>Product Name</Form.Label>
               <Form.Control
                 type="text"
@@ -125,7 +128,7 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Price */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 update-product-price">
               <Form.Label>Price</Form.Label>
               <Form.Control
                 type="number"
@@ -138,7 +141,7 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Stock Quantity */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 update-product-stock-quantity">
               <Form.Label>Stock Quantity</Form.Label>
               <Form.Control
                 type="number"
@@ -151,7 +154,7 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Description */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 update-product-description">
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
@@ -165,7 +168,7 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Amount */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 update-product-amount">
               <Form.Label>Amount</Form.Label>
               <Form.Control
                 type="number"
@@ -178,7 +181,7 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Category */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-3 update-product-category">
               <Form.Label>Category</Form.Label>
               <Form.Control
                 as="select"
@@ -197,14 +200,23 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Image Upload */}
-            <Form.Group className="mb-3">
+            <Form.Group className="mb-4">
               <Form.Label>Product Images</Form.Label>
               <Form.Control
                 type="file"
                 multiple
                 accept="image/*"
                 onChange={handleImageChange}
+                id="file-upload"
+                className="d-none" // Hide the default input
               />
+              <label
+                htmlFor="file-upload"
+                className="btn btn-outline-primary w-100"
+              >
+                <FaUpload className="me-2" />
+                Choose Images
+              </label>
               {imageFiles.length > 0 && (
                 <small className="text-muted">
                   {imageFiles.length} file(s) selected

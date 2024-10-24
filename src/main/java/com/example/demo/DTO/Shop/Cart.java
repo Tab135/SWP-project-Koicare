@@ -20,6 +20,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
 
@@ -43,6 +45,8 @@ public class Cart {
         this.date = date;
         this.items = new ArrayList<>();  // Initialize items
     }
+
+
 
     public int getId() {
         return id;

@@ -3,6 +3,8 @@ package com.example.demo.Controller;
 
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResPayment;
 import com.example.demo.Service.JWTUtils;
+import com.example.demo.Service.Shop.CartService;
+import com.example.demo.Service.Shop.OrderService;
 import com.example.demo.Service.VNpayService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,13 @@ public class VNpayController {
 
     @Autowired
     private JWTUtils jwt;
+
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private CartService cartService;
+
     @PostMapping("/create_payment")
     public ResponseEntity<?> createPayment(HttpServletRequest req,
                                            @RequestBody ReqResPayment order,
@@ -41,5 +50,23 @@ public class VNpayController {
         transaction.setOrderInfo(order);
         return ResponseEntity.status(HttpStatus.OK).body(transaction);
     }
+    @GetMapping("/payment-success")
+    public ResponseEntity<?> handlePaymentSuccess(
+            @RequestParam String orderId,
+            @RequestParam String vnp_ResponseCode) {
+
+        // Check if the payment was successful (usually "00" for VNpay)
+        if ("00".equals(vnp_ResponseCode)) {
+            // Remove the order and cart
+            orderService.removeOrderById(Integer.parseInt(orderId));
+
+
+            return ResponseEntity.ok("Payment successful, order and cart removed");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Payment failed");
+        }
+    }
 }
+
+
 
