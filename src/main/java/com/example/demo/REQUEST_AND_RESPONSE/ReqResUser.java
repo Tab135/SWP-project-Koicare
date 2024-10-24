@@ -22,7 +22,16 @@ public class ReqResUser {
     private String role;
     private String email;
     private UserModel Users;
+    private String address;
     private List<UserModel> UsersList;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public int getStatusCode() {
         return statusCode;

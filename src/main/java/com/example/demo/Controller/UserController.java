@@ -117,6 +117,15 @@ public class UserController {
     public ResponseEntity<ReqResUser> refreshToken(@RequestBody ReqResUser refreshTokenRequest) {
         return ResponseEntity.ok(userManagement.refreshToken(refreshTokenRequest));
     }
-
+    @GetMapping("/user/get-address")
+    public ResponseEntity<ReqResUser> getAddress(@RequestHeader("Authorization") String token ){
+        int userId = jwt.extractUserId(token.replace("Bearer ",""));
+        return  ResponseEntity.ok(userManagement.getAddress(userId));
+    }
+    @PostMapping("/user/update-address")
+    public ResponseEntity<ReqResUser> updateAddress(@RequestHeader("Authorization") String token, @RequestBody ReqResUser address) {
+        int userId = jwt.extractUserId(token.replace("Bearer ",""));
+        return ResponseEntity.ok(userManagement.updateAddress(userId, address));
+    }
 
 }

@@ -21,6 +21,7 @@ public class UserModel implements UserDetails {
     private String email;
     private String name;
     private String password;
+    private String address;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private RoleModel role;
@@ -36,6 +37,16 @@ public class UserModel implements UserDetails {
 
 //    @OneToOne(mappedBy = "user")
 //    private ShopPaymentModel shopPaymentModel;
+
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     @Override
     public String getUsername() {
         return email;

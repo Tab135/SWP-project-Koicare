@@ -56,7 +56,7 @@ const LoginRegister = () => {
                 }
 
                 if (role === 'USER') {
-                    navigate("/user/koicare"); 
+                    navigate("/koicare");
                 } else if (role === 'ADMIN') {
                     navigate("/admin/dashboard"); 
                 } else if (role === 'SHOP') {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import OrderService from "./OrderService"; // Adjust import as necessary
+import OrderService from "./OrderService";
 import {
   Alert,
   Spinner,
@@ -10,21 +10,24 @@ import {
   Table,
   Card,
   Button,
+  Form,
 } from "react-bootstrap";
-import "./listOrder.scss";
 import PaymentService from "./PaymentService";
 import ToastNotification from "../Cart/AddToCart/ToastNotification";
+import axios from "axios";
+
 const ListOrder = () => {
   const { orderId } = useParams();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showToast, setShowToast] = useState(false); // State to control toast visibility
+  const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [address, setAddress] = useState("");
+  const [addressLoading, setAddressLoading] = useState(true);
 
   useEffect(() => {
     const fetchOrder = async () => {
-      console.log("Order ID from URL:", orderId);
       if (!orderId) {
         setError("Order ID is missing.");
         setLoading(false);
@@ -33,7 +36,6 @@ const ListOrder = () => {
 
       try {
         const orderData = await OrderService.getOrderById(orderId);
-        console.log("Fetched Order Data:", orderData); // Add this line
         setOrder(orderData);
       } catch (err) {
         setError(err.message);
@@ -45,7 +47,63 @@ const ListOrder = () => {
     fetchOrder();
   }, [orderId]);
 
-  if (loading) {
+  useEffect(() => {
+    const fetchAddress = async () => {
+      try {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        const response = await axios.get("http://localhost:8080/user/get-address", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setAddress(response.data.address || "");
+      } catch (err) {
+        console.error("Failed to fetch address:", err);
+        setError("Failed to load user address.");
+      } finally {
+        setAddressLoading(false);
+      }
+    };
+
+    fetchAddress();
+  }, []);
+
+  const handleAddressChange = (e) => {
+    setAddress(e.target.value);
+  };
+
+  const handlePayment = async () => {
+    try {
+      const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+
+      await axios.post(
+        "http://localhost:8080/user/update-address",
+        { address },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const paymentData = {
+        amount: order.totalAmount * 100,
+        orderInfo: `Order ID: ${orderId}`,
+      };
+
+      const paymentResponse = await PaymentService.createPayment(paymentData);
+
+      if (paymentResponse.url) {
+        window.location.href = paymentResponse.url;
+      } else {
+        throw new Error("Payment URL not found in response.");
+      }
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  if (loading || addressLoading) {
     return (
       <Container className="text-center">
         <Spinner animation="border" variant="primary" />
@@ -60,32 +118,10 @@ const ListOrder = () => {
   if (!order) {
     return <Alert variant="warning">No order found.</Alert>;
   }
-  const handlePayment = async () => {
-    try {
-      // Ensure you're using the correct amount and orderInfo from the fetched order
-      const paymentData = {
-        amount: order.totalAmount * 100, // Make sure totalAmount is a number
-        orderInfo: `Order ID: ${orderId}`, // Use dynamic orderId
-      };
 
-      console.log("Payment Data:", paymentData); // Log payment data for debugging
+  // Check if address is empty or only contains whitespace
+  const isAddressEmpty = !address || address.trim() === "";
 
-      // Call the createPayment function in your service
-      const paymentResponse = await PaymentService.createPayment(paymentData);
-      console.log("Payment Response:", paymentResponse); // Log the response
-      
-      // Redirect the user to the payment URL
-      if (paymentResponse.url) {
-        window.location.href = paymentResponse.url; // Redirect to the payment page
-      } else {
-        throw new Error("Payment URL not found in response.");
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
-  // Render your order details here
   return (
     <Container className="order-container">
       <Card className="order-card">
@@ -127,8 +163,29 @@ const ListOrder = () => {
               ))}
             </tbody>
           </Table>
-          <div className="text-center">
-            <Button size="sm" variant="success" onClick={handlePayment}>
+          <Form.Group controlId="formAddress">
+            <Form.Label>Shipping Address</Form.Label>
+            <Form.Control
+              type="text"
+              value={address}
+              placeholder="Enter your shipping address"
+              onChange={handleAddressChange}
+              isInvalid={isAddressEmpty}
+            />
+            {isAddressEmpty && (
+              <Form.Text className="text-muted">
+                Please enter a shipping address to proceed with payment
+              </Form.Text>
+            )}
+          </Form.Group>
+          <div className="text-center mt-4">
+            <Button
+              size="sm"
+              variant="success"
+              onClick={handlePayment}
+              disabled={isAddressEmpty}
+              style={{ opacity: isAddressEmpty ? 0.5 : 1 }}
+            >
               Pay Now
             </Button>
           </div>

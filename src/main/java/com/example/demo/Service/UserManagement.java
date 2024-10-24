@@ -318,4 +318,42 @@ public class UserManagement {
         return resp;
     }
 
+    public ReqResUser getAddress(int userId) {
+        ReqResUser resp = new ReqResUser();
+        try{
+            Optional<UserModel> user = userRepo.findById(userId);
+            if(user.isPresent()) {
+                UserModel userData = user.get();
+                if (userData.getAddress() == null) {
+                    resp.setAddress("");
+                } else {
+                    resp.setAddress(userData.getAddress());
+                }
+            } else {
+                resp.setError("No user found with the provided id");
+            }
+        }
+        catch (Exception e){
+            resp.setError("Error at the get address" + e.getMessage());
+        }
+        return resp;
+    }
+
+    public ReqResUser updateAddress(int userId, ReqResUser address){
+        ReqResUser resp = new ReqResUser();
+        try{
+            Optional<UserModel> user = userRepo.findById(userId);
+            if(user.isPresent()) {
+                UserModel exsitUser = user.get();
+                exsitUser.setAddress(address.getAddress());
+                UserModel result = userRepo.save(exsitUser);
+                resp.setUsers(result);
+            }
+        }
+        catch (Exception e){
+            resp.setMessage(e.getMessage());
+        }
+        return resp;
+    }
+
 }

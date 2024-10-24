@@ -105,11 +105,18 @@ const ListKoiFishPage = () => {
     };
 
     const handleDeleteKoi = async (koiId) => {
-        if (!selectedPond) {
-            alert('Please select a pond before deleting a Koi fish.');
-            return;
-        }
-
+            let pondId = selectedPond;
+            if (!pondId) {
+                const deleteWithoutKoiId = koiFishList.find(koi => koi.koiId == koiId);
+                if(!deleteWithoutKoiId){
+                    alert("Koi fish not found");
+                    return;
+                }
+                // alert('Please select a pond before deleting a Koi fish.');
+                // return;
+                pondId = deleteWithoutKoiId.pondId.id;
+                setSelectedPond(pondId);
+            }
         const token = localStorage.getItem('token');
         try {
             const config = {

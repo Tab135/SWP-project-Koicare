@@ -17,4 +17,7 @@ public interface UserRepo extends JpaRepository<UserModel,Integer> {
     @Transactional
     @Query("update UserModel set password = ?2 where email = ?1")
     int updatePassword(String email, String password);
+
+//    @Query("SELECT u FROM UserModel u WHERE u.id = ?1 AND u.address IS NOT NULL")
+//    UserModel findByIdWithNonNullAddress(int id);
 }
