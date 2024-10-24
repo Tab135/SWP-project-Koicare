@@ -49,6 +49,10 @@ const Shop = () => {
     if (token) {
       const userId = extractUserId(token.replace("Bearer ", ""));
       setId(userId);
+      const storedCount = localStorage.getItem(`cartItemCount_${userId}`);
+      if (storedCount) {
+        setCartItemCount(Number(storedCount));
+      }
     }
   }, []);
 
@@ -67,40 +71,38 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
+  // Fetch cart item count whenever the user ID is set
   useEffect(() => {
-    // Check if the payment was successful from the URL params
-    const params = new URLSearchParams(location.search);
-    const paymentStatus = params.get("payment");
+    const fetchCartItemCount = async () => {
+      if (Id) {
+        try {
+          const response = await CartService.countItemsInCart(Id);
+          setCartItemCount(response.data);
+        } catch (error) {
+          console.error("Error fetching cart item count:", error);
+        }
+      }
+    };
 
-    if (paymentStatus === "Successfully") {
-      setToastMessage("Payment was successful!");
-      setShowToast(true);
+    fetchCartItemCount();
+  }, [Id]);
 
-      // Hide the toast after 3 seconds
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-    }
-  }, [location]);
+  
 
   const handleAddToCart = async (productId) => {
-    console.log("Attempting to add product ID:", productId);
     try {
       const response = await CartService.addProductToCart(productId, 1);
-      setCartItemCount((prevCount) => prevCount + 1);
-      console.log("Product added to cart:", response);
-      setToastMessage("Product added to cart successfully!"); // Set success message
-      setShowToast(true); // Show the toast
+      const newCount = cartItemCount + 1; // Change to always add 1
+      setCartItemCount(newCount);
+      localStorage.setItem(`cartItemCount_${Id}`, newCount);
+      setToastMessage("Product added to cart successfully!");
+      setShowToast(true);
 
       // Auto-close the toast after 2 seconds
       setTimeout(() => {
         setShowToast(false);
       }, 2000);
     } catch (error) {
-      console.error(
-        "Failed to add product to cart:",
-        error.response ? error.response.data : error
-      );
       alert("Failed to add product to cart: " + error.message);
     }
   };

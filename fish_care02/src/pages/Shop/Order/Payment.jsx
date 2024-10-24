@@ -10,20 +10,34 @@ const Payment = () => {
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const orderId = queryParams.get("orderId"); // Assuming you pass this in the return URL
+    const orderId = queryParams.get("vnp_TxnRef"); // Ensure this is correct
     const responseCode = queryParams.get("vnp_ResponseCode");
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+
+    console.log("Order ID:", orderId); // Debugging line
+    console.log("Response Code:", responseCode); // Debugging line
 
     // Call your backend to validate the payment
     const validatePayment = async () => {
       try {
-        const response = await axios.get(`/user/payment/payment-success`, {
-          params: {
-            orderId: orderId,
-            vnp_ResponseCode: responseCode,
-          },
-        });
-        setPaymentStatus(response.data); // or whatever structure your API returns
+        const response = await axios.get(
+          `http://localhost:3000/user/payment/payment-success`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            params: {
+              orderId: orderId, // Pass orderId here
+              vnp_ResponseCode: responseCode,
+            },
+          }
+        );
+        // Adjust this based on your response structure
+        setPaymentStatus(response.data); // or set response.data.status if that's what your API returns
       } catch (err) {
+        console.error("Payment validation error:", err); // Log error details for debugging
         setError("Payment validation failed. Please try again.");
       } finally {
         setLoading(false);
@@ -49,7 +63,11 @@ const Payment = () => {
   return (
     <div>
       <h1>Payment Status</h1>
-      <p>{paymentStatus}</p>
+      <p>
+        {paymentStatus
+          ? JSON.stringify(paymentStatus)
+          : "No payment status available."}
+      </p>
       {/* You can also add a button to navigate back to the shop or view orders */}
     </div>
   );

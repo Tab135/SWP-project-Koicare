@@ -11,7 +11,9 @@ import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -57,4 +59,19 @@ public class ReviewService {
         }
         return resp;
     }
+    public List<ReqResReview> listReviewByProductId(int productId) {
+        // Fetch the list of reviews for the given productId
+        List<ReviewModel> reviews = reviewRepo.findByProductId(productId);
+
+        // Convert ReviewModel to ReqResReview
+        return reviews.stream().map(review -> {
+            ReqResReview reqResReview = new ReqResReview();
+            reqResReview.setComment(review.getComment());
+            reqResReview.setRating(review.getRating());
+            reqResReview.setUserID(review.getUser().getId()); // Assuming UserModel has a getId() method
+            reqResReview.setProductId(review.getProduct().getId()); // Assuming ProductModel has a getId() method
+            return reqResReview;
+        }).collect(Collectors.toList());
+    }
 }
+

@@ -51,4 +51,10 @@ public class CartController {
     public ResponseEntity<CartItem> getCartItem(@PathVariable int cartId, @PathVariable int productId){
         return ResponseEntity.ok(cartS.getCartItem(cartId, productId));
     }
+    @GetMapping("/user/count")
+    public ResponseEntity<Integer> countItemsInCart(@RequestHeader ("Authorization") String token) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        int itemCount = cartS.countItemInCart(userId);
+        return ResponseEntity.ok(itemCount);
+    }
 }

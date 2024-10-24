@@ -18,4 +18,8 @@ public interface ICartService {
     Cart getCartByUserId(int userId);
 
     CartItem getCartItem(int cartId, int productId);
+
+    public int countItemInCart(int userId);
+
+    ReqResCart removeCartByUser(int userId);
 }

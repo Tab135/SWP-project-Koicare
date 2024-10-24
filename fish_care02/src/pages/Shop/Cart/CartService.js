@@ -124,6 +124,27 @@ class CartService {
       throw new Error(errorMessage); // Rethrow with user-friendly message
     }
   }
+  static async countItem() {
+    try {
+      const token = this.getToken();
+      if (!token) {
+        throw new Error("Authorization token not found.");
+      }
+      const response = await axios.get(`${CartService.base_url}/count`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("Total items in cart:", response.data);
+      return response.data; // Return total item count
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.error ||
+        "An error occurred while fetching the item count.";
+      console.error("Error fetching item count:", errorMessage);
+      throw new Error(errorMessage); // Rethrow with user-friendly message
+    }
+  }
 }
 
 export default CartService;

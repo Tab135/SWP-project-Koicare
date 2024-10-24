@@ -14,11 +14,11 @@ import CartService from "../CartService";
 import "./_list.scss"; // Adjust the import path as necessary
 import OrderService from "../../Order/OrderService";
 import { useNavigate } from "react-router-dom";
-import { ROUTERS } from "../../../../utis/router";
 
 const extractUserId = (token) => {
   const payload = token.split(".")[1];
   const decodedPayload = JSON.parse(atob(payload));
+
   return decodedPayload.userId; // Adjust according to your token's structure
 };
 
@@ -26,6 +26,7 @@ const ListCart = () => {
   const { userId } = useParams(); // Assuming you're using the userId from the URL
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const [error, setError] = useState(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const navigate = useNavigate();
@@ -42,6 +43,7 @@ const ListCart = () => {
         const userId = extractUserId(token.replace("Bearer ", ""));
         const cartData = await CartService.getCartByUser();
         setCartItems(cartData.items);
+        setCartItemCount(cartData.items.length); // Set initial count
         await handleGetTotalPrice();
       } catch (err) {
         setError(err.message);
@@ -87,6 +89,10 @@ const ListCart = () => {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.id !== cartItemId)
       );
+
+      // Decrease the cart item count
+      setCartItemCount((prevCount) => Math.max(prevCount - 1, 0));
+      localStorage.setItem(`cartItemCount_${userId}`, cartItemCount - 1); // Update local storage
       await handleGetTotalPrice();
     } catch (err) {
       setError(err.message);
@@ -214,11 +220,10 @@ const ListCart = () => {
                     .replace("₫", "đ")}
                 </strong>
               </div>
-
               <Button
-                variant="dark"
-                className="w-100 mt-2"
-                onClick={handleCheckout} // Add this line
+                variant="success"
+                className="mt-3 w-100"
+                onClick={handleCheckout}
               >
                 Checkout
               </Button>

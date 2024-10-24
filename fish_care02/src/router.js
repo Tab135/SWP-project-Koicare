@@ -32,6 +32,9 @@ import OrderList from "./pages/Shop/Order/ListOrder";
 import Dashboard from "./pages/Shop/Dash board/ShopDashBoard";
 import ShopDashboard from "./pages/Shop/Dash board/ShopDashBoard";
 import DashBoard from "./pages/admin/dashboard/dashboard";
+import Payment from "./pages/Shop/Order/Payment";
+import AddCate from "./pages/Shop/Category/AddCategory/AddCate";
+import UpdateCategory from "./pages/Shop/Category/UpdateCategory/UpdateCategory";
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
@@ -68,7 +71,7 @@ const RouterControl = () => {
     { path: ROUTERS.USER.OrderList, element: <OrderList /> },
     { path: ROUTERS.USER.ShopDashboard, element: <ShopDashboard /> },
     { path: ROUTERS.ADMIN.DASHBOARD, element: <DashBoard />, useLayout: false },
-    { path: ROUTERS.USER.Payment, element: <Payment /> },
+    { path: ROUTERS.USER.Payment, element: <Payment/> },
     { path: ROUTERS.USER.AddCate, element: <AddCate /> },
     { path: ROUTERS.USER.UpdateCategory, element: <UpdateCategory /> },
   ];

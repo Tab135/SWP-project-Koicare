@@ -14,6 +14,9 @@ import java.util.*;
 @Service
 public class VNpayService {
     public ReqResPayment createPayment(HttpServletRequest req, ReqResPayment order, int userId) throws UnsupportedEncodingException {
+        if (order.getAmount() <= 0 || order.getOrderInfo() == null || order.getOrderInfo().isEmpty()) {
+            throw new IllegalArgumentException("Invalid payment details.");
+        }
         String vnp_TxnRef = VNpayConfig.getRandomNumber(8);
         String vnp_IpAddr = VNpayConfig.getIpAddress(req);
 

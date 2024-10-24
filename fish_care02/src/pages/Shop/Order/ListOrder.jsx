@@ -13,7 +13,6 @@ import {
   Form,
 } from "react-bootstrap";
 import PaymentService from "./PaymentService";
-import ToastNotification from "../Cart/AddToCart/ToastNotification";
 import axios from "axios";
 
 const ListOrder = () => {
@@ -21,8 +20,7 @@ const ListOrder = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
+ 
   const [address, setAddress] = useState("");
   const [addressLoading, setAddressLoading] = useState(true);
 

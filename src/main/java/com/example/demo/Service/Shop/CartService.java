@@ -97,7 +97,6 @@ public class CartService implements ICartService {
         return response;
     }
 
-
     @Override
     public ReqResCart removeItemFromCart(int userId, int cartItemId) {
         ReqResCart req = new ReqResCart();
@@ -192,7 +191,6 @@ public class CartService implements ICartService {
         return req;
     }
 
-
     @Override
     public BigDecimal getTotalPrice(int userId) {
         // Find the cart associated with the userId (assuming cartRepo is a repository for Cart)
@@ -221,5 +219,30 @@ public class CartService implements ICartService {
                 .filter(item -> item.getProduct().getId() == productId)
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("Product not found in cart"));
+    }
+
+    @Override
+    public int countItemInCart(int userId) {
+        Optional<Cart> cart = cartRepo.findByUserId(userId);
+        if (cart.isPresent()) {
+            return cart.get().getItems().size(); // Ensure 'getItemCart()' is the correct method name
+        }
+        return 0;
+    }
+
+    @Override
+    public ReqResCart removeCartByUser(int userId) {
+        ReqResCart req = new ReqResCart();
+
+        // Find the cart for the user
+        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
+        // Delete the cart
+        cartRepo.delete(cart);
+        // Set the response details
+        req.setStatusCode(200); // Indicate success
+        req.setMessage("Cart removed successfully");
+        req.setCartId(cart.getId()); // Optionally return the removed cart ID
+
+        return req;
     }
 }

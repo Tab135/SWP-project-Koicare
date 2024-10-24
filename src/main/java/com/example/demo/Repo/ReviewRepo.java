@@ -10,4 +10,5 @@ public interface ReviewRepo extends JpaRepository<ReviewModel,Integer> {
     List<ReviewModel> findAllByProductId(int id);
     ReviewModel deleteById(int id);
     Optional<ReviewModel> findById(int id);
+    List<ReviewModel> findByProductId(int productId);
 }
