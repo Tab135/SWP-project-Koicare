@@ -65,10 +65,12 @@ const RouterControl = () => {
     { path: ROUTERS.USER.CREATE_BLOG, element: <CreateBlogPage /> },
     { path: ROUTERS.USER.LIST_BLOGS, element: <ListBlogsPage /> },
     { path: ROUTERS.USER.Cart, element: <Cart /> },
-    { path: ROUTERS.USER.OrderList, element: <OrderList/> },
-    { path: ROUTERS.USER.ShopDashboard, element: <ShopDashboard/> },
-    {path: ROUTERS.ADMIN.DASHBOARD, element: <DashBoard/>,  useLayout: false },
-
+    { path: ROUTERS.USER.OrderList, element: <OrderList /> },
+    { path: ROUTERS.USER.ShopDashboard, element: <ShopDashboard /> },
+    { path: ROUTERS.ADMIN.DASHBOARD, element: <DashBoard />, useLayout: false },
+    { path: ROUTERS.USER.Payment, element: <Payment /> },
+    { path: ROUTERS.USER.AddCate, element: <AddCate /> },
+    { path: ROUTERS.USER.UpdateCategory, element: <UpdateCategory /> },
   ];
 
   return (

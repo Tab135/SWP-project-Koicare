@@ -28,7 +28,11 @@ export const ROUTERS = {
         LIST_BLOGS: '/shop/blog/list',
         Cart: "/user/cart/getCartByUser",
         OrderList : "/user/order/getOrder/:orderId",
-        ShopDashboard: "/shop/product"
+        ShopDashboard: "/shop/product",
+        Payment:"/user/payment/payment-success",
+        AddCate:  "/shop/addCate",
+        UpdateCategory: "/shop/updateCate/:cateId"
+
 
 
     },
