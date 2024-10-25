@@ -7,68 +7,90 @@ const Payment = () => {
   const [paymentStatus, setPaymentStatus] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [debugInfo, setDebugInfo] = useState({});
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const orderId = queryParams.get("vnp_TxnRef"); // Ensure this is correct
     const responseCode = queryParams.get("vnp_ResponseCode");
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const orderId = localStorage.getItem('orderId')
+    // Debug information
+    setDebugInfo({
+      orderId,
+      responseCode,
+      allParams: Object.fromEntries(queryParams.entries()),
+      search: location.search
+    });
 
-    console.log("Order ID:", orderId); // Debugging line
-    console.log("Response Code:", responseCode); // Debugging line
-
-    // Call your backend to validate the payment
     const validatePayment = async () => {
+      const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+      if (!token) {
+        setError("Authentication token not found");
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await axios.get(
-          `http://localhost:3000/user/payment/payment-success`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-            params: {
-              orderId: orderId, // Pass orderId here
-              vnp_ResponseCode: responseCode,
-            },
+        console.log('Calling API with orderId:', orderId);
+
+        const response = await axios.get(`http://localhost:8080/user/payment/payment-success`, {
+          params: {
+            orderId: orderId
+          },
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           }
-        );
-        // Adjust this based on your response structure
-        setPaymentStatus(response.data); // or set response.data.status if that's what your API returns
+        });
+        localStorage.removeItem("orderId");
+
+        console.log('API Response:', response.data);
+        setPaymentStatus(response.data);
+
       } catch (err) {
-        console.error("Payment validation error:", err); // Log error details for debugging
-        setError("Payment validation failed. Please try again.");
+        console.error('Payment validation error:', err);
+        setError(
+          err.response?.data?.message ||
+          err.message ||
+          "Payment validation failed. Please try again."
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    if (orderId && responseCode) {
+    // Only validate if we have an orderId
+    if (orderId) {
       validatePayment();
     } else {
-      setError("Invalid payment response.");
+      setError("Order ID not found in URL parameters");
       setLoading(false);
     }
   }, [location]);
 
   if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+      </div>
+    );
   }
 
   return (
-    <div>
-      <h1>Payment Status</h1>
-      <p>
-        {paymentStatus
-          ? JSON.stringify(paymentStatus)
-          : "No payment status available."}
-      </p>
-      {/* You can also add a button to navigate back to the shop or view orders */}
+    <div className="container mx-auto p-4 max-w-2xl">
+      <h1 className="text-2xl font-bold mb-4">Payment Status</h1>
+
+
+
+      {/* Debug Information Panel (only show in development) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+          <h2 className="text-lg font-semibold mb-2">Debug Information</h2>
+          <pre className="whitespace-pre-wrap text-sm">
+            {JSON.stringify(debugInfo, null, 2)}
+          </pre>
+        </div>
+      )}
     </div>
   );
 };

@@ -44,7 +44,7 @@ const ListOrder = () => {
 
     fetchOrder();
   }, [orderId]);
-
+    localStorage.setItem("orderId",orderId)
   useEffect(() => {
     const fetchAddress = async () => {
       try {
