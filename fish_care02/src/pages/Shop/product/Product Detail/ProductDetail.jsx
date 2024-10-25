@@ -55,18 +55,16 @@ const ProductDetail = () => {
     const { name, value } = e.target;
     setNewReview((prev) => ({ ...prev, [name]: value }));
   };
-  const handleRatingChange = (newRating) => {
-    setNewReview((prev) => ({ ...prev, rating: newRating }));
-  };
 
   const handleSubmitReview = async (e) => {
     e.preventDefault();
+    const reviewData = { comment: newReview.comment, rating: newReview.rating }; // Construct review data
+
     try {
-      await ReviewService.postReview({ ...newReview, productId });
-      // Optionally, refetch reviews after submitting
+      await ReviewService.postReview(productId, reviewData); // Pass productId and reviewData
       const updatedReviews = await ReviewService.getReviewsByProductId(
         productId
-      );
+      ); // Fetch updated reviews
       setReviews(updatedReviews);
       setNewReview({ comment: "", rating: 0 }); // Reset form
     } catch (err) {
@@ -144,17 +142,6 @@ const ProductDetail = () => {
               {/* Review Form */}
               <h6>Write a Review</h6>
               <Form onSubmit={handleSubmitReview}>
-                <Form.Group controlId="formComment">
-                  <Form.Label>Comment</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    name="comment"
-                    value={newReview.comment}
-                    onChange={handleReviewChange}
-                    required
-                  />
-                </Form.Group>
                 <Form.Group controlId="formRating">
                   <Form.Label>Rating</Form.Label>
                   <Form.Control
@@ -167,6 +154,18 @@ const ProductDetail = () => {
                     required
                   />
                 </Form.Group>
+                <Form.Group controlId="formComment">
+                  <Form.Label>Comment</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    name="comment"
+                    value={newReview.comment}
+                    onChange={handleReviewChange}
+                    required
+                  />
+                </Form.Group>
+
                 <Button variant="primary" type="submit" className="mt-2">
                   Submit Review
                 </Button>
