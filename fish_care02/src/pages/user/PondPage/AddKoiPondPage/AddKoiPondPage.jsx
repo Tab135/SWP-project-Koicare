@@ -21,6 +21,14 @@ const AddKoiPondPage = () => {
     const [isImageUploaded, setIsImageUploaded] = useState(false);
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (['depth', 'volume', 'pumpingCapacity', 'drain'].includes(name)) {
+            if (value < 0) {
+                alert(`${name.charAt(0).toUpperCase() + name.slice(1)} parameter cannot be less than 0.`);
+                return;
+            }
+        }
         setPond({
             ...pond,
             [e.target.name]: e.target.value

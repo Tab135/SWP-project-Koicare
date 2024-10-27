@@ -89,13 +89,13 @@ const PondListPage = () => {
                                     <p><strong>Pumping Capacity:</strong> {pond.pumpingCapacity} W</p>
                                     <p><strong>Water Source:</strong> {pond.waterSource}</p>
                                     <div className="button-group">
-                                        {ponds.length > 1 && (
+                                        {
                                             <button
                                                 className="delete-pond-button"
                                                 onClick={() => handleDeletePond(pond.id)}>
                                                 Delete Pond
                                             </button>
-                                        )}
+                                        }
                                         <Link to={`/edit-pond/${pond.id}`}>
                                             <button className="edit-pond-button">Edit Pond</button>
                                         </Link>

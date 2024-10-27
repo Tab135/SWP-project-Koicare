@@ -105,31 +105,39 @@ const ListKoiFishPage = () => {
     };
 
     const handleDeleteKoi = async (koiId) => {
-            let pondId = selectedPond;
-            if (!pondId) {
-                const deleteWithoutKoiId = koiFishList.find(koi => koi.koiId == koiId);
-                if(!deleteWithoutKoiId){
-                    alert("Koi fish not found");
-                    return;
-                }
-                // alert('Please select a pond before deleting a Koi fish.');
-                // return;
-                pondId = deleteWithoutKoiId.pondId.id;
-                setSelectedPond(pondId);
+        let pondId = selectedPond;
+        if (!pondId) {
+            const deleteWithoutKoiId = koiFishList.find(koi => koi.koiId == koiId);
+            if(!deleteWithoutKoiId){
+                alert("Koi fish not found");
+                return;
             }
-        const token = localStorage.getItem('token');
+            pondId = deleteWithoutKoiId.pondId?.id;
+            if (!pondId) {
+                alert("Pond ID not found for the selected koi.");
+                return;
+            }
+
+        }
+
+        let token = localStorage.getItem('token');
+        if (!token) {
+            token = sessionStorage.getItem('token');
+        }
         try {
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
             };
-            await axios.delete(`http://localhost:8080/user/${selectedPond}/${koiId}/delete`, config);
+            if (selectedPond) {
+                await axios.delete(`http://localhost:8080/user/${selectedPond}/${koiId}/delete`, config);
+            } else {
+                await axios.delete(`http://localhost:8080/user/delete/${koiId}`, config);
+            }
+
             alert('Koi fish deleted successfully!');
-
-            const updatedKoiList = koiFishList.filter(koi => koi.koiId !== koiId);
-            setKoiFishList(updatedKoiList);
-
-            if (updatedKoiList.length === 0) {
-                setMessage('No koi fish found for this pond.');
+            setKoiFishList((prevList) => prevList.filter((koi) => koi.koiId !== koiId));
+            if (koiFishList.length === 0) {
+                setMessage('No koi fish found.');
             }
         } catch (error) {
             console.error('Error deleting koi fish', error);
@@ -154,7 +162,7 @@ const ListKoiFishPage = () => {
 
             {message && <p>{message}</p>}
 
-            {koiFishList.length > 0 && !message ? (
+            {!message ? (
                 <div className="koi-fish-list">
                     {koiFishList.map((koi) => (
                         <div key={koi.koiId} className="koi-fish-card">
@@ -173,13 +181,10 @@ const ListKoiFishPage = () => {
                                     <Link to={`/list-koi/${koi.koiId}`}>
                                         <button className="details-koi-button">Detail</button>
                                     </Link>
-
-                                    {koiFishList.length > 1 && (
                                         <button className="delete-koi-button"
                                                 onClick={() => handleDeleteKoi(koi.koiId)}>
                                             Delete
                                         </button>
-                                    )}
                                 </div>
                             </div>
                         </div>

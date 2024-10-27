@@ -12,7 +12,6 @@ const AddKoiFishPage = () => {
         length: '',
         variety: '',
         sex: '',
-        feedingSchedule: '',
         lastMedicalCheck: '',
         price: '',
         physique: '',
@@ -57,6 +56,14 @@ const AddKoiFishPage = () => {
     }, []);
 
     const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (['age', 'weight', 'length', 'price'].includes(name)) {
+            if (value < 0) {
+                alert(`${name.charAt(0).toUpperCase() + name.slice(1)} parameter cannot be less than 0.`);
+                return;
+            }
+        }
         setKoiFish({
             ...koiFish,
             [e.target.name]: e.target.value
@@ -182,7 +189,7 @@ const AddKoiFishPage = () => {
                     <input type="number" name="weight" value={koiFish.weight} onChange={handleChange} required/>
                 </div>
                 <div>
-                    <label>Length:</label> {/* Added length input */}
+                    <label>Length:</label>
                     <input type="number" name="length" value={koiFish.length} onChange={handleChange} required/>
                 </div>
                 <div>
@@ -196,11 +203,6 @@ const AddKoiFishPage = () => {
                         <option value="Male">Male</option>
                         <option value="Female">Female</option>
                     </select>
-                </div>
-                <div>
-                    <label>Feeding Schedule:</label>
-                    <input type="text" name="feedingSchedule" value={koiFish.feedingSchedule} onChange={handleChange}
-                           required/>
                 </div>
                 <div>
                     <label>Price:</label>

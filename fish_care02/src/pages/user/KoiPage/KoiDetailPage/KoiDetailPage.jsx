@@ -27,9 +27,11 @@ const KoiDetailPage = () => {
         sex: '',
         price: '',
         origin: '',
-        image: ''
+        image: '',
+        pondId: '',
     });
     const [selectedImage, setSelectedImage] = useState(null);
+    const [ponds, setPond] = useState([]);
     const [canAddGrowthRecord, setCanAddGrowthRecord] = useState(true);
 
     useEffect(() => {
@@ -68,7 +70,7 @@ const KoiDetailPage = () => {
 
             try {
                 const config = {
-                    headers: { Authorization: `Bearer ${token}` }
+                    headers: {Authorization: `Bearer ${token}`}
                 };
                 const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
                 setGrowthRecords(response.data.growthRecordList);
@@ -83,14 +85,43 @@ const KoiDetailPage = () => {
                 console.error('Error fetching growth records', error);
                 setErrorMessage('Failed to fetch growth records.');
             }
+        }
+            const fetchPonds = async () => {
+                let token = localStorage.getItem('token');
+                if (!token) {
+                    token = sessionStorage.getItem('token');
+                }
+                if (!token) {
+                    return;
+                }
+
+                try {
+                    const config = {
+                        headers: { Authorization: `Bearer ${token}` }
+                    };
+                    const response = await axios.get(`http://localhost:8080/user/pond`, config)
+                    setPond(response.data.pondList);
+                    console.log(response.data.pondList);
+                } catch (error) {
+                    console.error('Error fetching ponds', error);
+                    setErrorMessage('Failed to fetch ponds.');
+                }
+
         };
 
         fetchKoiDetails();
         fetchGrowthRecords();
+        fetchPonds();
     }, [koiId]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
+        if (['length', 'weight'].includes(name)) {
+            if (value < 0) {
+                alert(`${name.charAt(0).toUpperCase() + name.slice(1)} parameter cannot be less than 0.`);
+                return;
+            }
+        }
         setGrowthRecord({
             ...growthRecord,
             [name]: value
@@ -99,6 +130,12 @@ const KoiDetailPage = () => {
 
     const handleKoiInputChange = (e) => {
         const { name, value } = e.target;
+        if (['age', 'price'].includes(name)) {
+            if (value < 0) {
+                alert(`${name.charAt(0).toUpperCase() + name.slice(1)} parameter cannot be less than 0.`);
+                return;
+            }
+        }
         setKoiEditData({
             ...koiEditData,
             [name]: value
@@ -107,7 +144,14 @@ const KoiDetailPage = () => {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setSelectedImage(file);
+        if (file) {
+            setSelectedImage(URL.createObjectURL(file));
+            handleKoiInputChange(e);
+        }
+    };
+
+    const resetImage = () => {
+        setSelectedImage(null);
     };
 
     const handleKoiSubmit = async (e) => {
@@ -125,6 +169,7 @@ const KoiDetailPage = () => {
         formData.append('sex', koiEditData.sex);
         formData.append('price', koiEditData.price);
         formData.append('origin', koiEditData.origin);
+        formData.append('pondId', koiEditData.pondId);
 
         if (selectedImage) {
             formData.append('image', selectedImage);
@@ -245,6 +290,10 @@ const KoiDetailPage = () => {
             alert('Failed to delete growth record');
         }
     };
+    const handleSelectPond = (e) => {
+        const selectedPondId = e.target.value;
+        setKoiEditData({ ...koiEditData, pondId: selectedPondId });
+    };
         if (!koiDetails) {
             return (
                 <div className="koi-detail-container">
@@ -295,7 +344,7 @@ const KoiDetailPage = () => {
                         <h2>Growth Records</h2>
                         {growthRecords.length > 0 ? (
                             <ul>
-                                {growthRecords.map((record) => (
+                                {growthRecords.map((record, index) => (
                                     <li key={record.koiId.date}>
                                         <div>
                                             <strong>Date:</strong> {new Date(record.koiId.date).toLocaleDateString()}
@@ -324,9 +373,11 @@ const KoiDetailPage = () => {
                                         <div className="button-container">
                                             <button className="edit-koi-button" onClick={() => handleEdit(record)}>Edit
                                             </button>
+                                            {index !== 1 && (
                                             <button className="delete-button"
                                                     onClick={() => handleDelete(record)}>Delete
                                             </button>
+                                                )}
                                         </div>
                                     </li>
                                 ))}
@@ -362,8 +413,14 @@ const KoiDetailPage = () => {
                                            onChange={handleInputChange} required/>
                                 </label>
                                 <label>
-                                Physique:
-                                    <input type="text" name="physique" value={growthRecord.physique} onChange={handleInputChange} required />
+                                    Physique:
+                                    <select name="physique" value={growthRecord.physique} onChange={handleInputChange}
+                                            required>
+                                        <option value="" disabled>Select a physique</option>
+                                        <option value="Slim">Slim</option>
+                                        <option value="Normal">Normal</option>
+                                        <option value="Corpulent">Corpulent</option>
+                                    </select>
                                 </label>
                                 <button type="submit">{editMode ? 'Update Record' : 'Add Record'}</button>
                                 <button type="button" onClick={() => setShowGrowthModal(false)}>Cancel</button>
@@ -379,7 +436,7 @@ const KoiDetailPage = () => {
                             <form onSubmit={handleKoiSubmit}>
                                 <label>
                                     <img
-                                        src={`data:image/jpeg;base64,${koiDetails.image}`}
+                                        src={selectedImage || `data:image/jpeg;base64,${koiDetails.image}`}
                                         alt={koiDetails.koiName}
                                         className="koi-edit-image-preview"
                                     />
@@ -396,44 +453,59 @@ const KoiDetailPage = () => {
                                         onChange={handleImageChange}
                                         style={{display: 'none'}}
                                     />
+                                    {selectedImage && (
+                                        <button type="button" onClick={resetImage} className="reset-image-button">
+                                            Reset Image
+                                        </button>
+                                    )}
                                 </div>
-                                    <label>
-                                        Koi Name:
-                                        <input type="text" name="koiName" value={koiEditData.koiName || ''}
-                                               onChange={handleKoiInputChange} required/>
-                                    </label>
-                                    <label>
-                                        Variety:
-                                        <input type="text" name="variety" value={koiEditData.variety || ''}
-                                               onChange={handleKoiInputChange} required/>
-                                    </label>
-                                    <label>
-                                        Age (years):
-                                        <input type="number" name="age" value={koiEditData.age || ''}
-                                               onChange={handleKoiInputChange} required/>
-                                    </label>
-                                    <label>
-                                        Sex:
-                                        <input type="text" name="sex" value={koiEditData.sex || ''}
-                                               onChange={handleKoiInputChange} required/>
-                                    </label>
-                                    <label>
-                                        Price (VND):
-                                        <input type="number" name="price" value={koiEditData.price || ''}
-                                               onChange={handleKoiInputChange} required/>
-                                    </label>
-                                    <label>
-                                        Origin:
-                                        <input type="text" name="origin" value={koiEditData.origin || ''}
-                                               onChange={handleKoiInputChange} required/>
-                                    </label>
-
-                                    <button type="submit">Save Changes</button>
-                                    <button type="button" onClick={() => setShowKoiModal(false)}>Cancel</button>
+                                <label>
+                                    Koi Name:
+                                    <input type="text" name="koiName" value={koiEditData.koiName || ''}
+                                           onChange={handleKoiInputChange} required/>
+                                </label>
+                                <label>
+                                    Variety:
+                                    <input type="text" name="variety" value={koiEditData.variety || ''}
+                                           onChange={handleKoiInputChange} required/>
+                                </label>
+                                <label>
+                                    Age (years):
+                                    <input type="number" name="age" value={koiEditData.age || ''}
+                                           onChange={handleKoiInputChange} required/>
+                                </label>
+                                <label>
+                                    Sex:
+                                    <input type="text" name="sex" value={koiEditData.sex || ''}
+                                           onChange={handleKoiInputChange} required/>
+                                </label>
+                                <label>
+                                    Price (VND):
+                                    <input type="number" name="price" value={koiEditData.price || ''}
+                                           onChange={handleKoiInputChange} required/>
+                                </label>
+                                <label>
+                                    Origin:
+                                    <input type="text" name="origin" value={koiEditData.origin || ''}
+                                           onChange={handleKoiInputChange} required/>
+                                </label>
+                                <label>
+                                    Pond:
+                                    <select value={koiEditData.pondId} onChange={handleSelectPond} required>
+                                        <option value="" disabled>Select a pond</option>
+                                        {ponds.map((pond) => (
+                                            <option key={pond.id} value={pond.id}>
+                                                {pond.pondName}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </label>
+                                <button type="submit">Save Changes</button>
+                                <button type="button" onClick={() => setShowKoiModal(false)}>Cancel</button>
                             </form>
                         </div>
                     </div>
-                    )}
+                )}
             </div>
         );
 };
