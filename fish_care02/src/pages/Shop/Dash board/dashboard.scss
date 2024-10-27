@@ -1,104 +1,125 @@
-.custom-dashboard-container {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  background-color: #f4f7fa; /* Light background for contrast */
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+.dashboard {
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
 
-h2 {
-  font-size: 1.5rem;
-  color: #333; /* Darker text for better readability */
-  margin-bottom: 20px;
-}
-
-.custom-chart-container {
-  width: 60%; /* Set a smaller width for the chart */
-  margin: 0 auto; /* Center the chart horizontally */
-  background-color: #fff; /* White background for the chart */
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.custom-sidebar {
-  background-color: #ffffff; /* White background for sidebar */
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.custom-dashboard-stats {
-  display: flex;
-  flex-direction: column;
-}
-
-.custom-card {
-  background-color: #e9ecef; /* Light gray background for cards */
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-
-  &:hover {
-    transform: translateY(-5px); /* Lift effect on hover */
-  }
-}
-.custom-row-margin {
-  margin: 20px 0; /* Adjust the margin as needed */
-}
-.custom-small-button {
-  padding: 4px 8px; // Adjust button padding to make it smaller
-  font-size: 0.85rem; // Decrease font size for smaller buttons
-  margin: 0 2px; // Adjust margins to ensure proper spacing
-}
-
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-
-  th {
-    background-color: #007bff; /* Bootstrap primary color */
-    color: #ffffff; /* White text for contrast */
-    padding: 10px;
-    text-align: left;
-    border-bottom: 2px solid #0056b3; /* Darker border for emphasis */
+  &-header {
+    margin-bottom: 2rem;
+    h1 {
+      color: #2c3e50;
+      font-weight: 600;
+    }
   }
 
-  td {
-    padding: 10px;
-    border-bottom: 1px solid #dee2e6; /* Light gray border for rows */
+  &-nav {
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    margin-bottom: 2rem;
+
+    .nav-btn {
+      padding: 0.7rem 1.5rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: none;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+
+      &.active {
+        background: #4338ca;
+        color: white;
+      }
+    }
   }
 
-  tr:hover {
-    background-color: #f1f1f1; /* Light background on row hover */
+  &-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .value {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #4338ca;
+        margin-bottom: 0.5rem;
+      }
+
+      .title {
+        color: #6b7280;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
   }
-}
 
-.btn {
-  border-radius: 5px; /* Rounded buttons */
-}
-
-.btn-group {
-  display: flex;
-  gap: 5px; /* Space between buttons */
-}
-
-.text-center {
-  text-align: center;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .custom-sidebar {
-    width: 100%;
-    margin-bottom: 20px; /* Space between sidebar and main content */
+  .chart-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    margin-bottom: 2rem;
   }
 
-  .custom-main-content {
-    width: 100%;
+  .data-table {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    overflow: hidden;
+
+    .table {
+      margin-bottom: 0;
+    }
+
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #374151;
+      padding: 1rem;
+    }
+
+    td {
+      padding: 1rem;
+      vertical-align: middle;
+    }
+
+    .action-btn {
+      padding: 0.5rem;
+      border-radius: 6px;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    .add-btn {
+      background: #4338ca;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      &:hover {
+        background: #3730a3;
+      }
+    }
   }
 }

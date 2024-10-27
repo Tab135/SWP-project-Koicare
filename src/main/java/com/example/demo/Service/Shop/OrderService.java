@@ -18,7 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderService implements IOrderService{
+public class OrderService implements IOrderService {
 
     @Autowired
     private OrderRepository orderRepo;
@@ -91,11 +91,11 @@ public class OrderService implements IOrderService{
     public ReqResOrder updateOrder(int orderId, List<OrderItem> detail) {
         ReqResOrder req = new ReqResOrder();
         Order order = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found for ID : " + orderId));
-        Map<Integer,Integer> updateQuantityMap = new HashMap<>();
-        for(OrderItem item : detail){
+        Map<Integer, Integer> updateQuantityMap = new HashMap<>();
+        for (OrderItem item : detail) {
             updateQuantityMap.put(item.getProduct().getId(), item.getQuantity());
         }
-        for(OrderItem item : order.getOrderItems()){
+        for (OrderItem item : order.getOrderItems()) {
             Integer newQuantity = updateQuantityMap.get(item.getProduct().getId());
             if (newQuantity != null) {
                 // Update quantity
@@ -183,6 +183,7 @@ public class OrderService implements IOrderService{
         orderRepo.save(order);
         req.setStatusCode(200);
         req.setMessage("Order status updated successfully");
+        req.setId(order.getId());
         req.setUserId(order.getUser().getId());
         req.setOrderDate(order.getDate());
         req.setTotalAmount(order.getTotalAmount());
@@ -260,15 +261,18 @@ public class OrderService implements IOrderService{
     }
 
     @Override
-    public List<ReqResOrder> getOrdersByStatus(OrderStatus status) {
-        List<Order> orders = orderRepo.findByOrderStatus(status);
+    public List<ReqResOrder> getOrdersByStatus() {
+        // Fetch all orders with the specified status except PENDING
+        List<Order> orders = orderRepo.findByOrderStatusNot(OrderStatus.PENDING);
 
         // Convert the List<Order> to List<ReqResOrder>
         return orders.stream().map(order -> {
             ReqResOrder reqResOrder = new ReqResOrder();
             reqResOrder.setStatusCode(200);
             reqResOrder.setMessage("Orders retrieved successfully");
+            reqResOrder.setId(order.getId());
             reqResOrder.setUserId(order.getUser().getId());
+            reqResOrder.setUserName(order.getUser().getName());
             reqResOrder.setOrderDate(order.getDate());
             reqResOrder.setTotalAmount(order.getTotalAmount());
             reqResOrder.setOrderStatus(order.getOrderStatus());

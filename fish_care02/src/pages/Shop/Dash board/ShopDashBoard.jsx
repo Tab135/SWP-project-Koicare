@@ -1,300 +1,283 @@
 import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
+import "./dashboard.scss";
 import ProductService from "../ShopService";
 import CategoryService from "./CategoryService";
-import "./dashboard.scss";
-import { Button, Row, Col } from "react-bootstrap";
-import { FaTrashAlt, FaEdit, FaPlus } from "react-icons/fa";
+import OrderService from "../Order/OrderService";
+import { Button, Container } from "react-bootstrap";
+import {
+  FaPlus,
+  FaChartBar,
+  FaBox,
+  FaList,
+  FaShoppingCart,
+} from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ROUTERS } from "../../../utis/router";
+
+// Import components
+import ProductTable from "./table/ProductTable";
+import CategoryTable from "./table/CategoryTable";
+import OrderTable from "./table/OrderTable";
+import StatCard from "./StatCard";
 
 const ShopDashboard = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [orders, setOrders] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [error, setError] = useState(null);
-  const [view, setView] = useState("products");
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalProducts, setTotalProducts] = useState(0);
+  const [totalStock, setTotalStock] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
+  const [view, setView] = useState("dashboard");
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productList = await ProductService.getAllProducts();
-        setProducts(productList);
-        setFilteredProducts(productList);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    const fetchCategories = async () => {
-      try {
-        const categories = await CategoryService.getAllCategory();
-        setCategories(categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-      }
-    };
-
-    fetchProducts();
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
-    const results = products.filter((product) =>
-      product.productName.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredProducts(results);
-  }, [searchTerm, products]);
-
-  const totalRevenue = orders.reduce((acc, order) => acc + order.price, 0);
-  const totalProducts = filteredProducts.length;
-  const totalStock = filteredProducts.reduce(
-    (acc, product) => acc + product.stock,
-    0
-  );
-  const totalOrders = orders.length;
+  const orderStatuses = ["PROCESSING", "SHIPPED", "DELIVERED", "CANCELED"];
 
   const chartData = {
-    labels: filteredProducts.map((product) => product.productName),
+    labels: products.map((product) => product.productName || ""),
     datasets: [
       {
         label: "Stock Levels",
-        data: filteredProducts.map((product) => product.stock),
+        data: products.map((product) => product.amount || 0),
         backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
       },
     ],
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const productList = await ProductService.getAllProducts();
+      setProducts(productList);
+      setFilteredProducts(productList);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const categories = await CategoryService.getAllCategory();
+      setCategories(categories);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  };
+
+  const fetchOrders = async () => {
+    try {
+      const response = await OrderService.getOrderByStatus();
+      setOrders(response);
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
+
+  const calculateTotals = (products, orders) => {
+    const revenue = products.reduce(
+      (acc, product) => acc + (product.price || 0) * (product.amount || 0),
+      0
+    );
+    setTotalRevenue(revenue);
+    setTotalProducts(products.length);
+    setTotalStock(
+      products.reduce((acc, product) => acc + (product.amount || 0), 0)
+    );
+    setTotalOrders(orders.length);
   };
 
   const handleDelete = async (productId) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
       try {
         await ProductService.deleteProduct(productId);
-        setProducts(products.filter((product) => product.id !== productId));
-        setFilteredProducts(
-          filteredProducts.filter((product) => product.id !== productId)
+        const updatedProducts = products.filter(
+          (product) => product.id !== productId
         );
+        setProducts(updatedProducts);
+        setFilteredProducts(updatedProducts);
         alert("Product deleted successfully");
       } catch (error) {
-        setError("Failed to delete product: " + error.message);
+        console.error("Failed to delete product:", error);
       }
     }
   };
 
   const handleDeleteCategory = async (categoryId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this category? This will delete associated products as well."
-      )
-    ) {
+    if (window.confirm("Are you sure you want to delete this category?")) {
       try {
         const response = await CategoryService.deleteCategory(categoryId);
         if (response.statusCode === 200) {
           setCategories(
             categories.filter((cat) => cat.categoryId !== categoryId)
           );
-          alert("Category and associated products deleted successfully.");
+          alert("Category deleted successfully.");
         } else {
           alert(response.message);
         }
       } catch (error) {
-        alert("Failed to delete category: " + error.message);
+        console.error("Failed to delete category:", error);
       }
     }
   };
 
+  const handleUpdateStatus = async (orderId, orderStatus) => {
+    try {
+      console.log("Updating Order ID:", orderId, "to Status:", orderStatus); // Log for debugging
+      const updatedOrder = await OrderService.updateOrderStatus(
+        orderId,
+        orderStatus
+      );
+      console.log("Order updated successfully:", updatedOrder);
+      fetchOrders(); // Re-fetch orders to reflect the updated status
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  };
+
+  useEffect(() => {
+    Promise.all([fetchProducts(), fetchCategories(), fetchOrders()]);
+  }, []);
+
+  useEffect(() => {
+    calculateTotals(products, orders);
+  }, [products, orders]);
+
   const renderContent = () => {
-    if (view === "products") {
-      return (
-        <>
-          <h2>Product Inventory</h2>
-          <ProductTable
-            products={filteredProducts}
-            handleDelete={handleDelete}
-          />
-        </>
-      );
-    } else if (view === "categories") {
-      return (
-        <>
-          <h2>Category List</h2>
-          <CategoryTable
-            categories={categories}
-            handleDeleteCategory={handleDeleteCategory}
-          />
-        </>
-      );
+    switch (view) {
+      case "products":
+        return (
+          <div className="data-table">
+            <div className="d-flex justify-content-between align-items-center p-4">
+              <h2 className="m-0">Product Inventory</h2>
+              <Link to={ROUTERS.USER.AddProduct}>
+                <Button className="add-btn">
+                  <FaPlus /> Add Product
+                </Button>
+              </Link>
+            </div>
+            <ProductTable
+              products={filteredProducts}
+              handleDelete={handleDelete}
+            />
+          </div>
+        );
+      case "categories":
+        return (
+          <div className="data-table">
+            <div className="d-flex justify-content-between align-items-center p-4">
+              <h2 className="m-0">Categories</h2>
+              <Link to={ROUTERS.USER.AddCategory}>
+                <Button className="add-btn">
+                  <FaPlus /> Add Category
+                </Button>
+              </Link>
+            </div>
+            <CategoryTable
+              categories={categories}
+              handleDeleteCategory={handleDeleteCategory}
+            />
+          </div>
+        );
+      case "orders":
+        return (
+          <div className="data-table">
+            <h2 className="p-4 m-0">Orders</h2>
+            <OrderTable
+              orders={orders}
+              onUpdateStatus={handleUpdateStatus} // Pass the function directly
+              orderStatuses={orderStatuses} // Pass order statuses for selection
+            />
+          </div>
+        );
+      default:
+        return (
+          <>
+            <div className="dashboard-stats">
+              <StatCard
+                icon={<FaChartBar />}
+                title="Total Revenue"
+                value={`$${totalRevenue.toFixed(2)}`}
+                color="#4338ca"
+              />
+              <StatCard
+                icon={<FaBox />}
+                title="Total Products"
+                value={totalProducts}
+                color="#059669"
+              />
+              <StatCard
+                icon={<FaList />}
+                title="Total Stock"
+                value={totalStock}
+                color="#db2777"
+              />
+              <StatCard
+                icon={<FaShoppingCart />}
+                title="Total Orders"
+                value={totalOrders}
+                color="#9333ea"
+              />
+            </div>
+
+            <div className="chart-container">
+              <h4>Stock Levels</h4>
+              <Bar
+                data={chartData}
+                options={{
+                  responsive: true,
+                  plugins: {
+                    legend: {
+                      position: "top",
+                    },
+                  },
+                }}
+              />
+            </div>
+          </>
+        );
     }
   };
 
   return (
-    <div className="custom-dashboard-container d-flex flex-column">
-      <Row className="mb-4">
-        <Col>
-          <h2>Stock Levels Chart</h2>
-          <div className="custom-chart-container">
-            <Bar data={chartData} />
-          </div>
-        </Col>
-      </Row>
+    <div className="dashboard">
+      <Container fluid>
+        <div className="dashboard-header">
+          <h1>Shop Dashboard</h1>
+        </div>
 
-      <Row className="DB custom-row-margin">
-        <Col md={6} className="custom-sidebar">
-          <h2 className="text-center">Statistics</h2>
-          <div className="custom-dashboard-stats">
-            <Row className="justify-content-center">
-              <Col md={6} className="mb-3">
-                <CustomStatsCard
-                  title="Total Revenue"
-                  value={`$${totalRevenue.toFixed(2)}`}
-                />
-              </Col>
-              <Col md={6} className="mb-3">
-                <CustomStatsCard title="Total Products" value={totalProducts} />
-              </Col>
-            </Row>
-            <Row className="justify-content-center">
-              <Col md={6} className="mb-3">
-                <CustomStatsCard title="Total Stock" value={totalStock} />
-              </Col>
-              <Col md={6} className="mb-3">
-                <CustomStatsCard title="Total Orders" value={totalOrders} />
-              </Col>
-            </Row>
-          </div>
-        </Col>
+        <div className="dashboard-nav">
+          <Button
+            className={`nav-btn me-2 ${view === "dashboard" ? "active" : ""}`}
+            onClick={() => setView("dashboard")}
+          >
+            <FaChartBar className="me-2" /> Dashboard
+          </Button>
+          <Button
+            className={`nav-btn me-2 ${view === "products" ? "active" : ""}`}
+            onClick={() => setView("products")}
+          >
+            <FaBox className="me-2" /> Products
+          </Button>
+          <Button
+            className={`nav-btn me-2 ${view === "categories" ? "active" : ""}`}
+            onClick={() => setView("categories")}
+          >
+            <FaList className="me-2" /> Categories
+          </Button>
+          <Button
+            className={`nav-btn ${view === "orders" ? "active" : ""}`}
+            onClick={() => setView("orders")}
+          >
+            <FaShoppingCart className="me-2" /> Orders
+          </Button>
+        </div>
 
-        <Col md={6} className="custom-main-content">
-          <h1 className="my-4 text-center">Shop Dashboard</h1>
-          <div className="d-flex justify-content-start mb-3">
-            <Button
-              variant="primary"
-              className="me-2"
-              size="sm"
-              onClick={() => setView("products")}
-            >
-              Products
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setView("categories")}
-            >
-              Categories
-            </Button>
-          </div>
-          {renderContent()}
-        </Col>
-      </Row>
+        {renderContent()}
+      </Container>
     </div>
   );
 };
-
-const CustomStatsCard = ({ title, value }) => (
-  <div className="custom-card text-center mb-3">
-    <div className="custom-card-body">
-      <h6>{value}</h6>
-      <h6>{title}</h6>
-    </div>
-  </div>
-);
-
-const ProductTable = ({ products, handleDelete }) => (
-  <table className="custom-table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Price</th>
-        <th>Amount</th>
-        <th>
-          Actions
-          <Link to={ROUTERS.USER.AddProduct}>
-            <Button variant="success" size="sm" className="ms-2">
-              <FaPlus className="me-1" /> Add Product
-            </Button>
-          </Link>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {products.map((product) => (
-        <tr key={product.id} className="hover-row">
-          <td>{product.productName}</td>
-          <td>{product.category?.categoryName || "No Category"}</td>
-          <td>${product.price.toFixed(2)}</td>
-          <td>{product.amount}</td>
-          <td>
-            <div className="btn-group" role="group">
-              <Link to={`/shop/updatePro/${product.id}`}>
-                <Button variant="warning" size="sm" className="me-2">
-                  <FaEdit className="me-1" />
-                </Button>
-              </Link>
-              <Button
-                variant="danger"
-                size="sm"
-                onClick={() => handleDelete(product.id)}
-              >
-                <FaTrashAlt className="me-1" />
-              </Button>
-            </div>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
-
-const CategoryTable = ({ categories, handleDeleteCategory }) => (
-  <table className="custom-table table-striped table-hover">
-    <thead>
-      <tr>
-        <th>Category ID</th>
-        <th>Category Name</th>
-        <th>
-          Actions
-          <Link to={ROUTERS.USER.AddCate}>
-            <Button
-              variant="primary"
-              size="sm"
-              className="ms-2 custom-small-button"
-            >
-              <FaPlus className="me-1" /> Add Category
-            </Button>
-          </Link>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {categories.map((category) => (
-        <tr key={category.categoryId} className="hover-row">
-          <td>{category.categoryId}</td>
-          <td>{category.categoryName}</td>
-          <td>
-            <Button
-              variant="danger"
-              size="sm"
-              className="me-2 custom-small-button"
-              onClick={() => handleDeleteCategory(category.categoryId)}
-            >
-              <FaTrashAlt className="me-1" />
-            </Button>
-            <Link to={`/shop/updateCategory/${category.categoryId}`}>
-              <Button
-                variant="warning"
-                size="sm"
-                className="custom-small-button"
-              >
-                <FaEdit className="me-1" />
-              </Button>
-            </Link>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
 
 export default ShopDashboard;

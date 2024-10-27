@@ -16,12 +16,11 @@ import {
   Button,
   Badge,
 } from "react-bootstrap";
-import { FaShoppingCart, FaImage } from "react-icons/fa";
+import { FaShoppingCart, FaImage, FaSearch } from "react-icons/fa";
 import AddToCart from "./Cart/AddToCart/AddToCart.jsx";
-import ToastNotification from "./Cart/AddToCart/ToastNotification.jsx"; // Import the Toast component
+import ToastNotification from "./Cart/AddToCart/ToastNotification.jsx";
 import "./_shop.scss";
 
-// Function to extract user ID from token
 const extractUserId = (token) => {
   try {
     const decoded = jwtDecode(token);
@@ -39,8 +38,8 @@ const Shop = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [cartItemCount, setCartItemCount] = useState(0);
-  const [showToast, setShowToast] = useState(false); // State to control toast visibility
-  const [toastMessage, setToastMessage] = useState(""); // State for toast message
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
   const location = useLocation();
 
   useEffect(() => {
@@ -71,7 +70,6 @@ const Shop = () => {
     fetchProducts();
   }, []);
 
-  // Fetch cart item count whenever the user ID is set
   useEffect(() => {
     const fetchCartItemCount = async () => {
       if (Id) {
@@ -87,28 +85,22 @@ const Shop = () => {
     fetchCartItemCount();
   }, [Id]);
 
-  
-
   const handleAddToCart = async (productId) => {
     try {
-      const response = await CartService.addProductToCart(productId, 1);
-      const newCount = cartItemCount + 1; // Change to always add 1
+      await CartService.addProductToCart(productId, 1);
+      const newCount = cartItemCount + 1;
       setCartItemCount(newCount);
       localStorage.setItem(`cartItemCount_${Id}`, newCount);
       setToastMessage("Product added to cart successfully!");
       setShowToast(true);
 
-      // Auto-close the toast after 2 seconds
       setTimeout(() => {
         setShowToast(false);
       }, 2000);
     } catch (error) {
-      alert("Failed to add product to cart: " + error.message);
+      setToastMessage("Failed to add product to cart: " + error.message);
+      setShowToast(true);
     }
-  };
-
-  const handleSearchInputChange = (event) => {
-    setSearchTerm(event.target.value);
   };
 
   const filteredProducts = products.filter((product) =>
@@ -116,120 +108,106 @@ const Shop = () => {
   );
 
   return (
-    <Container fluid className="shop-container py-5">
+    <div className="shop-container">
       {showToast && (
         <ToastNotification
           message={toastMessage}
-          onClose={() => setShowToast(false)} // Close the toast manually if needed
+          onClose={() => setShowToast(false)}
         />
       )}
-      <Row className="justify-content-center mb-4">
-        <Col xs={12} md={6} lg={4}>
-          <div className="search-bar-container">
-            <Form.Control
-              type="text"
-              placeholder="Search for products..."
-              value={searchTerm}
-              onChange={handleSearchInputChange}
-              className="search-input"
-            />
-          </div>
-        </Col>
-        <Col xs="auto" className="mt-3 mt-md-0">
-          {/* Make the cart icon a link to the cart page */}
-          <Link to="/user/cart/getCartByUser">
-            <Button
-              variant="outline-primary"
-              className="rounded-circle p-2 position-relative"
-            >
-              <FaShoppingCart size={24} />
-              <Badge
-                bg="danger"
-                className="position-absolute top-0 start-100 translate-middle rounded-pill"
-              >
-                {cartItemCount}
-              </Badge>
-            </Button>
-          </Link>
-        </Col>
-      </Row>
-      {/* Render products */}
-      {loading ? (
-        <div className="text-center">
-          <Spinner animation="border" variant="primary" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </Spinner>
-        </div>
-      ) : error ? (
-        <Alert variant="danger">{error}</Alert>
-      ) : filteredProducts.length > 0 ? (
-        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
-          {filteredProducts.map((product) => (
-            <Col key={product.id}>
-              <Card className="h-100 shadow-sm product-card">
-                <div className="product-image-container">
-                  {product.productImage ? (
-                    <Card.Img
-                      variant="top"
-                      src={`data:image/jpeg;base64,${product.productImage}`}
-                      alt={product.productName}
-                      className="product-image"
-                    />
-                  ) : (
-                    <div className="placeholder-image">
-                      <FaImage size={48} color="#ccc" />
-                    </div>
-                  )}
-                </div>
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title className="product-title">
-                    {product.productName}
-                  </Card.Title>
-                  <Card.Text className="text-primary fw-bold mb-2">
-                    {product.price
-                      .toLocaleString("vi-VN", {
-                        style: "currency",
-                        currency: "VND",
-                      })
-                      .replace("₫", "đ")}
-                  </Card.Text>
-                  {product.description && (
-                    <Card.Text className="product-description">
-                      {product.description}
-                    </Card.Text>
-                  )}
-                  {product.amount && (
-                    <Card.Text className="product-description">
-                      Amount: {product.amount}
-                    </Card.Text>
-                  )}
-                  <div className="mt-auto">
-                    {/* Add to Cart Button */}
-                    <AddToCart
-                      userId={Id}
-                      productId={product.id}
-                      onAdd={handleAddToCart}
-                      className="mb-2" // Add margin-bottom for spacing
-                    />
-                    <Link to={`/public/product/${product.id}`}>
-                      <Button
-                        variant="info"
-                        className="w-100 mb-2"
-                        style={{ padding: "0.75rem 1rem" }}
-                      >
-                        Detail
-                      </Button>
-                    </Link>
-                  </div>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
+
+      <Container>
+        <Row className="justify-content-center mb-4">
+          <Col xs={12} md={6} lg={4}>
+            <div className="search-bar-container">
+              <Form.Control
+                type="text"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+             
+            </div>
+          </Col>
+          <Col xs="auto" className="d-flex align-items-center">
+            <Link to="/user/cart/getCartByUser" className="cart-button-link">
+              <div className="cart-button">
+                <FaShoppingCart size={20} />
+                {cartItemCount > 0 && (
+                  <span className="cart-badge">{cartItemCount}</span>
+                )}
+              </div>
+            </Link>
+          </Col>
         </Row>
-      ) : (
-        <Alert variant="info">No products available</Alert>
-      )}
-    </Container>
+
+        {loading ? (
+          <div className="text-center py-5">
+            <Spinner animation="border" variant="primary" />
+          </div>
+        ) : error ? (
+          <Alert variant="danger">{error}</Alert>
+        ) : filteredProducts.length > 0 ? (
+          <Row xs={1} sm={2} md={3} lg={4} className="g-4">
+            {filteredProducts.map((product) => (
+              <Col key={product.id}>
+                <Card className="product-card">
+                  <div className="product-image-container">
+                    {product.productImage ? (
+                      <img
+                        src={`data:image/jpeg;base64,${product.productImage}`}
+                        alt={product.productName}
+                        className="product-image"
+                      />
+                    ) : (
+                      <div className="placeholder-image">
+                        <FaImage size={40} />
+                      </div>
+                    )}
+                  </div>
+                  <Card.Body>
+                    <h3 className="product-title">{product.productName}</h3>
+                    <div className="product-price">
+                      {product.price
+                        .toLocaleString("vi-VN", {
+                          style: "currency",
+                          currency: "VND",
+                        })
+                        .replace("₫", "đ")}
+                    </div>
+                    {product.description && (
+                      <p className="product-description">
+                        {product.description}
+                      </p>
+                    )}
+                    {product.amount && (
+                      <div className="product-amount">
+                        Stock: {product.amount}
+                      </div>
+                    )}
+                    <div className="mt-auto">
+                      <AddToCart
+                        userId={Id}
+                        productId={product.id}
+                        onAdd={handleAddToCart}
+                      />
+                      <Link to={`/public/product/${product.id}`}>
+                        <Button variant="info">View Details</Button>
+                      </Link>
+                    </div>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <Alert variant="info" className="text-center">
+            No products found
+          </Alert>
+        )}
+      </Container>
+    </div>
   );
 };
 

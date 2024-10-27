@@ -14,6 +14,6 @@ public interface IOrderService {
     ReqResOrder updateOrderStatus(int orderId , OrderStatus newStatus);
     ReqResOrder getOrderById(int orderId);                     // Read
     List<ReqResOrder> getOrdersByUserId(int userId);          // Read
-    List<ReqResOrder> getOrdersByStatus(OrderStatus status);
+    List<ReqResOrder> getOrdersByStatus();
     ReqResOrder cancelOrder(int userId ,int orderId );
 }

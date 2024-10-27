@@ -1,18 +1,17 @@
 // StarRating.jsx
 import React from "react";
-import { FaStar } from "react-icons/fa";
-import "./StarRating.scss"; // Import star icon from react-icons
+import "./StarRating.scss"; // Create a CSS file for styling
 
 const StarRating = ({ rating, onRatingChange }) => {
-  const stars = [1, 2, 3, 4, 5]; // Assuming a 5-star rating system
+  const stars = [1, 2, 3, 4, 5]; // Array for five stars
 
   return (
-    <div>
+    <div className="star-rating">
       {stars.map((star) => (
         <span
           key={star}
+          className={`star ${star <= rating ? "filled" : ""}`}
           onClick={() => onRatingChange(star)}
-          style={{ cursor: "pointer", color: star <= rating ? "gold" : "gray" }}
         >
           ★
         </span>

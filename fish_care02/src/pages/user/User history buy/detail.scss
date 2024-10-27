@@ -1,19 +1,53 @@
+// detail.scss
+
 .order-detail-container {
+  padding: 30px; // Increased padding for a more spacious layout
+  background-color: #f9f9f9; // Light background for contrast
+
+  h1 {
+    font-size: 2.5rem; // Larger title for emphasis
+    color: #343a40; // Darker color for better contrast
+    margin-bottom: 30px; // Space below the title
+  }
+
   .order-card {
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px; // More rounded corners for a softer look
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); // Deeper shadow for depth
+    background-color: #ffffff; // White background for the card
+    margin-bottom: 30px; // Space below the card
+
+    .card-title {
+      font-size: 1.8rem; // Larger font size for the order ID
+      color: #007bff; // Primary color for the title
+      margin-bottom: 15px; // Space below the title
+    }
+
+    .card-text {
+      font-size: 1.1rem; // Slightly larger text for better readability
+      color: #495057; // Darker grey for text
+      margin-bottom: 10px; // Space below text
+    }
 
     .product-item {
       display: flex;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 20px; // Increased space between product items
+      padding: 15px; // Add padding for better spacing
+      border: 1px solid #e0e0e0; // Light border for product items
+      border-radius: 8px; // Rounded corners for product items
+      transition: box-shadow 0.3s; // Smooth shadow transition
+
+      &:hover {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Shadow effect on hover
+      }
 
       .product-image {
-        width: 80px; // Adjust the width as needed
+        width: 100px; // Adjust the width for better visibility
         height: auto; // Maintain aspect ratio
         margin-right: 15px; // Space between image and text
-        border-radius: 4px; // Optional: Add border radius for rounded corners
+        border-radius: 5px; // Rounded corners for images
+        object-fit: cover; // Ensure the image covers the area without distortion
       }
 
       .card-body {
@@ -25,9 +59,20 @@
   .text-muted {
     margin-top: 20px;
     font-size: 1.1rem; // Slightly larger text for better readability
+    color: #6c757d; // Muted color for less emphasis
   }
 
   .btn {
     width: 100%; // Make the button full width
+    padding: 12px; // Add padding for better touch targets
+    border-radius: 5px; // Rounded corners for the button
+    transition: background-color 0.3s, transform 0.2s; // Smooth transition
+    background-color: #007bff; // Primary button color
+    color: #fff; // White text color
+
+    &:hover {
+      background-color: #0056b3; // Darker shade on hover
+      transform: translateY(-2px); // Slight lift effect
+    }
   }
 }

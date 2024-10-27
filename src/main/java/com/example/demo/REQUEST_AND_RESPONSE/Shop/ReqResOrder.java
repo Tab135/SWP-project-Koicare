@@ -13,6 +13,7 @@ public class ReqResOrder {
     private String message;
     private int id;
     private int userId;
+    private String userName;
     private LocalDateTime orderDate;
     private BigDecimal totalAmount;
     private OrderStatus orderStatus;
@@ -29,6 +30,15 @@ public class ReqResOrder {
         this.orderStatus = orderStatus;
         this.items = items;
     }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public int getId() {
         return id;
     }

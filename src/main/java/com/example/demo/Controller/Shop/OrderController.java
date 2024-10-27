@@ -59,8 +59,8 @@ public class OrderController {
         return ResponseEntity.ok(orderS.getOrdersByUserId(userId));
     }
 
-    @GetMapping("/user/order/listStatus/{status}")
-    public ResponseEntity<List<ReqResOrder>> getOrderStatus(@PathVariable OrderStatus status) {
-        return ResponseEntity.ok(orderS.getOrdersByStatus(status));
+    @GetMapping("/shop/order/listStatus")
+    public ResponseEntity<List<ReqResOrder>> getOrderStatus() {
+        return ResponseEntity.ok(orderS.getOrdersByStatus());
     }
 }
