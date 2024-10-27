@@ -171,13 +171,7 @@ const ProductDetail = () => {
                             ))}
                           </div>
                         </div>
-                        <div className="review-content">{review.comment}</div>
-                        <div className="review-date">
-                          <FaRegClock className="clock-icon" />
-                          <span>
-                            {new Date(review.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
+                        <div className="review-content">{review.comment}</div>                       
                       </Card.Body>
                     </Card>
                   ))

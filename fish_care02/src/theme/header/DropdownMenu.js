@@ -23,6 +23,9 @@ const DropdownMenu = ({ userId }) => {
         <Dropdown.Item as={Link} to={ROUTERS.USER.History}>
           <FaHistory className="me-2" /> Order History
         </Dropdown.Item>
+        <Dropdown.Item as={Link} to={ROUTERS.USER.ShopDashboard}>
+          DashBoard
+        </Dropdown.Item>
         <Dropdown.Divider />
         <LogoutButton />
       </Dropdown.Menu>

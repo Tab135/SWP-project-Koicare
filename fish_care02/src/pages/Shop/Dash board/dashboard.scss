@@ -1,7 +1,9 @@
 .dashboard {
   padding: 2rem;
-  background: #f8f9fa;
+  background: rgba(248, 249, 250, 0.8); // Semi-transparent background
+  backdrop-filter: blur(10px); // Blur effect for glassmorphism
   min-height: 100vh;
+  border-radius: 15px; // Rounded corners for the dashboard
 
   &-header {
     margin-bottom: 2rem;
@@ -12,10 +14,15 @@
   }
 
   &-nav {
-    background: white;
+    background: rgba(
+      255,
+      255,
+      255,
+      0.2
+    ); // Semi-transparent background for navigation
     padding: 1rem;
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); // Slightly stronger shadow
     margin-bottom: 2rem;
 
     .nav-btn {
@@ -24,13 +31,15 @@
       font-weight: 500;
       transition: all 0.3s ease;
       border: none;
+      color: white; // White text for better contrast
 
       &:hover {
         transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.3); // Change background on hover
       }
 
       &.active {
-        background: #4338ca;
+        background: rgba(67, 56, 202, 0.8); // Active button background
         color: white;
       }
     }
@@ -43,10 +52,10 @@
     margin-bottom: 2rem;
 
     .stat-card {
-      background: white;
+      background: rgba(255, 255, 255, 0.2); // Semi-transparent card background
       padding: 1.5rem;
       border-radius: 12px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
 
       &:hover {
@@ -69,17 +78,29 @@
   }
 
   .chart-container {
-    background: white;
+    background: rgba(
+      255,
+      255,
+      255,
+      0.2
+    ); // Semi-transparent background for chart
     padding: 1.5rem;
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
+    height: 300px; // Set a fixed height for the container
+    position: relative; // Ensure the container can hold absolute positioning
   }
 
   .data-table {
-    background: white;
+    background: rgba(
+      255,
+      255,
+      255,
+      0.2
+    ); // Semi-transparent background for data table
     border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     overflow: hidden;
 
     .table {
@@ -87,7 +108,12 @@
     }
 
     th {
-      background: #f9fafb;
+      background: rgba(
+        249,
+        250,
+        251,
+        0.5
+      ); // Semi-transparent header background
       font-weight: 600;
       color: #374151;
       padding: 1rem;

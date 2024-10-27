@@ -7,9 +7,11 @@ $transition-speed: 0.3s;
 $border-radius: 12px;
 
 .shop-container {
-  background-color: $background-color;
   min-height: 100vh;
   padding: 2rem 1rem;
+  background: rgba( 0, 0, 0, 0.25 ); // Semi-transparent background
+  backdrop-filter: blur(5px); // Blur effect for the background
+  border-radius: $border-radius; // Rounded corners for the shop container
 
   .search-bar-container {
     margin-bottom: 2rem;
@@ -18,10 +20,10 @@ $border-radius: 12px;
     .search-input {
       border-radius: $border-radius;
       padding: 1rem 1.5rem;
-      border: 2px solid #e5e7eb;
+      border: 2px solid rgba(229, 231, 235, 0.5); // Semi-transparent border
       transition: all $transition-speed ease;
       font-size: 1rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: $card-shadow;
 
       &:focus {
         border-color: $primary-color;
@@ -32,7 +34,7 @@ $border-radius: 12px;
   }
 
   .cart-button {
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8); // Semi-transparent white
     border: 2px solid $primary-color;
     color: $primary-color;
     width: 48px;
@@ -43,6 +45,7 @@ $border-radius: 12px;
     justify-content: center;
     transition: all $transition-speed ease;
     position: relative;
+    margin-bottom: 30px;
 
     &:hover {
       background-color: $primary-color;
@@ -66,11 +69,13 @@ $border-radius: 12px;
   .product-card {
     border: none;
     border-radius: $border-radius;
-    background: white;
+    background: rgba(255, 255, 255, 0.9); // Semi-transparent white for the card
     transition: all $transition-speed ease;
     height: 100%;
     overflow: hidden;
     box-shadow: $card-shadow;
+
+    backdrop-filter: blur(10px); // Add blur effect to the card
 
     &:hover {
       transform: translateY(-5px);
@@ -84,7 +89,7 @@ $border-radius: 12px;
     .product-image-container {
       height: 200px;
       overflow: hidden;
-      background-color: #f9fafb;
+      background-color: rgba(249, 250, 251, 0.8); // Semi-transparent background
       border-radius: $border-radius $border-radius 0 0;
 
       .product-image {
@@ -135,7 +140,7 @@ $border-radius: 12px;
       color: #374151;
       margin-bottom: 1rem;
       padding: 0.5rem;
-      background-color: #f3f4f6;
+      background-color: rgba(243, 244, 246, 0.7); // Semi-transparent background
       border-radius: 6px;
       display: inline-block;
     }
@@ -180,7 +185,7 @@ $border-radius: 12px;
   top: 20px;
   right: 20px;
   z-index: 1000;
-  background-color: #10b981;
+  background-color: rgba(16, 185, 129, 0.9); // Semi-transparent background
   color: white;
   padding: 1rem 1.5rem;
   border-radius: $border-radius;

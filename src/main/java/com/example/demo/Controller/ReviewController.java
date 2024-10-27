@@ -28,7 +28,7 @@ public class ReviewController {
         return ResponseEntity.ok(review.deleteReview(reviewId));
     }
 
-    @GetMapping("/user/review/listReview/{productId}")
+    @GetMapping("/public/review/listReview/{productId}")
     public ResponseEntity<List<ReqResReview>> show(@PathVariable int productId) {
         return ResponseEntity.ok(review.listReviewByProductId(productId));
     }

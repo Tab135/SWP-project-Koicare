@@ -9,6 +9,7 @@ const ProductTable = ({ products, handleDelete }) => (
     <thead>
       <tr>
         <th>Product Name</th>
+        <th>Category</th>
         <th>Price</th>
         <th>Stock</th>
         <th>Actions</th>
@@ -18,6 +19,7 @@ const ProductTable = ({ products, handleDelete }) => (
       {products.map((product) => (
         <tr key={product.id}>
           <td>{product.productName}</td>
+          <td>{product.category?.categoryName || "No Category"}</td>
           <td>${product.price.toFixed(2)}</td>
           <td>{product.amount}</td>
           <td>

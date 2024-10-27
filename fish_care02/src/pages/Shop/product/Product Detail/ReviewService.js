@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class ReviewService {
-  static base_url = "http://localhost:8080/user"; // Assuming this is your base API URL
+  static base_url = "http://localhost:8080"; // Assuming this is your base API URL
 
   // Helper function to get token from local or session storage
   static getToken() {
@@ -13,7 +13,7 @@ class ReviewService {
     const token = this.getToken();
     try {
       const response = await axios.post(
-        `${this.base_url}/review/${productId}`, // Correct endpoint for posting reviews
+        `${this.base_url}/user/review/${productId}`, // Correct endpoint for posting reviews
         reviewData, // Send review data (rating, comment)
         {
           headers: {
@@ -34,7 +34,7 @@ class ReviewService {
     const token = this.getToken();
     try {
       const response = await axios.get(
-        `${this.base_url}/review/listReview/${productId}`,
+        `${this.base_url}/public/review/listReview/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

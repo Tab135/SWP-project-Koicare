@@ -6,9 +6,11 @@ import com.example.demo.DTO.Shop.OrderItem;
 import com.example.demo.DTO.Shop.OrderStatus;
 import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResPayment;
+import com.example.demo.REQUEST_AND_RESPONSE.ReqResRevenue;
 import com.example.demo.Repo.Shop.OrderRepository;
 import com.example.demo.Repo.Shop.ProductRepo;
 import com.example.demo.Service.JWTUtils;
+import com.example.demo.Service.RevenueService;
 import com.example.demo.Service.Shop.CartService;
 import com.example.demo.Service.Shop.OrderService;
 import com.example.demo.Service.Shop.OrderTrackingService;
@@ -20,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/user/payment")
@@ -40,6 +43,8 @@ public class VNpayController {
     private OrderRepository orderRepo;
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    private RevenueService revenueService;
 
     @PostMapping("/create_payment")
     public ResponseEntity<?> createPayment(HttpServletRequest req,
@@ -76,7 +81,10 @@ public class VNpayController {
                 .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
         order.setOrderStatus(OrderStatus.PROCESSING); // Set the order status to processing
 
-        // Loop through each order item to update product quantities
+        // Initialize totalRevenue as BigDecimal
+        BigDecimal totalRevenue = BigDecimal.ZERO;
+
+        // Loop through each order item to update product quantities and calculate revenue
         for (OrderItem orderItem : order.getOrderItems()) {
             ProductModel product = productRepo.findById(orderItem.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found with ID: " + orderItem.getProduct().getId()));
@@ -89,13 +97,24 @@ public class VNpayController {
             } else {
                 throw new RuntimeException("Not enough stock for product ID: " + product.getId());
             }
+
+            // Calculate revenue for this item
+            BigDecimal itemRevenue = product.getPrice().multiply(BigDecimal.valueOf(orderItem.getQuantity()));
+            totalRevenue = totalRevenue.add(itemRevenue); // Add to total revenue
         }
 
         // Save the updated order
         orderRepo.save(order); // Make sure to save the updated order
         orderTrackingService.createOrderTracking(orderId, OrderStatus.PROCESSING);
-        return ResponseEntity.ok("Payment successful, order updated to PROCESSING and cart removed");
+
+        // Create a revenue record
+        ReqResRevenue reqResRevenue = new ReqResRevenue();
+        reqResRevenue.setAmount(totalRevenue);
+        revenueService.create(userId, reqResRevenue);
+
+        return ResponseEntity.ok("Payment successful, order updated to PROCESSING, cart removed, and revenue recorded.");
     }
+
 }
 
 

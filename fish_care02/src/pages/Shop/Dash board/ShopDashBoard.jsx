@@ -27,6 +27,7 @@ const ShopDashboard = () => {
   const [orders, setOrders] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalAmount, setTotalAmount] = useState(0);
   const [totalProducts, setTotalProducts] = useState(0);
   const [totalStock, setTotalStock] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
@@ -75,12 +76,17 @@ const ShopDashboard = () => {
     }
   };
 
+  const fetchTotalRevenue = async () => {
+    try {
+      const revenueData = await OrderService.getTotalRevenue();
+      const totalRevenue = revenueData.totalAmount; // Accessing totalAmount directly
+      setTotalAmount(totalRevenue);
+    } catch (error) {
+      console.error("Error fetching total revenue:", error);
+    }
+  };
+
   const calculateTotals = (products, orders) => {
-    const revenue = products.reduce(
-      (acc, product) => acc + (product.price || 0) * (product.amount || 0),
-      0
-    );
-    setTotalRevenue(revenue);
     setTotalProducts(products.length);
     setTotalStock(
       products.reduce((acc, product) => acc + (product.amount || 0), 0)
@@ -137,7 +143,12 @@ const ShopDashboard = () => {
   };
 
   useEffect(() => {
-    Promise.all([fetchProducts(), fetchCategories(), fetchOrders()]);
+    Promise.all([
+      fetchProducts(),
+      fetchCategories(),
+      fetchOrders(),
+      fetchTotalRevenue(),
+    ]); // Fetch all data
   }, []);
 
   useEffect(() => {
@@ -198,7 +209,7 @@ const ShopDashboard = () => {
               <StatCard
                 icon={<FaChartBar />}
                 title="Total Revenue"
-                value={`$${totalRevenue.toFixed(2)}`}
+                value={`$${totalAmount.toFixed(2)}`} // Display the total revenue
                 color="#4338ca"
               />
               <StatCard
@@ -227,12 +238,19 @@ const ShopDashboard = () => {
                 data={chartData}
                 options={{
                   responsive: true,
+                  maintainAspectRatio: false, // Allow resizing
                   plugins: {
                     legend: {
                       position: "top",
                     },
                   },
+                  scales: {
+                    y: {
+                      beginAtZero: true,
+                    },
+                  },
                 }}
+                height={250} // Set the height of the chart
               />
             </div>
           </>
@@ -274,7 +292,7 @@ const ShopDashboard = () => {
           </Button>
         </div>
 
-        {renderContent()}
+        <div className="dashboard-content">{renderContent()}</div>
       </Container>
     </div>
   );

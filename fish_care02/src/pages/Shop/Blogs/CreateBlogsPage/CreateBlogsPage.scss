@@ -4,7 +4,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-form {
+.create-blog-container form {
   background-color: #ffffff;
   border-radius: 8px;
   padding: 20px;
@@ -13,7 +13,8 @@ form {
   margin: 0 auto;
 }
 
-input[type='text'], textarea {
+input[type="text"],
+textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 15px;
@@ -23,13 +24,13 @@ input[type='text'], textarea {
   transition: border-color 0.3s;
 }
 
-input[type='text']:focus, textarea:focus {
+input[type="text"]:focus,
+textarea:focus {
   border-color: #007bff;
   outline: none;
 }
 
-
-.add-image-blog-upload-container {
+.image-upload-container {
   background-color: #eaeaea;
   padding: 60px 30px;
   border: 3px dashed #00aaff;
@@ -42,8 +43,7 @@ input[type='text']:focus, textarea:focus {
   text-align: center;
 }
 
-
-.add-blog-image-preview {
+.image-preview {
   max-width: 100%;
   max-height: 200px;
   border-radius: 8px;
@@ -66,31 +66,41 @@ button:hover {
   background-color: #0056b3;
 }
 
-.add-change-image-button,
-.add-delete-image-button {
+.change-image-button,
+.delete-image-button {
   background-color: #17a2b8;
 }
 
-.add-change-image-button:hover {
+.change-image-button:hover {
   background-color: #138496;
 }
 
-.add-delete-image-button {
+.delete-image-button {
   background-color: #dc3545;
 }
 
-.add-delete-image-button:hover {
+.delete-image-button:hover {
   background-color: #c82333;
 }
 
-
-.add-blog-image-upload {
+.image-select-placeholder {
   border-radius: 4px;
   padding: 20px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.add-image-upload:hover {
+.image-select-placeholder:hover {
   background-color: #e9ecef;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  border: none;
+  transition: background-color 0.3s;
 }

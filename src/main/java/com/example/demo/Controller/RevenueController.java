@@ -27,6 +27,11 @@ public class RevenueController {
         int userid = jwtUtils.extractUserId(token.replace("Bearer ", ""));
         return ResponseEntity.ok(revenueService.create(userid, revenue));
     }
+    @GetMapping("/shop/total")
+    public ResponseEntity<?> show()
+    {
+        return ResponseEntity.ok(revenueService.listAllRevenue());
+    }
 
 
 }

@@ -7,6 +7,7 @@ import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResOrderItem;
 import com.example.demo.Repo.Shop.CartRepository;
 import com.example.demo.Repo.Shop.OrderItemRepository;
 import com.example.demo.Repo.Shop.OrderRepository;
+import com.example.demo.Repo.Shop.OrderTrackingRepository;
 import com.example.demo.Repo.UserRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class OrderService implements IOrderService {
     private UserRepo userRepo;
     @Autowired
     private OrderItemRepository itemRepo;
+    @Autowired
+    private OrderTrackingRepository trackingRepository;
 
     @Override
     public ReqResOrder createOrder(int userId) {
@@ -178,9 +181,26 @@ public class OrderService implements IOrderService {
     @Override
     public ReqResOrder updateOrderStatus(int orderId, OrderStatus newStatus) {
         ReqResOrder req = new ReqResOrder();
-        Order order = orderRepo.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found with ID :" + orderId));
+
+        // Fetch the order
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID :" + orderId));
+
+        // Update the order status
         order.setOrderStatus(newStatus);
         orderRepo.save(order);
+
+        // Update the corresponding OrderTracking status
+        OrderTracking orderTracking = trackingRepository.findByOrderId(orderId); // Make sure you have a method to fetch by orderId
+        if (orderTracking != null) {
+            orderTracking.setStatus(newStatus); // Update status
+            trackingRepository.save(orderTracking); // Save changes
+        } else {
+            // Handle the case where the OrderTracking is not found (optional)
+            System.out.println("No OrderTracking found for orderId: " + orderId);
+        }
+
+        // Set response details
         req.setStatusCode(200);
         req.setMessage("Order status updated successfully");
         req.setId(order.getId());
@@ -188,6 +208,8 @@ public class OrderService implements IOrderService {
         req.setOrderDate(order.getDate());
         req.setTotalAmount(order.getTotalAmount());
         req.setOrderStatus(order.getOrderStatus());
+
+        // Prepare order items
         List<ReqResOrderItem> reqResOrderItems = order.getOrderItems().stream()
                 .map(orderItem -> {
                     ReqResOrderItem reqResOrderItem = new ReqResOrderItem();

@@ -50,6 +50,23 @@ public class RevenueService {
         }
         return resp;
     }
-    
+
+    public ReqResRevenue listAllRevenue() {
+        ReqResRevenue resp = new ReqResRevenue();
+        List<RevenueModel> revenueList = revenueRepo.findAll();
+        BigDecimal totalRevenue = BigDecimal.ZERO; // Initialize total revenue
+
+        if (revenueList != null && !revenueList.isEmpty()) {
+            for (RevenueModel revenue : revenueList) {
+                totalRevenue = totalRevenue.add(revenue.getAmount()); // Sum amounts
+            }
+            resp.setRevenueModelList(revenueList);
+            resp.setTotalAmount(totalRevenue); // Assuming you add this field in ReqResRevenue
+            resp.setMessage("Revenue list retrieved successfully, total: " + totalRevenue);
+        } else {
+            resp.setMessage("Revenue list empty");
+        }
+        return resp;
+    }
 }
 

@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface OrderTrackingRepository extends JpaRepository<OrderTracking,Integer> {
     List<OrderTracking> findByOrderUserId(int userId);
     Optional<OrderTracking> findTopByOrderIdOrderByTimestampDesc(int orderId);
+    OrderTracking findByOrderId(int orderId);
+
 }

@@ -90,5 +90,20 @@ class OrderService {
       throw error;
     }
   }
+  static async getTotalRevenue() {
+    const token = this.getToken();
+    try {
+      const response = await axios.get(`http://localhost:8080/shop/total`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Corrected string interpolation
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data; // Return the total revenue data
+    } catch (err) {
+      console.error("Error listing revenue:", err);
+      throw new Error("An error occurred while listing the revenue.");
+    }
+  }
 }
 export default OrderService;
