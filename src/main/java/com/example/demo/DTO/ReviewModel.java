@@ -3,6 +3,7 @@ package com.example.demo.DTO;
 import com.example.demo.DTO.Shop.ProductModel;
 import jakarta.persistence.*;
 import lombok.Data;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Entity
 @Table(name = "review")
@@ -17,9 +18,10 @@ public class ReviewModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private UserModel user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private ProductModel product;
 

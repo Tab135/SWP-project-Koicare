@@ -128,7 +128,7 @@ const ProductDetail = () => {
                   <Card key={index} className="mb-2">
                     <Card.Body>
                       <Card.Text>
-                        <strong>{review.userID}</strong>: {review.comment}{" "}
+                        <strong>{review.userName}</strong>: {review.comment}{" "}
                         <br />
                         <span>Rating: {review.rating} stars</span>
                       </Card.Text>

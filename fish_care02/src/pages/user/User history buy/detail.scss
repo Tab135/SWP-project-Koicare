@@ -1,0 +1,33 @@
+.order-detail-container {
+  .order-card {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .product-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+
+      .product-image {
+        width: 80px; // Adjust the width as needed
+        height: auto; // Maintain aspect ratio
+        margin-right: 15px; // Space between image and text
+        border-radius: 4px; // Optional: Add border radius for rounded corners
+      }
+
+      .card-body {
+        flex: 1; // Allow the text to take up the remaining space
+      }
+    }
+  }
+
+  .text-muted {
+    margin-top: 20px;
+    font-size: 1.1rem; // Slightly larger text for better readability
+  }
+
+  .btn {
+    width: 100%; // Make the button full width
+  }
+}

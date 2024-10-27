@@ -18,17 +18,18 @@ public class ReviewController {
     private JWTUtils jwt;
 
     @PostMapping("/user/review/{productId}")
-    public ResponseEntity<ReqResReview> postReview(@RequestHeader("Authorization") String token, @RequestBody ReqResReview reviewBody, @PathVariable int productId){
-        int userId = jwt.extractUserId(token.replace("Bearer ",""));
-        return ResponseEntity.ok(review.writeReview(reviewBody,userId,productId));
+    public ResponseEntity<ReqResReview> postReview(@RequestHeader("Authorization") String token, @RequestBody ReqResReview reviewBody, @PathVariable int productId) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(review.writeReview(reviewBody, userId, productId));
     }
 
     @DeleteMapping("/admin/review/{reviewId}")
-    public ResponseEntity<ReqResReview> deleteReview(@PathVariable int reviewId){
+    public ResponseEntity<ReqResReview> deleteReview(@PathVariable int reviewId) {
         return ResponseEntity.ok(review.deleteReview(reviewId));
     }
+
     @GetMapping("/user/review/listReview/{productId}")
-    public ResponseEntity<List<ReqResReview>> show(@PathVariable int productId){
+    public ResponseEntity<List<ReqResReview>> show(@PathVariable int productId) {
         return ResponseEntity.ok(review.listReviewByProductId(productId));
     }
 

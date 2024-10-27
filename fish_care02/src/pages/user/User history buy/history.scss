@@ -1,0 +1,96 @@
+.history-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+
+  .order-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .order-item {
+    .order-card {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+
+      &:hover {
+        transform: translateY(-5px);
+      }
+
+      .product-image {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        object-fit: cover;
+        margin-right: 1.5rem;
+      }
+
+      .order-details {
+        display: flex;
+        flex-direction: column;
+
+        h2 {
+          font-size: 1.1rem;
+          color: #333;
+          margin: 0 0 0.3rem;
+        }
+
+        p {
+          font-size: 0.9rem;
+          margin: 0.3rem 0;
+          color: #666;
+        }
+
+        .status {
+          font-weight: 600;
+          color: #3b82f6; // Blue for status text
+        }
+
+        .text-gray-600 {
+          color: #4b5563;
+        }
+
+        .font-medium {
+          font-weight: 500;
+        }
+
+        .font-semibold {
+          font-weight: 600;
+        }
+
+        .view-details-button {
+          margin-top: 1rem;
+          padding: 0.5rem 1.5rem;
+          font-size: 0.9rem;
+          background-color: #10b981;
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #059669;
+          }
+        }
+      }
+    }
+  }
+}

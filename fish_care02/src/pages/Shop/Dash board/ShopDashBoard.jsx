@@ -207,7 +207,6 @@ const ProductTable = ({ products, handleDelete }) => (
         <th>Name</th>
         <th>Category</th>
         <th>Price</th>
-        <th>Stock</th>
         <th>Amount</th>
         <th>
           Actions
@@ -225,7 +224,6 @@ const ProductTable = ({ products, handleDelete }) => (
           <td>{product.productName}</td>
           <td>{product.category?.categoryName || "No Category"}</td>
           <td>${product.price.toFixed(2)}</td>
-          <td>{product.stockQuantity}</td>
           <td>{product.amount}</td>
           <td>
             <div className="btn-group" role="group">

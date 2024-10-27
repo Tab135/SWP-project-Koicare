@@ -235,13 +235,17 @@ public class CartService implements ICartService {
         ReqResCart req = new ReqResCart();
 
         // Find the cart for the user
-        Cart cart = cartRepo.findByUserId(userId).orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
-        // Delete the cart
-        cartRepo.delete(cart);
+        Cart cart = cartRepo.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException("Cart not found for user: " + userId));
+
+        // Delete all cart items associated with the user's cart
+        List<CartItem> cartItems = itemRepository.findByCartId(cart.getId()); // Assuming you have a method to find items by cart ID
+        itemRepository.deleteAll(cartItems); // Delete all items in the cart
+
         // Set the response details
         req.setStatusCode(200); // Indicate success
-        req.setMessage("Cart removed successfully");
-        req.setCartId(cart.getId()); // Optionally return the removed cart ID
+        req.setMessage("Cart items removed successfully");
+        req.setCartId(cart.getId()); // Optionally return the cart ID from which items were removed
 
         return req;
     }

@@ -1,5 +1,4 @@
-import ProductDashboard from "../pages/Shop/Dash board/ShopDashBoard";
-import OrderList from "../pages/Shop/Order/ListOrder";
+
 
 export const ROUTERS = {
     USER: {
@@ -31,8 +30,9 @@ export const ROUTERS = {
         ShopDashboard: "/shop/product",
         Payment:"/user/payment/payment-success",
         AddCate:  "/shop/addCate",
-        UpdateCategory: "/shop/updateCate/:cateId"
-
+        UpdateCategory: "/shop/updateCate/:cateId",
+        History: "/user/track/history",
+        Detail:"/user/detail/:orderId"
 
 
     },

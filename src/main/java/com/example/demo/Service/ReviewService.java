@@ -27,23 +27,48 @@ public class ReviewService {
     private ProductRepo productRepo;
 
 
-    public ReqResReview writeReview(ReqResReview review,int userId,int pondId){
+    public ReqResReview writeReview(ReqResReview review, int userId, int pondId) {
         ReqResReview resp = new ReqResReview();
         ReviewModel reviewModel = new ReviewModel();
 
+        // Fetch user and product using their IDs
         UserModel user = userRepo.findById(userId).orElseThrow();
         ProductModel product = productRepo.findById(pondId).orElseThrow();
+
+        // Set the user, rating, comment, and product for the review
         reviewModel.setUser(user);
         reviewModel.setRating(review.getRating());
         reviewModel.setComment(review.getComment());
         reviewModel.setProduct(product);
 
+        // Save the review
         ReviewModel savedReview = reviewRepo.save(reviewModel);
-        if(savedReview.getId() > 0){
+        if (savedReview.getId() > 0) {
             resp.setComment(review.getComment());
             resp.setRating(review.getRating());
+
+            // Calculate the average rating for the product
+            double averageRating = calculateAverageRating(product.getId());
+
+            // Update the product's average rating
+            product.setProductRating(averageRating);
+            productRepo.save(product); // Save the updated product
         }
         return resp;
+    }
+    public double calculateAverageRating(int productId) {
+        List<ReviewModel> reviews = reviewRepo.findByProductId(productId);
+
+        if (reviews.isEmpty()) {
+            return 0.0; // Return 0 if no reviews are present
+        }
+
+        double totalRating = 0.0;
+        for (ReviewModel review : reviews) {
+            totalRating += review.getRating();
+        }
+
+        return totalRating / reviews.size(); // Calculate the average
     }
 
     public ReqResReview deleteReview(int id){
@@ -68,7 +93,7 @@ public class ReviewService {
             ReqResReview reqResReview = new ReqResReview();
             reqResReview.setComment(review.getComment());
             reqResReview.setRating(review.getRating());
-            reqResReview.setUserID(review.getUser().getId()); // Assuming UserModel has a getId() method
+            reqResReview.setUserName(review.getUser().getName()); // Assuming UserModel has a getId() method
             reqResReview.setProductId(review.getProduct().getId()); // Assuming ProductModel has a getId() method
             return reqResReview;
         }).collect(Collectors.toList());

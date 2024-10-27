@@ -1,8 +1,10 @@
 package com.example.demo.Service.Shop;
 
+import com.example.demo.DTO.ReviewModel;
 import com.example.demo.DTO.Shop.CategoryModel;
 import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResProduct;
+import com.example.demo.Repo.ReviewRepo;
 import com.example.demo.Repo.Shop.CategoryRepo;
 import com.example.demo.Repo.Shop.ProductRepo;
 import jakarta.transaction.Transactional;
@@ -21,6 +23,8 @@ public class ProductManagement {
     private ProductRepo proRepository;
     @Autowired
     private CategoryRepo cateRepo;
+    @Autowired
+    private ReviewRepo reviewRepo;
 
     public ReqResProduct searchByCategoryId(int categoryId) {
         ReqResProduct req = new ReqResProduct();
@@ -56,14 +60,10 @@ public class ProductManagement {
         ReqResProduct req = new ReqResProduct();
 
         try {
-            System.out.println(addPro.getCategoryId());
-            System.out.println(addPro.getAmount());
-            System.out.println(addPro.getPrice());
-            System.out.println(addPro.getStockQuantity());
-            System.out.println(addPro.getName());
+
 
             if (addPro.getName() == null || addPro.getPrice().compareTo(BigDecimal.ZERO) <= 0 ||
-                    addPro.getStockQuantity() <= 0 || addPro.getCategoryId() <= 0 ||
+                    addPro.getCategoryId() <= 0 ||
                     addPro.getAmount() <= 0) {
 
                 req.setMessage("Invalid product data");
@@ -83,7 +83,7 @@ public class ProductManagement {
             pm.setPrice(addPro.getPrice());
             pm.setDescription(addPro.getDescription());
             pm.setCategory(cm.get());
-            pm.setStockQuantity(addPro.getStockQuantity());
+            pm.setProductRating(0.0);
             pm.setAmount(addPro.getAmount());
 
             // Handle image upload if provided
@@ -151,10 +151,6 @@ public class ProductManagement {
             }
             System.out.println("Description: " + reqResProduct.getDescription());
 
-            if (reqResProduct.getStockQuantity() > 0) {
-                existingProduct.setStockQuantity(reqResProduct.getStockQuantity());
-            }
-            System.out.println("Stock Quantity: " + reqResProduct.getStockQuantity());
 
             if (reqResProduct.getAmount() > 0) {
                 existingProduct.setAmount(reqResProduct.getAmount());
@@ -201,6 +197,16 @@ public class ProductManagement {
             if (list.isEmpty()) {
                 return new ArrayList<>();
             }
+
+            // Calculate average rating for each product
+            for (ProductModel product : list) {
+                double averageRating = reviewRepo.findByProductId(product.getId()).stream()
+                        .mapToDouble(ReviewModel::getRating)
+                        .average()
+                        .orElse(0.0); // Default to 0 if no ratings
+                product.setProductRating(averageRating); // Update the product's rating
+            }
+
             return list;
         } catch (RuntimeException e) {
             throw new RuntimeException(e);
@@ -227,9 +233,10 @@ public class ProductManagement {
         reqResProduct.setName(foundProduct.getProductName());
         reqResProduct.setPrice(foundProduct.getPrice());
         reqResProduct.setDescription(foundProduct.getDescription());
-        reqResProduct.setStockQuantity(foundProduct.getStockQuantity());
         reqResProduct.setAmount(foundProduct.getAmount());
         reqResProduct.setCategoryName(foundProduct.getCategory().getCategoryName());
+        double averageRating = calculateAverageRating(id);
+        reqResProduct.setProductRating(averageRating);
 
         // Convert product image to Base64 if present
         if (foundProduct.getProductImage() != null && foundProduct.getProductImage().length > 0) {
@@ -239,5 +246,14 @@ public class ProductManagement {
 
         reqResProduct.setMessage("Product details retrieved successfully");
         return reqResProduct;
+    }
+
+    public double calculateAverageRating(int productId) {
+        List<ReviewModel> reviews = reviewRepo.findByProductId(productId);
+
+        return reviews.stream()
+                .mapToDouble(ReviewModel::getRating)
+                .average()
+                .orElse(0.0); // Calculate the average
     }
 }

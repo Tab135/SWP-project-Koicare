@@ -12,7 +12,6 @@ const UpdateProduct = () => {
   const [productData, setProductData] = useState({
     name: "",
     price: "",
-    stockQuantity: "",
     description: "",
     amount: "",
     categoryId: "", // Category field (ID)
@@ -32,7 +31,6 @@ const UpdateProduct = () => {
           setProductData({
             name: product.name || "",
             price: product.price || "",
-            stockQuantity: product.stockQuantity || "",
             description: product.description || "",
             amount: product.amount || "",
             categoryId: product.categoryId || "", // Prepopulate categoryId
@@ -141,17 +139,6 @@ const UpdateProduct = () => {
             </Form.Group>
 
             {/* Stock Quantity */}
-            <Form.Group className="mb-3 update-product-stock-quantity">
-              <Form.Label>Stock Quantity</Form.Label>
-              <Form.Control
-                type="number"
-                name="stockQuantity"
-                placeholder="Enter stock quantity"
-                value={productData.stockQuantity}
-                onChange={handleInputChange}
-                required
-              />
-            </Form.Group>
 
             {/* Description */}
             <Form.Group className="mb-3 update-product-description">

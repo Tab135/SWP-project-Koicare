@@ -19,13 +19,21 @@ public class ReqResProduct {
     private String description;
     private int categoryId;
     private String categoryName;// CamelCase for consistency
-    private int stockQuantity;
     private long amount;
+    private double productRating;
     private MultipartFile productImage;
     private String productImageBase64; // CamelCase for consistency
     private String message;
     private ProductModel productM;
     private List<ProductModel> productList;
+
+    public double getProductRating() {
+        return productRating;
+    }
+
+    public void setProductRating(double productRating) {
+        this.productRating = productRating;
+    }
 
     public String getCategoryName() {
         return categoryName;
@@ -89,14 +97,6 @@ public class ReqResProduct {
 
     public void setAmount(long amount) {
         this.amount = amount;
-    }
-
-    public int getStockQuantity() {
-        return stockQuantity;
-    }
-
-    public void setStockQuantity(int stockQuantity) {
-        this.stockQuantity = stockQuantity;
     }
 
     public int getCategoryId() {

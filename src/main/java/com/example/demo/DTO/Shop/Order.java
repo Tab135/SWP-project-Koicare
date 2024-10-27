@@ -40,6 +40,17 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> orderItems = new ArrayList<>();
 
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrderTracking> orderTrackingList = new ArrayList<>();
+
+    public List<OrderTracking> getOrderTrackingList() {
+        return orderTrackingList;
+    }
+
+    public void setOrderTrackingList(List<OrderTracking> orderTrackingList) {
+        this.orderTrackingList = orderTrackingList;
+    }
+
     public int getId() {
         return id;
     }

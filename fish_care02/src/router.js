@@ -35,6 +35,8 @@ import DashBoard from "./pages/admin/dashboard/dashboard";
 import Payment from "./pages/Shop/Order/Payment";
 import AddCate from "./pages/Shop/Category/AddCategory/AddCate";
 import UpdateCategory from "./pages/Shop/Category/UpdateCategory/UpdateCategory";
+import History from "./pages/user/User history buy/History";
+import Detail from "./pages/user/User history buy/Detail";
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
@@ -74,6 +76,9 @@ const RouterControl = () => {
     { path: ROUTERS.USER.Payment, element: <Payment/> },
     { path: ROUTERS.USER.AddCate, element: <AddCate /> },
     { path: ROUTERS.USER.UpdateCategory, element: <UpdateCategory /> },
+    { path: ROUTERS.USER.History, element: <History/> },
+    { path: ROUTERS.USER.Detail, element: <Detail/> },
+    
   ];
 
   return (

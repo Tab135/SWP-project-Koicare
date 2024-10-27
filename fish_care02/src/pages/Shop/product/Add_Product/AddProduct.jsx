@@ -19,7 +19,6 @@ const AddProduct = () => {
     price: "",
     description: "",
     categoryId: "",
-    stockQuantity: "",
     amount: "",
   });
   const [imageFiles, setImageFiles] = useState([]);
@@ -80,7 +79,6 @@ const AddProduct = () => {
         price: 0,
         description: "",
         categoryId: "",
-        stockQuantity: 0,
         amount: 0,
       });
       setImageFiles([]);
@@ -166,18 +164,7 @@ const AddProduct = () => {
                   )}
                 </Form.Group>
               </Col>
-              <Col md={4}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Stock Quantity</Form.Label>
-                  <Form.Control
-                    type="number"
-                    name="stockQuantity"
-                    placeholder="Enter stock quantity"
-                    value={productData.stockQuantity}
-                    onChange={handleInputChange}
-                  />
-                </Form.Group>
-              </Col>
+             
               <Col md={4}>
                 <Form.Group className="mb-3">
                   <Form.Label>Amount</Form.Label>

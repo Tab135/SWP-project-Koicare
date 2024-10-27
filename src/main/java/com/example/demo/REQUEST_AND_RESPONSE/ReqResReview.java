@@ -17,9 +17,18 @@ public class ReqResReview {
     private String comment;
     private float rating;
     private int userID;
+    private String userName;
     private int productId;
     private List<ReviewModel> listReview;
     private String message;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public String getMessage() {
         return message;

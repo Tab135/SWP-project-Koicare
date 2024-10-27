@@ -1,10 +1,17 @@
 package com.example.demo.Controller;
 
 
+import com.example.demo.DTO.Shop.Order;
+import com.example.demo.DTO.Shop.OrderItem;
+import com.example.demo.DTO.Shop.OrderStatus;
+import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResPayment;
+import com.example.demo.Repo.Shop.OrderRepository;
+import com.example.demo.Repo.Shop.ProductRepo;
 import com.example.demo.Service.JWTUtils;
 import com.example.demo.Service.Shop.CartService;
 import com.example.demo.Service.Shop.OrderService;
+import com.example.demo.Service.Shop.OrderTrackingService;
 import com.example.demo.Service.VNpayService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +32,21 @@ public class VNpayController {
 
     @Autowired
     private OrderService orderService;
-
+    @Autowired
+    private OrderTrackingService orderTrackingService;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private OrderRepository orderRepo;
+    @Autowired
+    private ProductRepo productRepo;
 
     @PostMapping("/create_payment")
     public ResponseEntity<?> createPayment(HttpServletRequest req,
                                            @RequestBody ReqResPayment order,
-                                           @RequestHeader ("Authorization") String token) throws UnsupportedEncodingException {
+                                           @RequestHeader("Authorization") String token) throws UnsupportedEncodingException {
         int userId = jwt.extractUserId(token.replace("Bearer ", ""));
-        ReqResPayment payment = vnpayService.createPayment(req, order,userId);
+        ReqResPayment payment = vnpayService.createPayment(req, order, userId);
         return ResponseEntity.status(HttpStatus.OK).body(payment);
     }
 
@@ -53,14 +65,41 @@ public class VNpayController {
 
     @GetMapping("/payment-success")
     public ResponseEntity<?> handlePaymentSuccess(
-            @RequestParam String orderId) {
-            orderService.removeOrderById(Integer.parseInt(orderId));
-            return ResponseEntity.ok("Payment successful, order and cart removed");
+            @RequestParam int orderId, @RequestHeader("Authorization") String token) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+
+        // Remove the user's cart
+        cartService.removeCartByUser(userId);
+
+        // Find the order
+        Order order = orderRepo.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        order.setOrderStatus(OrderStatus.PROCESSING); // Set the order status to processing
+
+        // Loop through each order item to update product quantities
+        for (OrderItem orderItem : order.getOrderItems()) {
+            ProductModel product = productRepo.findById(orderItem.getProduct().getId())
+                    .orElseThrow(() -> new RuntimeException("Product not found with ID: " + orderItem.getProduct().getId()));
+
+            // Check if there is enough stock
+            if (product.getAmount() >= orderItem.getQuantity()) {
+                // Decrease the product quantity
+                product.setAmount(product.getAmount() - orderItem.getQuantity());
+                productRepo.save(product); // Save the updated product
+            } else {
+                throw new RuntimeException("Not enough stock for product ID: " + product.getId());
+            }
+        }
+
+        // Save the updated order
+        orderRepo.save(order); // Make sure to save the updated order
+        orderTrackingService.createOrderTracking(orderId, OrderStatus.PROCESSING);
+        return ResponseEntity.ok("Payment successful, order updated to PROCESSING and cart removed");
     }
-
-
-
 }
+
+
+
 
 
 
