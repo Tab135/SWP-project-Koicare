@@ -98,7 +98,7 @@ const AddKoiPondPage = () => {
     return (
         <div className="pond-form-container">
             <h1>Create New Pond</h1>
-            <div className="image-upload-container">
+            <div className="pond-image-upload-container">
                 {isImageUploaded ? (
                     <>
                         <img src={previewUrl} alt="Preview" className="image-preview" />
@@ -118,7 +118,7 @@ const AddKoiPondPage = () => {
                         </button>
                     </>
                 ) : (
-                    <div className="image-upload" onClick={() => document.querySelector('input[type="file"]').click()}>
+                    <div className="pond-image-upload" onClick={() => document.querySelector('input[type="file"]').click()}>
                         Select Image
                     </div>
                 )}
