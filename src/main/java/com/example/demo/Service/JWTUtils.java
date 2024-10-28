@@ -1,8 +1,10 @@
 package com.example.demo.Service;
 
 
+import com.example.demo.Repo.UserRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +15,12 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.function.Function;
+
 @Component
 public class JWTUtils {
+    @Autowired
+    private UserRepo userRepo;
+
     private final SecretKey Key;
     private static final long Expiration_Time = 74000000;
     private static final long Expiration_Time_Refresh = 2592000000L;
@@ -29,6 +35,7 @@ public class JWTUtils {
         return Jwts.builder()
                 .claim("userId", userId)
                 .claim("email",userDetails.getUsername())
+                .claim("role",userRepo.findById(userId).get().getRole().getName())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + Expiration_Time ))
                 .signWith(Key)

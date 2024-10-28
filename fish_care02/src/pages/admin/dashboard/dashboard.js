@@ -18,19 +18,19 @@ const Sidebar = ({ onMenuClick }) => {
 };
 const Dashboard = () => {
     const [activeContent, setActiveContent] = useState(''); 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const role = localStorage.getItem('role') || sessionStorage.getItem('role');
-        try {
-            if (role !== 'ADMIN') {
-                navigate('/user/koicare'); 
-            }
-        } catch (err) {
-            console.error('Invalid token', err);
-            navigate('/'); 
-        }
-    }, [navigate]);
+  const navigate = useNavigate();
+useEffect(() => {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    const role = decodedToken.role;
+    if (role !== 'ADMIN') {
+      navigate('/koicare');
+    }
+  } else {
+    navigate('/');
+  }
+}, [navigate]);
     const handleMenuClick = (content) => {
         setActiveContent(content);
     };

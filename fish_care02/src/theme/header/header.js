@@ -13,7 +13,7 @@ const Header = () => {
     { name: "Koicare", path: ROUTERS.USER.KOICARE },
     { name: "Shop", path: ROUTERS.USER.Shop },
     { name: "Blog", path: ROUTERS.USER.BLOG },
-    { name: "Contact", path: ROUTERS.USER.CONTACT },
+    { name: "News", path: ROUTERS.USER.ListNews },
   ];
 
   return (

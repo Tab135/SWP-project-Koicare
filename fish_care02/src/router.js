@@ -37,6 +37,10 @@ import AddCate from "./pages/Shop/Category/AddCategory/AddCate";
 import UpdateCategory from "./pages/Shop/Category/UpdateCategory/UpdateCategory";
 import History from "./pages/user/User history buy/History";
 import Detail from "./pages/user/User history buy/Detail";
+import News from "./pages/Shop/Newspage/AddNews/addNews";
+import ViewNews from "./pages/user/newspage/Viewnews/viewNews";
+import ListNews from "./pages/user/newspage/ListNew/listNews";
+import UpdateNews from "./pages/Shop/Newspage/UpdateNews/updateNews";
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
@@ -49,9 +53,13 @@ const RouterControl = () => {
     { path: ROUTERS.USER.OTP_VERIFY, element: <OtpVerify />, useLayout: false },
     { path: ROUTERS.USER.Shop, element: <Shop /> },
     { path: ROUTERS.USER.ProductDetail, element: <ProductDetail /> },
+    { path: ROUTERS.USER.ViewNews,element:<ViewNews/>},
+    { path: ROUTERS.USER.ListNews,element:<ListNews/>},
   ];
 
   const protectedRoutes = [
+    { path: ROUTERS.USER.News,element:<News/>},
+    { path: ROUTERS.USER.UpdateNews,element:<UpdateNews/>},
     { path: ROUTERS.USER.KOICARE, element: <Koicarepage /> },
     { path: ROUTERS.USER.ADD_POND, element: <AddKoiPondPage /> },
     { path: ROUTERS.USER.LIST_PONDS, element: <ListKoiPondPage /> },

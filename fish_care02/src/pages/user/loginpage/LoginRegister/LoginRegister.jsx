@@ -49,9 +49,7 @@ const LoginRegister = () => {
                 if (rememberMe) {
                     localStorage.setItem("token", token);
                     localStorage.setItem("refreshToken", refreshToken);
-                    localStorage.setItem("role", role);
                 } else {
-                    sessionStorage.setItem("role", role);
                     sessionStorage.setItem("token", token);
                 }
 

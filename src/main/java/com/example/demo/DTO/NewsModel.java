@@ -16,9 +16,10 @@ public class NewsModel {
     @Column(name = "image", columnDefinition = "VARBINARY(MAX)")
     private byte[] newsImage;
 
-    @Column (columnDefinition = "TEXT")
+    @Column (columnDefinition = "NVARCHAR(MAX)")
     private String newsContent;
     private LocalDate date;
+    @Column (columnDefinition = "NVARCHAR(MAX)")
     private String headline;
     @ManyToOne
     @JoinColumn(name ="author")

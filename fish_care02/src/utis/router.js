@@ -32,7 +32,11 @@ export const ROUTERS = {
         AddCate:  "/shop/addCate",
         UpdateCategory: "/shop/updateCate/:cateId",
         History: "/user/track/history",
-        Detail:"/user/detail/:orderId"
+        Detail:"/user/detail/:orderId",
+        News:"/shop/news/",
+        ViewNews:"/public/news/:newsId",
+        ListNews:"/public/news",
+        UpdateNews:"/shop/addnews",
 
 
     },

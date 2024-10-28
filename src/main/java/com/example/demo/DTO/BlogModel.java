@@ -17,12 +17,13 @@ public class BlogModel {
     @Lob
     @Column(name = "image", columnDefinition = "VARBINARY(MAX)")
     private byte[] blogImage;
-    @Column (columnDefinition = "TEXT")
+    @Column (columnDefinition = "NVARCHAR(MAX)")
     private String blogContent;
     private LocalDate date;
     @ManyToOne
     @JoinColumn(name ="author")
     private UserModel author;
+    @Column (columnDefinition = "NVARCHAR(MAX)")
     private String title;
 
     public String getTitle() {

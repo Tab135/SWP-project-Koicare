@@ -24,6 +24,7 @@ public class NewsService {
     public ReqResNews createNews(ReqResNews request, int userId){
         ReqResNews res = new ReqResNews();
         Optional<UserModel> author = userR.findById(userId);
+        System.out.println(request.getNewsContent());
         try{
             NewsModel newsModel = new NewsModel();
 
@@ -36,10 +37,6 @@ public class NewsService {
                 }else{
                     newsModel.setNewsImage(null);
                 }
-
-
-
-
             newsModel.setNewsContent(request.getNewsContent());
             newsModel.setDate(LocalDate.now());
             newsModel.setHeadline(request.getHeadline());
