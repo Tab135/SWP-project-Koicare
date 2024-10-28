@@ -58,7 +58,7 @@ const LoginRegister = () => {
                 } else if (role === 'ADMIN') {
                     navigate("/admin/dashboard"); 
                 } else if (role === 'SHOP') {
-                    navigate("/public/product"); 
+                    navigate("/shop/product"); 
                 }
                 setErrorMessage('');
             } else {

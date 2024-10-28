@@ -8,7 +8,7 @@ import { Chart } from 'chart.js'
 import KoiDropdown from './KoiDropdown';
 import { SlArrowLeft } from "react-icons/sl";
 import { SlArrowRight } from "react-icons/sl";
-import {useNavigate } from 'react-router-dom';
+
 const Statitic = () => {
     const [PondId, setPondId] = useState(null); 
     const [selectedKoiIds, setSelectedKoiIds] = useState([]);
@@ -46,7 +46,10 @@ const Statitic = () => {
                 fetchWaterData();
             }
         }, [pondId]);
-        const labels = waterData?.map(water => water.date_time) || []; 
+        const labels = waterData?.map(water => {
+            const date = new Date(water.date_time);
+            return date.toISOString().split('T')[0]; 
+        }) || [];
         const data = {
             labels: labels,
             datasets: [
@@ -89,8 +92,8 @@ const Statitic = () => {
                 {
                     label: 'Oxygen',
                     data: waterData?.map(water => water.oxygen)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(75, 192, 75, 0.2)',
+                    borderColor: 'rgba(75, 192, 75, 1)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,
@@ -107,8 +110,8 @@ const Statitic = () => {
                 {
                     label: 'CO2',
                     data: waterData?.map(water => water.co2)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(75, 75, 150, 0.2)',
+                    borderColor: 'rgba(75, 75, 150, 1)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,
@@ -116,8 +119,8 @@ const Statitic = () => {
                 {
                     label: 'Temperature',
                     data: waterData?.map(water => water.temperature)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(150, 75, 75, 0.2)',
+                    borderColor: 'rgba(150, 75, 75, 0.75)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,
@@ -125,8 +128,8 @@ const Statitic = () => {
                 {
                     label: 'pH',
                     data: waterData?.map(water => water.pH)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(75, 150, 75, 0.2)',
+                    borderColor: 'rgba(75, 150, 75, 1)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,
@@ -134,8 +137,8 @@ const Statitic = () => {
                 {
                     label: 'carbonHardnessKH',
                     data: waterData?.map(water => water.carbonHardnessKH)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(150, 150, 75, 0.2)',
+                    borderColor: 'rgba(150, 150, 75, 1)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,
@@ -143,8 +146,8 @@ const Statitic = () => {
                 {
                     label: 'Salt',
                     data: waterData?.map(water => water.salt)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(75, 150, 192, 0.2)',
+                    borderColor: 'rgba(75, 150, 192, 1)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,
@@ -152,8 +155,8 @@ const Statitic = () => {
                 {
                     label: 'Total Chlorine',
                     data: waterData?.map(water => water.totalChlorine)|| [],
-                    backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                    borderColor: 'rgba(192, 75, 75, 1)',
+                    backgroundColor: 'rgba(192, 150, 75, 0.2)',
+                    borderColor: 'rgba(192, 150, 75, 1)',
                     borderWidth: 1,
                     fill: false,
                     hidden: true,

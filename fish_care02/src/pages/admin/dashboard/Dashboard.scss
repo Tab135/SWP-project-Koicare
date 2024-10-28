@@ -10,10 +10,10 @@
 }
 .sidebar {
     width: 250px;
-    height: 100vh; /* Full height */
-    background-color: #f4f4f4; /* Light gray background */
+    height: 100vh;
+    background-color: #f4f4f4; 
     padding: 20px;
-    position: fixed; /* Fixed sidebar */
+    position: fixed; 
     top: 0;
     left: 0;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,46 @@
     cursor: pointer; 
     transition: background-color 0.3s;
 }
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; 
+    padding: 20px;
+    background-color: #f8f9fa; 
+}
 
+.menu-button {
+    padding: 10px 15px;
+    margin: 5px 0;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.menu-button:hover {
+    background-color: #0056b3; 
+}
+
+.home-button-container {
+    margin-top: auto; 
+}
+
+.home-button {
+    padding: 10px 15px;
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.home-button:hover {
+    background-color: #218838;
+}
 .menu-button:hover {
     background-color: #ddd; 
 }
@@ -66,22 +105,53 @@ th {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    background-color: rgba(0, 0, 0, 0.5); 
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000; /* Ensures it appears above other content */
+    z-index: 1000; 
 }
 
-/* Modal Content */
 .modal-content {
     background-color: white;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 500px;  /* Adjust the width as necessary */
+    max-width: 500px; 
     width: 100%;
-    max-height: 90vh; /* Ensures the modal doesn’t go off-screen vertically */
-    overflow-y: auto; /* Adds a scrollbar if content overflows */
+    max-height: 90vh; 
+    overflow-y: auto;
     position: relative;
 }
+.date-picker-container {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.load-data-button {
+    padding: 4px 10px;
+    background-color: #007bff; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8em; 
+    width: 100px; 
+    margin-bottom: 24px;
+}
+
+.load-data-button:hover {
+    background-color: #0056b3;
+}
+
+.chart-container_dashboard {
+    display: flex;
+    justify-content: center; 
+    width: 80%;
+    margin: auto;
+    padding-top: 20px;
+}
+

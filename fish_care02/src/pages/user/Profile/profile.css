@@ -2,7 +2,15 @@
   border: none;
   transition: all 0.3s ease;
 }
-
+.py-5 {
+  min-height: 500px; 
+}
+.py-4{
+  h2{
+    font-size: 2rem;
+    color: white ;
+  }
+}
 .profile-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;

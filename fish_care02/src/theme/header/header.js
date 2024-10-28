@@ -1,8 +1,7 @@
-import React, { memo, useState, useEffect } from "react";
+import React, { memo, useState } from "react";
 import { ROUTERS } from "../../utis/router";
 import { Outlet, Link, NavLink } from "react-router-dom";
-import { Navbar, Nav, Container, Dropdown } from "react-bootstrap";
-import { FaUser, FaSignOutAlt } from "react-icons/fa";
+import { Navbar, Nav, Container } from "react-bootstrap";
 import "./header.scss";
 import logo from "../../assets/image/logo.jpg";
 import UserProfile from "./UserProfile"

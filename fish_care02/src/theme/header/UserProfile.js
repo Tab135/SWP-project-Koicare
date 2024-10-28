@@ -1,6 +1,6 @@
-import React, { memo, useState, useEffect } from "react";
+import React, {useEffect } from "react";
 import { ROUTERS } from "../../utis/router";
-import { Outlet, Link, NavLink } from "react-router-dom";
+import { Link} from "react-router-dom";
 import "./header.scss";
 import DropdownMenu from "./DropdownMenu";
 
