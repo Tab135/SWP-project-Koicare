@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState} from 'react';
 import axios from 'axios';
 
 const PondDropdown = ({ setPondId }) => {
@@ -30,13 +30,12 @@ const PondDropdown = ({ setPondId }) => {
                     setIsPondSelected(true);
                     setPondId(storedPondId);
                 } else if (pondList.length > 0) {
-                    // Select the first pond in the list if no pond is stored
                     const firstPond = pondList[0];
                     setSelectedPond({ id: firstPond.id, name: firstPond.pondName });
                     setIsPondSelected(true);
                     setPondId(firstPond.id);
     
-                    sessionStorage.setItem('selectedPondId', firstPond.id); // Store the first pond ID
+                    sessionStorage.setItem('selectedPondId', firstPond.id);
                 }
             } catch (error) {
                 console.error('Error fetching ponds', error);
@@ -46,6 +45,7 @@ const PondDropdown = ({ setPondId }) => {
     
         fetchPonds();
     }, []);
+    
     const handleChange = (e) => {
         const pond_id = e.target.value;
         const selectedPondName = ponds.find(pond => pond.id === parseInt(pond_id))?.pondName || '';

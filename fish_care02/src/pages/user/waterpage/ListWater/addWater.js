@@ -124,8 +124,6 @@ const handleInputChange = (e) => {
       ...prevData,
       [name]: newValue,
     };
-
-    // Calculate CO2 if KH and pH are present
     if (updatedData.carbonHardnessKH && updatedData.pH) {
       updatedData.co2 = calculateCO2(updatedData.carbonHardnessKH, updatedData.pH);
     }

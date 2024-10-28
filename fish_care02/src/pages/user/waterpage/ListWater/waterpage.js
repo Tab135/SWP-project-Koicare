@@ -8,6 +8,70 @@ import Modal from 'react-modal';
 Modal.setAppElement('#root');
 const WaterPage = () => {
     const [PondId, setPondId] = useState(null);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [selectedWater, setSelectedWater] = useState(null);
+    const [waterDetails, setWaterDetails] = useState(null);
+    const [isEditMode, setIsEditMode] = useState(false);
+    const [updatedDetails, setUpdatedDetails] = useState({
+        nitrite: '',
+        nitrate: '',
+        phosphate: '',
+        ammonium: '',
+        pH: '',
+        temperature: '',
+        salt: '',
+        co2: '',
+        oxygen: ''
+    });
+    const openModal = (water) => {
+        setSelectedWater(water);
+        fetchWaterDetails(water.id);
+        setModalIsOpen(true);
+        setIsEditMode(false);  
+    };
+    ;
+
+    const closeModal = () => {
+        setModalIsOpen(false);
+        setSelectedWater(null);
+        setWaterDetails(null);
+    };
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setUpdatedDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value,
+        }));
+    };
+    const handleSave = async () => {
+        try {
+            let token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+            const waterId = selectedWater.id;
+            await axios.put(`http://localhost:8080/user/WaterMonitor/updateWater/${waterId}`, updatedDetails,  config);
+            alert('Water details updated successfully');
+            closeModal();
+        } catch (error) {
+            console.error('Failed to update water details:', error);
+            alert('Error updating water details');
+        }
+    };
+
+    const fetchWaterDetails = async (waterId) => {
+        try {
+            let token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+            const response = await axios.get(`http://localhost:8080/user/WaterMonitor/WaterDetail/${waterId}`, config);
+            setWaterDetails(response.data.waterModel); 
+            setUpdatedDetails(response.data.waterModel);
+        } catch (error) {
+            console.error("Error fetching water details", error);
+        }
+    };
     const WaterList = ({pondId}) => {
             const [waters, setWater] = useState([]);
             const [error, setError] = useState(null);
@@ -204,6 +268,7 @@ const getBorderColorForWaterCard = (water) => {
                                 style={{ 
                                     border: getBorderColorForWaterCard(water) 
                                 }}
+                                onClick={() => openModal(water)}
                             >
                             <div className="water-content">
                                 <div className="water-contentheader">
@@ -347,8 +412,9 @@ const getBorderColorForWaterCard = (water) => {
         </div>
         )
 }   
+
 return (
-    <div>
+    <div className="WaterPage">
         <h1>Water Parameter</h1>
         <div className="container">
             <div className="row">
@@ -359,6 +425,165 @@ return (
         <div className="container">
         <div className="row">       
             <WaterList pondId={PondId}/>
+            <Modal
+    isOpen={modalIsOpen}
+    onRequestClose={closeModal}
+    contentLabel="Water Details Modal"
+    className="water-details-modal"
+>
+    {selectedWater && waterDetails ? (
+        <div>
+            <h2>{selectedWater.date_time}</h2>
+            <form>
+                <div className="form-group">
+                    <div>
+                        <label>Nitrite:</label>
+                        <input 
+                            type="text" 
+                            name="nitrite" 
+                            value={updatedDetails.nitrite || ''} 
+                            onChange={handleInputChange} 
+                            readOnly={!isEditMode}  
+                        />
+                    </div>
+                    <div>
+                        <label>Nitrate:</label>
+                        <input 
+                            type="text" 
+                            name="nitrate" 
+                            value={updatedDetails.nitrate || ''} 
+                            onChange={handleInputChange} 
+                            readOnly={!isEditMode}  
+                        />
+                    </div>
+                    <div>
+                        <label>Phosphate:</label>
+                        <input 
+                            type="text" 
+                            name="phosphate" 
+                            value={updatedDetails.phosphate || ''} 
+                            onChange={handleInputChange} 
+                            readOnly={!isEditMode}  
+                        />
+                    </div>
+                    <div>
+                    <label>Ammonium:</label>
+                    <input 
+                        type="text" 
+                        name="ammonium" 
+                        value={updatedDetails.ammonium || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Hardness GH:</label>
+                    <input 
+                        type="text" 
+                        name="hardnessGH" 
+                        value={updatedDetails.hardnessGH || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Temperature:</label>
+                    <input 
+                        type="text" 
+                        name="temperature" 
+                        value={updatedDetails.temperature || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>pH:</label>
+                    <input 
+                        type="text" 
+                        name="pH" 
+                        value={updatedDetails.pH || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Carbon Hardness KH:</label>
+                    <input 
+                        type="text" 
+                        name="carbonHardnessKH" 
+                        value={updatedDetails.carbonHardnessKH || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Salt:</label>
+                    <input 
+                        type="text" 
+                        name="salt" 
+                        value={updatedDetails.salt || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Total Chlorine:</label>
+                    <input 
+                        type="text" 
+                        name="totalChlorine" 
+                        value={updatedDetails.totalChlorine || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Outdoor Temperature:</label>
+                    <input 
+                        type="text" 
+                        name="outdoorTemperature" 
+                        value={updatedDetails.outdoorTemperature || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>Amount Fed:</label>
+                    <input 
+                        type="text" 
+                        name="amountFed" 
+                        value={updatedDetails.amountFed || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                    <div>
+                    <label>CO2:</label>
+                    <input 
+                        type="text" 
+                        name="co2" 
+                        value={updatedDetails.co2 || ''} 
+                        onChange={handleInputChange} 
+                        readOnly={!isEditMode}  
+                    />
+                    </div>
+                </div>
+                <div className="button-group">
+                    {!isEditMode ? (
+                        <button type="button" onClick={() => setIsEditMode(true)}>Edit</button> 
+                    ) : (
+                        <>
+                            <button type="button" onClick={handleSave}>Save</button>
+                            <button type="button" onClick={() => setIsEditMode(false)}>Cancel</button> 
+                        </>
+                    )}
+                    <button type="button" onClick={closeModal}>Close</button>
+                </div>
+            </form>
+        </div>
+    ) : (
+        <p>Loading water details...</p>
+    )}
+</Modal>
         </div>
         </div> 
     </div>
