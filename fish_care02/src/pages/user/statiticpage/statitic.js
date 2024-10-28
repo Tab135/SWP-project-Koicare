@@ -6,15 +6,22 @@ import PondDropdown from './PondDropdown';
 import React, { useEffect, useState } from 'react';
 import { Chart } from 'chart.js'
 import KoiDropdown from './KoiDropdown';
+import { SlArrowLeft } from "react-icons/sl";
+import { SlArrowRight } from "react-icons/sl";
+import {useNavigate } from 'react-router-dom';
 const Statitic = () => {
     const [PondId, setPondId] = useState(null); 
-    const [KoiId, setKoiId] = useState(null);
+    const [selectedKoiIds, setSelectedKoiIds] = useState([]);
     const [showSecondGraph, setShowSecondGraph] = useState(false);
     const [showFirstGraph, setShowFirstGraph] = useState(true);
+    const toggleGraphView = () => {
+        setShowFirstGraph(prev => !prev);
+        setShowSecondGraph(prev => !prev);
+    };
+
     const LineGraph = ({ pondId }) => {
         const [waterData, setWaterData] = useState([]);
         const [error, setError] = useState(null);
-    
         useEffect(() => {
             const fetchWaterData = async () => {
                 try {
@@ -35,16 +42,17 @@ const Statitic = () => {
                 }
             };
     
-            fetchWaterData();
+            if (pondId) { 
+                fetchWaterData();
+            }
         }, [pondId]);
-        const labels = waterData.map(water => water.date_time); // Use the date as labels
-        
+        const labels = waterData?.map(water => water.date_time) || []; 
         const data = {
             labels: labels,
             datasets: [
                 {
                     label: 'Nitrite',
-                    data: waterData.map(water => water.nitrite),
+                    data: waterData?.map(water => water.nitrite)|| [],
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
@@ -53,7 +61,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Nitrate',
-                    data: waterData.map(water => water.nitrate),
+                    data: waterData?.map(water => water.nitrate)|| [],
                     backgroundColor: 'rgba(192, 75, 192, 0.2)',
                     borderColor: 'rgba(192, 75, 192, 1)',
                     borderWidth: 1,
@@ -62,7 +70,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Phosphate',
-                    data: waterData.map(water => water.phosphate),
+                    data: waterData?.map(water => water.phosphate)|| [],
                     backgroundColor: 'rgba(192, 192, 75, 0.2)',
                     borderColor: 'rgba(192, 192, 75, 1)',
                     borderWidth: 1,
@@ -71,7 +79,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Ammonium',
-                    data: waterData.map(water => water.ammonium),
+                    data: waterData?.map(water => water.ammonium)|| [],
                     backgroundColor: 'rgba(75, 75, 192, 0.2)',
                     borderColor: 'rgba(75, 75, 192, 1)',
                     borderWidth: 1,
@@ -80,7 +88,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Oxygen',
-                    data: waterData.map(water => water.oxygen),
+                    data: waterData?.map(water => water.oxygen)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -89,7 +97,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'HardnessGH',
-                    data: waterData.map(water => water.hardnessGH),
+                    data: waterData?.map(water => water.hardnessGH)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -98,7 +106,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'CO2',
-                    data: waterData.map(water => water.co2),
+                    data: waterData?.map(water => water.co2)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -107,7 +115,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Temperature',
-                    data: waterData.map(water => water.temperature),
+                    data: waterData?.map(water => water.temperature)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -116,7 +124,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'pH',
-                    data: waterData.map(water => water.pH),
+                    data: waterData?.map(water => water.pH)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -125,7 +133,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'carbonHardnessKH',
-                    data: waterData.map(water => water.carbonHardnessKH),
+                    data: waterData?.map(water => water.carbonHardnessKH)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -134,7 +142,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Salt',
-                    data: waterData.map(water => water.salt),
+                    data: waterData?.map(water => water.salt)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -143,7 +151,7 @@ const Statitic = () => {
                 },
                 {
                     label: 'Total Chlorine',
-                    data: waterData.map(water => water.totalChlorine),
+                    data: waterData?.map(water => water.totalChlorine)|| [],
                     backgroundColor: 'rgba(192, 75, 75, 0.2)',
                     borderColor: 'rgba(192, 75, 75, 1)',
                     borderWidth: 1,
@@ -190,30 +198,47 @@ const Statitic = () => {
             </div>
         );
     };
-
-    const SecondLineGraph = () => {
+    const SecondLineGraph = ({ koiId }) => {
+        const [growthRecord, setGrowthRecord] = useState([]);
+        const [error, setError] = useState(null);
+        useEffect(() => {
+            const fetchGrowthRecords = async () => {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                if (!token) return;
+    
+                try {
+                    const config = { headers: { Authorization: `Bearer ${token}` } };
+                    const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
+                    const sortedRecords = response.data.growthRecordList.sort((a, b) => 
+                        new Date(a.koiId.date) - new Date(b.koiId.date)
+                    );
+                    
+                    setGrowthRecord(sortedRecords);
+                } catch (error) {
+                    console.error('Error fetching growth records', error);
+                    setError('Failed to fetch growth records.');
+                }
+            };
+    
+            fetchGrowthRecords();
+        }, [koiId]);
+    
+        const labels = growthRecord.map(growthRecordList => growthRecordList.koiId.date); 
+    
         const data = {
-            labels: ['April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+            labels: labels,
             datasets: [
                 {
-                    label: 'Mobile Apps',
-                    data: [150, 200, 250, 300, 350, 400, 450, 230, 500],
+                    label: 'weight',
+                    data: growthRecord.map(growthRecordList => growthRecordList.weight),
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
                     fill: false,
                 },
                 {
-                    label: 'Mobile Apps',
-                    data: [170, 220, 280, 300, 320, 400, 440, 100, 150],
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1,
-                    fill: false,
-                },
-                {
-                    label: 'Mobile Apps',
-                    data: [170, 220, 280, 100, 120, 500, 600, 240, 150],
+                    label: 'length',
+                    data: growthRecord.map(growthRecordList => growthRecordList.length),
                     backgroundColor: 'rgba(75, 192, 192, 0.2)',
                     borderColor: 'rgba(75, 192, 192, 1)',
                     borderWidth: 1,
@@ -229,9 +254,10 @@ const Statitic = () => {
         };
     
         return (
-            <div className="chart-container" style={{ width: '80%', margin: 'auto' }}>
-                <Line data={data} options={options} />
-            </div>
+            <div className="chart-container">
+                  <span>Growth Record of {growthRecord[0]?.koiFish.koiName} </span>
+            <Line data={data} options={options} />
+        </div>
         );
     };
     const toggleGraph = () => {
@@ -248,13 +274,26 @@ const Statitic = () => {
             <h1>Statistics</h1>
         <div className='container'>
             <div className='row'>
-            <span onClick={toggleGraph}>
-                    {showSecondGraph ? 'Water Parameter' : 'Growth record'}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: 'revert-layer' }}>
+                <span onClick={toggleGraphView} style={{ margin: '0 10px', color: 'white', fontWeight: 'bold'}}>
+                    {showSecondGraph ? <SlArrowLeft size={30}/> : <SlArrowLeft size={30}/>}
                 </span>
-            {showFirstGraph && <PondDropdown setPondId={setPondId} />}
-            {showSecondGraph && <KoiDropdown setKoiId={setKoiId} />}
-                {showFirstGraph && <LineGraph pondId={PondId} title="First Line Graph" /> }
-                {showSecondGraph && <SecondLineGraph pondId={PondId} title="Second Line Graph" />}           
+                <span style={{ margin: '0 10px', fontWeight: 'bold'  }}>
+                {showSecondGraph ? 'Growth Record' : 'Water Parameter'}
+            </span>
+                <span onClick={toggleGraphView} style={{ margin: '0 10px', color: 'white'}}>
+                    {showSecondGraph ? <SlArrowRight  size={30}/> : <SlArrowRight size={30} />}
+                </span>
+            </div>
+
+            <div className='statiticpage_container'>
+                    {showFirstGraph && <PondDropdown setPondId={setPondId} />}
+                    {showSecondGraph && <KoiDropdown setSelectedKoiIds={setSelectedKoiIds} />}
+                    {showFirstGraph && PondId && <LineGraph pondId={PondId} />}
+                    {showSecondGraph && selectedKoiIds.map(koiId => (
+                        <SecondLineGraph key={koiId} koiId={koiId} />
+                    ))}
+            </div>                    
         </div>
         </div>
         </div>

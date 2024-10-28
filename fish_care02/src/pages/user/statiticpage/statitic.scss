@@ -1,4 +1,82 @@
-.lineGraph{
+.statiticpage {
+    min-height: 600px; 
+    height: auto; 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px; 
+    flex-grow: 1;
+}
+
+.lineGraph {
     background-color: white;
-    
+    width: 100%;
+}
+
+.koi-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 600px;
+    margin: 0 auto; 
+}
+
+.chart-container {
+    width: 60%;
+    margin: 20px auto; 
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.koi_dropdown-toggle {
+    padding: 8px 12px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+}
+
+.koi-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 600px;
+    margin: 0 auto; 
+}
+
+.koi_dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%; 
+    transform: translateX(-50%);
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 400px;
+    max-height: 150px;
+    overflow-y: auto;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    padding: 8px;
+    display: block;
+}
+
+.koi_dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+    cursor: pointer;
+    justify-content: center; 
+}
+.statiticpage_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
