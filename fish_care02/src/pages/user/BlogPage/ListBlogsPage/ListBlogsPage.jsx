@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './ListBlogs.scss';
 
-const ListNews = () => {
-  const [news, setNews] = useState([]);
+const ListBlog = () => {
+  const [blog, setBlog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,16 +13,16 @@ const ListNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('http://localhost:8080/public/news');
+        const response = await fetch('http://localhost:8080/public/blog');
         if (!response.ok) {
-          throw new Error('Failed to fetch news');
+          throw new Error('Failed to fetch blog');
         }
         const data = await response.json();
 
         if (data.statusCode === 200) {
-          setNews(data.newsList || []);
+          setBlog(data.blogList || []);
         } else {
-          setError(data.message || 'Failed to fetch news');
+          setError(data.message || 'Failed to fetch blog');
         }
       } catch (err) {
         setError(err.message);
@@ -33,8 +34,8 @@ const ListNews = () => {
     fetchNews();
   }, []);
 
-  const handleNewsClick = (newsId) => {
-    navigate(`/public/news/${newsId}`);
+  const handleNewsClick = (blogId) => {
+    navigate(`/public/blog/${blogId}`);
   };
 
   const truncateText = (text, limit) => {
@@ -42,8 +43,8 @@ const ListNews = () => {
     return text.length > limit ? text.substring(0, limit) + '...' : text;
   };
 
-  const totalPages = Math.ceil(news.length / itemsPerPage);
-  const paginatedNews = news.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(blog.length / itemsPerPage);
+  const paginatedNews = blog.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -69,20 +70,20 @@ const ListNews = () => {
 
   return (
     <div className="news-container-list">
-      <h1 className="news-title-list">Latest News</h1>
+      <h1 className="news-title-list">Latest Blogs</h1>
 
       <div className="news-grid-list">
         {paginatedNews.map((article) => (
           <div
-            key={article.id || article.newsId}
+            key={article.id || article.blogId}
             className="news-card-list"
-            onClick={() => handleNewsClick(article.id || article.newsId)}
+            onClick={() => handleNewsClick(article.id || article.blogId)}
           >
-            {article.newsImage && (
+            {article.blogImage && (
               <div className="news-image-container-list">
                 <img
-                  src={`data:image/jpeg;base64,${article.newsImage}`}
-                  alt={article.headline}
+                  src={`data:image/jpeg;base64,${article.blogImage}`}
+                  alt={article.title}
                   className="news-image-list"
                 />
               </div>
@@ -90,7 +91,7 @@ const ListNews = () => {
 
             <div className="news-content-list">
               <h2 className="news-headline-list">
-                {article.headline || 'No Title'}
+                {article.title || 'No Title'}
               </h2>
 
               <div className="news-meta-list">
@@ -100,16 +101,16 @@ const ListNews = () => {
               </div>
 
               <div className="news-description-list">
-                {truncateText((article.newsContent || '').replace(/<[^>]*>/g, ''), 100)}
+                {truncateText((article.blogContent || '').replace(/<[^>]*>/g, ''), 100)}
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      {news.length === 0 && (
+      {blog.length === 0 && (
         <div className="no-news-message-list">
-          No news articles found.
+          No blog articles found.
         </div>
       )}
 
@@ -136,4 +137,4 @@ const ListNews = () => {
   );
 };
 
-export default ListNews;
+export default ListBlog;

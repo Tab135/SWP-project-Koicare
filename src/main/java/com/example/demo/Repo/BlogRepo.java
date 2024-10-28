@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface BlogRepo extends JpaRepository<BlogModel, Integer> {
     boolean existsByTitle(String title);
-    List<BlogModel> findAllByOrderByDateDesc();
+    List<BlogModel> findAllByOrderByDateDescBlogIdDesc();
     List<BlogModel> findAllByAuthor(UserModel author);
     List<BlogModel> findByTitleContainingIgnoreCase(String title);
     Optional<BlogModel> findByTitle(String title);

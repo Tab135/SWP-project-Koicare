@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,7 +60,8 @@ public class BlogService {
 //==========================PUBLIC===============================//
     public ReqResBlog listBlog(){
         ReqResBlog res = new ReqResBlog();
-        List<BlogModel> bList = blogRepo.findAllByOrderByDateDesc();
+        List<BlogModel> bList = blogRepo.findAllByOrderByDateDescBlogIdDesc();
+        Collections.reverse(bList);
         if(bList.isEmpty()){
             res.setStatusCode(404);
             res.setMessage("These is nothing here");

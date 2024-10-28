@@ -1,119 +1,214 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import "./CreateBlogsPage.scss";
+import React, { useEffect,useState } from 'react';
+import { Form, Button, Container, Alert, Spinner } from 'react-bootstrap';
+import ReactQuill from 'react-quill';
+import { useNavigate } from 'react-router-dom';
+import 'react-quill/dist/quill.snow.css';
+
+import { jwtDecode } from 'jwt-decode';
+
+
 
 const CreateBlogsPage = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    image: null
+  });
   const navigate = useNavigate();
+useEffect(() => {
+  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+  if (token) {
+    const decodedToken = jwtDecode(token);
+    const role = decodedToken.role;
+    if (role !== 'SHOP') {
+      navigate('/koicare');
+    }
+  } else {
+    navigate('/');
+  }
+}, [navigate]);
+  const [previewImage, setPreviewImage] = useState(null);
 
-  const handleFileChange = (e) => {
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleContentChange = (value) => {
+    setFormData(prev => ({
+      ...prev,
+      content: value
+    }));
+  };
+
+  const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setSelectedFile(file);
-      const fileUrl = URL.createObjectURL(file);
-      setPreviewUrl(fileUrl);
+      setFormData(prev => ({
+        ...prev,
+        image: file
+      }));
+
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("blogContent", content);
-    if (selectedFile) {
-      formData.append("image", selectedFile);
-    }
-
     try {
-      const token =
-        localStorage.getItem("token") || sessionStorage.getItem("token");
-      await axios.post("http://localhost:8080/shop/blog/create", formData, {
+      setLoading(true);
+      const formDataToSend = new FormData();
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('blogContent', formData.content);
+      if (formData.image) {
+        formDataToSend.append('image', formData.image);
+      }
+
+      const response = await fetch('http://localhost:8080/shop/blog/create', {
+        method: 'POST',
         headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem("token")}`
         },
+        body: formDataToSend
       });
-      alert("Blog created successfully!");
-      // navigate('/public/blog');
-    } catch (error) {
-      console.error("Error creating blog:", error);
-      alert("Error creating blog. Please try again.");
+
+      if (response.ok) {
+        window.location.href = '/blog';
+      } else {
+        throw new Error('Failed to create news');
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleDeleteImage = () => {
-    setSelectedFile(null);
-    setPreviewUrl(null);
+  const removeImage = () => {
+    setPreviewImage(null);
+    setFormData(prev => ({
+      ...prev,
+      image: null
+    }));
+  };
+
+
+  const modules = {
+    toolbar: [
+      [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+      [{ 'size': ['small', false, 'large', 'huge'] }],  // Font size options
+      ['bold', 'italic', 'underline', 'strike'],
+      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+      ['link', 'image'],
+      [{ 'align': [] }],
+      ['clean']  // Remove formatting
+    ]
   };
 
   return (
-    <div className="create-blog-container">
-      <h1>Create New Blog</h1>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Blog Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+    <Container className="create-news-container-add">
+      <div className="create-news-form-add">
+        <h2>Create Blog Article</h2>
 
-        <div className="image-upload-container">
-          {previewUrl ? (
-            <>
-              <img src={previewUrl} alt="Preview" className="image-preview" />
-              <button
-                type="button"
-                className="change-image-button"
-                onClick={() =>
-                  document.querySelector('input[type="file"]').click()
-                }
-              >
-                Change Image
-              </button>
-              <button
-                type="button"
-                className="delete-image-button"
-                onClick={handleDeleteImage}
-              >
-                Delete Image
-              </button>
-            </>
-          ) : (
-            <div
-              className="image-select-placeholder"
-              onClick={() =>
-                document.querySelector('input[type="file"]').click()
-              }
-            >
-              Select Image
+        {error && (
+          <Alert variant="danger">{error}</Alert>
+        )}
+
+        <Form onSubmit={handleSubmit}>
+          <div className="image-upload-section-add">
+            <div className="image-upload-container-add">
+              {previewImage ? (
+                <div className="preview-container-add">
+                  <img src={previewImage} alt="Preview" className="preview-image-add"/>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    className="remove-image-btn-add"
+                    onClick={removeImage}
+                  >
+                    ✕
+                  </Button>
+                </div>
+              ) : (
+                <label className="upload-placeholder-add">
+                  <div className="upload-icon-add">📷</div>
+                  <span>Upload Image</span>
+                  <Form.Control
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="file-input"
+                  />
+                </label>
+              )}
             </div>
-          )}
-          <input
-            type="file"
-            name="image"
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-            accept="image/*"
-          />
-        </div>
+          </div>
 
-        <textarea
-          placeholder="Blog Content"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        />
+          <Form.Group className="mb-3">
+            <Form.Label>Title</Form.Label>
+            <Form.Control
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              placeholder="Enter news title"
+              required
+            />
+          </Form.Group>
 
-        <button type="submit" className="submit-button">
-          Create Blog
-        </button>
-      </form>
-    </div>
+          <Form.Group className="mb-3">
+            <Form.Label>Content</Form.Label>
+            <ReactQuill
+              value={formData.content}
+              onChange={handleContentChange}
+              placeholder="Enter news content"
+              required
+              theme="snow"
+              style={{ minHeight: '200px' }}
+              modules={modules}  // Include the custom toolbar modules here
+            />
+          </Form.Group>
+
+          <div className="button-group-add">
+            <Button
+              variant="primary"
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Spinner
+                    as="span"
+                    animation="border"
+                    size="sm"
+                    role="status"
+                    aria-hidden="true"
+                  />
+                  <span> Creating...</span>
+                </>
+              ) : (
+                'Create News'
+              )}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => window.location.href = '/news'}
+            >
+              Cancel
+            </Button>
+          </div>
+        </Form>
+      </div>
+    </Container>
   );
 };
 

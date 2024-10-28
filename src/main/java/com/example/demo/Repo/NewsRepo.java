@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface NewsRepo extends JpaRepository<NewsModel, Integer> {
 
-    List<NewsModel> findAllByOrderByDateDesc();
+    List<NewsModel> findAllByOrderByDateDescNewsIdDesc();
     boolean existsByHeadline(String headline);
     List<NewsModel> findByHeadlineContainingIgnoreCase(String headLine);
     Optional<NewsModel> findByHeadline (String headLine);

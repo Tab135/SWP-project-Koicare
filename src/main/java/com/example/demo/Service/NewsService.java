@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,7 +58,7 @@ public class NewsService {
 //========================================================================
     public ReqResNews listNews(){
         ReqResNews res = new ReqResNews();
-        List<NewsModel> newsList = newsRepo.findAllByOrderByDateDesc();
+        List<NewsModel> newsList = newsRepo.findAllByOrderByDateDescNewsIdDesc();
         if(newsList.isEmpty()){
             res.setStatusCode(404);
             res.setMessage("These is nothing here");

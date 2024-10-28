@@ -24,7 +24,9 @@ export const ROUTERS = {
         WATERPAGE: "/koicare/waterpage",
         STATITIC: "/koicare/statitic",
         CREATE_BLOG: '/shop/blog/create',
-        LIST_BLOGS: '/shop/blog/list',
+        LIST_BLOGS: '/public/blog/list',
+        BlogDetail: "/public/blog/:blogId",
+        UpdateBlog: "/public/blog/update/:blogId",
         Cart: "/user/cart/getCartByUser",
         OrderList : "/user/order/getOrder/:orderId",
         ShopDashboard: "/shop/product",
@@ -36,7 +38,7 @@ export const ROUTERS = {
         News:"/shop/news/",
         ViewNews:"/public/news/:newsId",
         ListNews:"/public/news",
-        UpdateNews:"/shop/addnews",
+        UpdateNews:"/shop/updatenews/:newsId",
 
 
     },

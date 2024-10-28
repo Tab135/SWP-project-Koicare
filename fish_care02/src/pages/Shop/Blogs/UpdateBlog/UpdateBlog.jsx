@@ -5,8 +5,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import 'react-quill/dist/quill.snow.css';
 
-const UpdateNews = () => {
-  const { newsId } = useParams();
+const UpdateBlog = () => {
+  const { blogId } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -33,18 +33,18 @@ const UpdateNews = () => {
     // Fetch existing news data
     const fetchNewsData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/public/news/${newsId}`);
+        const response = await fetch(`http://localhost:8080/public/blog/${blogId}`);
         if (!response.ok) throw new Error('Failed to fetch news data');
         const data = await response.json();
 
         setFormData({
-          title: data.news.headline || '',
-          content: data.news.newsContent || '',
+          title: data.blog.title || '',
+          content: data.blog.blogContent || '',
           image: null
         });
 
         // Fetch and set image preview if exists
-        const imageResponse = await fetch(`http://localhost:8080/public/news/${newsId}/image`);
+        const imageResponse = await fetch(`http://localhost:8080/public/blog/${blogId}/image`);
         if (imageResponse.ok) {
           const base64Image = await imageResponse.text();
           if (base64Image && base64Image !== "Image not found") {
@@ -57,7 +57,7 @@ const UpdateNews = () => {
     };
 
     fetchNewsData();
-  }, [newsId, navigate]);
+  }, [blogId, navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -95,13 +95,13 @@ const UpdateNews = () => {
     try {
       setLoading(true);
       const formDataToSend = new FormData();
-      formDataToSend.append('Headline', formData.title);
-      formDataToSend.append('NewsContent', formData.content);
+      formDataToSend.append('title', formData.title);
+      formDataToSend.append('blogContent', formData.content);
       if (formData.image) {
         formDataToSend.append('image', formData.image);
       }
 
-      const response = await fetch(`http://localhost:8080/shop/news/${newsId}/update`, {
+      const response = await fetch(`http://localhost:8080/shop/blog/${blogId}/update`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`
@@ -226,7 +226,7 @@ const UpdateNews = () => {
             </Button>
             <Button
               variant="secondary"
-              onClick={() => window.location.href = '/public/news'}
+              onClick={() => window.location.href = '/public/blog'}
             >
               Cancel
             </Button>
@@ -237,4 +237,4 @@ const UpdateNews = () => {
   );
 };
 
-export default UpdateNews;
+export default UpdateBlog;

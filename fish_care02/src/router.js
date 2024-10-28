@@ -26,7 +26,9 @@ import ProtectedRoute from "./component/private-route/protect";
 import WaterPage from "./pages/user/waterpage/ListWater/waterpage";
 import Statitic from "./pages/user/statiticpage/statitic";
 import CreateBlogPage from "./pages/Shop/Blogs/CreateBlogsPage/CreateBlogsPage";
-import ListBlogsPage from "./pages/Shop/Blogs/ListBlogsPage/ListBlogsPage";
+import ListBlogsPage from "./pages/user/BlogPage/ListBlogsPage/ListBlogsPage";
+import BlogDetail from "./pages/user/BlogPage/BlogDetails/BlogDetails";
+import UpdateBlog from "./pages/Shop/Blogs/UpdateBlog/UpdateBlog";
 import Cart from "./pages/Shop/Cart/ListCart/ListCart";
 import OrderList from "./pages/Shop/Order/ListOrder";
 import Dashboard from "./pages/Shop/Dash board/ShopDashBoard";
@@ -55,6 +57,8 @@ const RouterControl = () => {
     { path: ROUTERS.USER.ProductDetail, element: <ProductDetail /> },
     { path: ROUTERS.USER.ViewNews,element:<ViewNews/>},
     { path: ROUTERS.USER.ListNews,element:<ListNews/>},
+    { path: ROUTERS.USER.LIST_BLOGS, element: <ListBlogsPage /> },
+    { path: ROUTERS.USER.BlogDetail, element: <BlogDetail /> },
   ];
 
   const protectedRoutes = [
@@ -76,7 +80,7 @@ const RouterControl = () => {
     { path: ROUTERS.USER.WATERPAGE, element: <WaterPage /> },
     { path: ROUTERS.USER.STATITIC, element: <Statitic /> },
     { path: ROUTERS.USER.CREATE_BLOG, element: <CreateBlogPage /> },
-    { path: ROUTERS.USER.LIST_BLOGS, element: <ListBlogsPage /> },
+    { path: ROUTERS.USER.UpdateBlog, element: <UpdateBlog /> },
     { path: ROUTERS.USER.Cart, element: <Cart /> },
     { path: ROUTERS.USER.OrderList, element: <OrderList /> },
     { path: ROUTERS.USER.ShopDashboard, element: <ShopDashboard /> },

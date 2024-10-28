@@ -12,7 +12,7 @@ const Header = () => {
   const menus = [
     { name: "Koicare", path: ROUTERS.USER.KOICARE },
     { name: "Shop", path: ROUTERS.USER.Shop },
-    { name: "Blog", path: ROUTERS.USER.BLOG },
+    { name: "Blog", path: ROUTERS.USER.LIST_BLOGS },
     { name: "News", path: ROUTERS.USER.ListNews },
   ];
 
