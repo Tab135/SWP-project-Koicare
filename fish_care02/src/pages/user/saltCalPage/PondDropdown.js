@@ -57,7 +57,7 @@ const PondDropdown = ({ setPondId, setPondVolume }) => {
         <div className='pond-name-dropdown'>
             {error && <p>{error}</p>}
             <select id="pond-select" onChange={handleChange} value={selectedPond.id || ''}>
-                {!isPondSelected && <option value="">Chọn hồ</option>}
+                {!isPondSelected && <option value="">select pond</option>}
                 {Array.isArray(ponds) && ponds.length > 0 ? (
                     ponds.map((pond) => (
                         <option key={pond.id} value={pond.id}>
@@ -65,7 +65,7 @@ const PondDropdown = ({ setPondId, setPondVolume }) => {
                         </option>
                     ))
                 ) : (
-                    <option value="">Đang tải danh sách hồ...</option>
+                    <option value="">Loading pond</option>
                 )}
             </select>
             {isPondSelected && <p>Volume: {selectedPond.volume} m³</p>}

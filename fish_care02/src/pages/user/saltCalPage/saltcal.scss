@@ -45,8 +45,8 @@
     border-radius: 10px;
       padding: 30px;
       width: 100%;
-      max-width: 600px;
-  
+      max-width: 530px;
+      margin: 10px;
 
     .input-group {
         margin-bottom: 20px;
@@ -141,3 +141,41 @@
       }
     }
   }
+.salt-result{
+  display: flex;
+  flex-direction: column;  
+  justify-content: center; 
+  align-items: center;     
+  height: 100%;            
+  text-align: center;
+  border-radius: 10px;
+    padding: 30px;
+    width: 100%;
+    max-width: 530px;
+    margin: 10px;
+    .result {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f9fa; /* Light grey background */
+    border: 1px solid #dee2e6; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+.result h2 {
+    margin: 0;
+    padding-bottom: 10px;
+    font-size: 1.5em;
+    color: #343a40; /* Darker text color */
+    border-bottom: 1px solid #dee2e6; /* Underline the title */
+}
+
+.result p {
+    margin: 0;
+    color: #495057; /* Medium-dark text color */
+    font-family: monospace; /* Code-like font */
+    white-space: pre-wrap; /* Keeps JSON formatting */
+    line-height: 1.5;
+}
+
+}
