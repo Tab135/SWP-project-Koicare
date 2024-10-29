@@ -58,9 +58,19 @@ const AddProduct = () => {
   }, []);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Ensure price and amount are not set below 1
+    if ((name === "price" || name === "amount") && value < 1) {
+      setProductData({
+        ...productData,
+        [name]: 1, // Reset to 1 if the value is less than 1
+      });
+      return;
+    }
+
     setProductData({
       ...productData,
-      [name]: name === "categoryId" ? value : value, // Store categoryId as a string
+      [name]: value,
     });
   };
 

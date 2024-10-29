@@ -135,12 +135,31 @@ class ProductService {
       return;
     }
     try {
+      const response = await axios.get(
+        `${ProductService.base_url}/public/product/${productId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        "Error fetching product details:",
+        error.response ? error.response.data : error
+      );
+      throw error;
+    }
+  }
+  static async ProById(productId) {
+    if (!productId) {
+      console.error("Invalid productId provided");
+      return;
+    }
+    productId = productId.trim();
+    try {
       let token = localStorage.getItem("token");
       if (!token) {
         token = sessionStorage.getItem("token");
       }
       const response = await axios.get(
-        `${ProductService.base_url}/public/product/${productId}`,
+        `${ProductService.base_url}/shop/product/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

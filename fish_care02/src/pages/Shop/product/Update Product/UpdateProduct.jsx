@@ -40,7 +40,7 @@ const UpdateProduct = () => {
 
   useEffect(() => {
     // Fetch product data by ID to prefill the form
-    ProductService.getProductById(productId)
+    ProductService.ProById(productId)
       .then((product) => {
         if (product) {
           setProductData({
@@ -73,6 +73,21 @@ const UpdateProduct = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    // Convert value to a number for validation
+    const numericValue = Number(value);
+
+    // Validate amount and price fields
+    if (name === "amount" && (numericValue < 1 || isNaN(numericValue))) {
+      setError("Amount must be a positive number greater than 0.");
+      return;
+    } else if (name === "price" && (numericValue < 1 || isNaN(numericValue))) {
+      setError("Price must be a positive number greater than 0.");
+      return;
+    } else {
+      setError(null); // Clear error if input is valid
+    }
+
     setProductData({
       ...productData,
       [name]: value,

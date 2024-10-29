@@ -3,7 +3,9 @@ package com.example.demo.Service.Shop;
 import com.example.demo.DTO.Shop.CategoryModel;
 import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResCATE;
+import com.example.demo.Repo.Shop.CartItemRepository;
 import com.example.demo.Repo.Shop.CategoryRepo;
+import com.example.demo.Repo.Shop.OrderItemRepository;
 import com.example.demo.Repo.Shop.ProductRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,10 @@ public class CategoryManagement {
     private CategoryRepo cateReposity;
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+    @Autowired
+    private CartItemRepository itemRepository;
 
 
     public ReqResCATE addCate(ReqResCATE addcate) {
@@ -59,13 +65,21 @@ public class CategoryManagement {
     public ReqResCATE deleteCate(int id) {
         ReqResCATE req = new ReqResCATE();
         try {
-            Optional<CategoryModel> cm = cateReposity.findByCategoryId(id);
-            if (cm.isPresent()) {
+            Optional<CategoryModel> categoryOptional = cateReposity.findByCategoryId(id);
+            if (categoryOptional.isPresent()) {
                 // Fetch products related to the category
                 List<ProductModel> products = productRepo.findByCategory_CategoryId(id);
 
-                // Delete associated products
                 if (!products.isEmpty()) {
+                    for (ProductModel product : products) {
+                        // Delete associated cart items that reference this product
+                        itemRepository.deleteByProductId(product.getId());
+
+                        // Delete associated order items that reference this product
+                        orderItemRepository.deleteByProductId(product.getId());
+                    }
+
+                    // Delete the associated products after clearing related entries
                     productRepo.deleteAll(products);
                 }
 
@@ -84,7 +98,7 @@ public class CategoryManagement {
         }
         return req;
     }
-
+    
     @Transactional
     public ReqResCATE updateById(int id, CategoryModel detail) {
         ReqResCATE req = new ReqResCATE();

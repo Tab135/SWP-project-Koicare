@@ -5,8 +5,7 @@ import com.example.demo.DTO.Shop.CategoryModel;
 import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.REQUEST_AND_RESPONSE.Shop.ReqResProduct;
 import com.example.demo.Repo.ReviewRepo;
-import com.example.demo.Repo.Shop.CategoryRepo;
-import com.example.demo.Repo.Shop.ProductRepo;
+import com.example.demo.Repo.Shop.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -25,6 +24,10 @@ public class ProductManagement {
     private CategoryRepo cateRepo;
     @Autowired
     private ReviewRepo reviewRepo;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+    @Autowired
+    private CartItemRepository itemRepository;
 
     public ReqResProduct searchByCategoryId(int categoryId) {
         ReqResProduct req = new ReqResProduct();
@@ -110,21 +113,21 @@ public class ProductManagement {
     public ReqResProduct delePro(int id) {
         ReqResProduct req = new ReqResProduct();
         try {
-            Optional<ProductModel> pm = proRepository.findById(id);
-            if (pm.isPresent()) {
-                proRepository.deleteById(id);
-                req.setMessage("Delete Successfully");
-                req.setStatusCode(200);
-            } else {
-                req.setMessage("Product not found");
-                req.setStatusCode(400);
-            }
+            ProductModel pm = proRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
+            itemRepository.deleteByProductId(id);
+            orderItemRepository.deleteByProductId(id);
+            proRepository.deleteById(id);
+
+            req.setMessage("Delete Successfully");
+            req.setStatusCode(200);
         } catch (RuntimeException e) {
             req.setMessage("Error in deleting Product: " + e.getMessage());
-            req.setStatusCode(500);
+            req.setStatusCode(e.getMessage().equals("Product not found") ? 400 : 500);
         }
         return req;
     }
+
 
     @Transactional
     public ReqResProduct updatePro(int id, ReqResProduct reqResProduct, MultipartFile imageFile) {

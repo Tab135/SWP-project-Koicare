@@ -10,7 +10,7 @@ const ProductTable = ({ products, handleDelete }) => (
       <tr>
         <th>Product Name</th>
         <th>Category</th>
-        <th>Price</th>
+        <th>Price (VND)</th> {/* Updated column header */}
         <th>Stock</th>
         <th>Actions</th>
       </tr>
@@ -20,7 +20,8 @@ const ProductTable = ({ products, handleDelete }) => (
         <tr key={product.id}>
           <td>{product.productName}</td>
           <td>{product.category?.categoryName || "No Category"}</td>
-          <td>${product.price.toFixed(2)}</td>
+          <td>{(product.price * 23000).toFixed(0)} VND</td>{" "}
+          {/* Convert to VND and format */}
           <td>{product.amount}</td>
           <td>
             <Button variant="danger" onClick={() => handleDelete(product.id)}>

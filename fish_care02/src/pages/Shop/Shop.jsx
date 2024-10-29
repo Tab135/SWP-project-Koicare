@@ -16,10 +16,11 @@ import {
   Button,
   Badge,
 } from "react-bootstrap";
-import { FaShoppingCart, FaImage, FaSearch } from "react-icons/fa";
+import { FaShoppingCart, FaImage } from "react-icons/fa";
 import AddToCart from "./Cart/AddToCart/AddToCart.jsx";
 import ToastNotification from "./Cart/AddToCart/ToastNotification.jsx";
 import "./_shop.scss";
+import { useNavigate } from "react-router-dom";
 
 const extractUserId = (token) => {
   try {
@@ -41,6 +42,7 @@ const Shop = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token =
@@ -86,7 +88,24 @@ const Shop = () => {
   }, [Id]);
 
   const handleAddToCart = async (productId) => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+
+      // Check user role
+      if (role !== "USER") {
+        navigate("/login");
+        return;
+      }
+
+      // Proceed to add the product to the cart
       await CartService.addProductToCart(productId, 1);
       const newCount = cartItemCount + 1;
       setCartItemCount(newCount);
@@ -127,7 +146,6 @@ const Shop = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="search-input"
               />
-             
             </div>
           </Col>
           <Col xs="auto" className="d-flex align-items-center">
@@ -169,6 +187,7 @@ const Shop = () => {
                   <Card.Body>
                     <h3 className="product-title">{product.productName}</h3>
                     <div className="product-price">
+                      {/* Ensure the price is formatted as VND */}
                       {product.price
                         .toLocaleString("vi-VN", {
                           style: "currency",

@@ -14,6 +14,7 @@ import CartService from "../CartService";
 import "./_list.scss"; // Adjust the import path as necessary
 import OrderService from "../../Order/OrderService";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const extractUserId = (token) => {
   const payload = token.split(".")[1];
@@ -54,6 +55,19 @@ const ListCart = () => {
 
     fetchCartItems();
   }, []);
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "USER") {
+        navigate("/login");
+      }
+    } else {
+      navigate("/user/cart/getCartByUser");
+    }
+  }, [navigate]);
 
   const handleGetTotalPrice = async () => {
     try {

@@ -32,5 +32,8 @@ public class ReviewController {
     public ResponseEntity<List<ReqResReview>> show(@PathVariable int productId) {
         return ResponseEntity.ok(review.listReviewByProductId(productId));
     }
-
+    @GetMapping("/shop/review/listReview/{productId}")
+    public ResponseEntity<List<ReqResReview>> list(@PathVariable int productId) {
+        return ResponseEntity.ok(review.listReviewByProductId(productId));
+    }
 }

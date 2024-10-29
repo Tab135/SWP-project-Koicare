@@ -32,8 +32,6 @@ public class RevenueController {
     {
         return ResponseEntity.ok(revenueService.listAllRevenue());
     }
-
-
 }
 
 

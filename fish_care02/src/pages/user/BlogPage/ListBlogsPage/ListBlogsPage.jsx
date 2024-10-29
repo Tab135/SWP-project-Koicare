@@ -7,6 +7,7 @@ const ListBlog = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState(''); // State for search term
   const itemsPerPage = 6; // Number of news items per page
   const navigate = useNavigate();
 
@@ -43,8 +44,13 @@ const ListBlog = () => {
     return text.length > limit ? text.substring(0, limit) + '...' : text;
   };
 
-  const totalPages = Math.ceil(blog.length / itemsPerPage);
-  const paginatedNews = blog.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  // Filter blogs based on the search term
+  const filteredBlogs = blog.filter((article) =>
+    article.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalPages = Math.ceil(filteredBlogs.length / itemsPerPage);
+  const paginatedNews = filteredBlogs.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
@@ -71,6 +77,17 @@ const ListBlog = () => {
   return (
     <div className="news-container-list">
       <h1 className="news-title-list">Latest Blogs</h1>
+
+      {/* Search Input */}
+      <div className="search-container-list">
+        <input
+          type="text"
+          placeholder="Search blog titles..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update search term
+          className="search-input-list"
+        />
+      </div>
 
       <div className="news-grid-list">
         {paginatedNews.map((article) => (
@@ -108,7 +125,7 @@ const ListBlog = () => {
         ))}
       </div>
 
-      {blog.length === 0 && (
+      {filteredBlogs.length === 0 && (
         <div className="no-news-message-list">
           No blog articles found.
         </div>
@@ -123,7 +140,7 @@ const ListBlog = () => {
           Previous
         </button>
         <span className="pagination-info">
-           {currentPage} of {totalPages}
+          {currentPage} of {totalPages}
         </span>
         <button
           onClick={() => handlePageChange(currentPage + 1)}

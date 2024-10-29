@@ -37,6 +37,7 @@ public class ProductController {
     {
         return ResponseEntity.ok(proM.delePro(id));
     }
+
     @GetMapping("/public/product")
     public ResponseEntity<List<ProductModel>> show()
     {
@@ -52,6 +53,7 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
 
     @GetMapping("/shop/product")
     public ResponseEntity<List<ProductModel>> shopShow()
@@ -78,6 +80,11 @@ public class ProductController {
 
     @GetMapping("/public/product/{id}")
     public ResponseEntity<ReqResProduct> getProById(@PathVariable int id){
+        return ResponseEntity.ok(proM.getProductById(id));
+    }
+
+    @GetMapping("/shop/product/{id}")
+    public ResponseEntity<ReqResProduct> getProductById(@PathVariable int id){
         return ResponseEntity.ok(proM.getProductById(id));
     }
 

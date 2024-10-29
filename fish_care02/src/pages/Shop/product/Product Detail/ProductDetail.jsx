@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import ProductService from "../../ShopService";
 import ReviewService from "./ReviewService";
 import StarRating from "./StarRating";
+import { jwtDecode } from "jwt-decode";
+
 import {
   Container,
   Card,
@@ -15,10 +17,14 @@ import {
 } from "react-bootstrap";
 import { FaStar, FaUser, FaRegClock } from "react-icons/fa";
 import "./productdetail.scss";
+import { useNavigate } from "react-router-dom";
+
 
 const ProductDetail = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
+  const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);
@@ -54,8 +60,26 @@ const ProductDetail = () => {
   };
 
   const handleSubmitReview = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Call this at the beginning to prevent default form submission behavior
+
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+      return;
+    }
+
     try {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+
+      // Check user role
+      if (role !== "USER") {
+        navigate("/login");
+        return;
+      }
+
+      // Proceed to post the review
       await ReviewService.postReview(productId, {
         comment: newReview.comment,
         rating: newReview.rating,
@@ -74,18 +98,6 @@ const ProductDetail = () => {
       setError("Error posting review: " + err.message);
     }
   };
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <Spinner animation="border" variant="primary" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return <Alert variant="danger">{error}</Alert>;
-  }
 
   return (
     <div className="product-detail-page">
@@ -171,7 +183,7 @@ const ProductDetail = () => {
                             ))}
                           </div>
                         </div>
-                        <div className="review-content">{review.comment}</div>                       
+                        <div className="review-content">{review.comment}</div>
                       </Card.Body>
                     </Card>
                   ))

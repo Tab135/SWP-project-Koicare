@@ -6,6 +6,7 @@ const ListNews = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
   const itemsPerPage = 6; // Number of news items per page
   const navigate = useNavigate();
 
@@ -43,10 +44,17 @@ const ListNews = () => {
   };
 
   const totalPages = Math.ceil(news.length / itemsPerPage);
-  const paginatedNews = news.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const paginatedNews = news
+    .filter(article => article.headline.toLowerCase().includes(searchQuery.toLowerCase())) // Filter by search query
+    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value); // Update the search query state
+    setCurrentPage(1); // Reset to the first page on search
   };
 
   if (loading) {
@@ -70,6 +78,14 @@ const ListNews = () => {
   return (
     <div className="news-container-list">
       <h1 className="news-title-list">Latest News</h1>
+
+      <input
+        type="text"
+        placeholder="Search by headline..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+        className="search-input"
+      />
 
       <div className="news-grid-list">
         {paginatedNews.map((article) => (

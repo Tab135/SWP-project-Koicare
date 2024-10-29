@@ -31,15 +31,9 @@ class ReviewService {
     }
   }
   static async getReviewsByProductId(productId) {
-    const token = this.getToken();
     try {
       const response = await axios.get(
-        `${this.base_url}/public/review/listReview/${productId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        `${this.base_url}/public/review/listReview/${productId}`
       );
       return response.data; // Return the list of reviews
     } catch (error) {
