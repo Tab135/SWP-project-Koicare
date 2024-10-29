@@ -3,6 +3,8 @@ package com.example.demo.Service;
 import com.example.demo.DTO.*;
 import com.example.demo.DTO.Shop.Cart;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
+import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
+import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.RoleRepo;
 import com.example.demo.Repo.Shop.CartRepository;
 import com.example.demo.Repo.UserRepo;
@@ -36,6 +38,8 @@ public class UserManagement {
 
     @Autowired
     private EmailService emailService;
+    @Autowired
+    private PondService pondService;
 
     private final Map<String, SignupOTP> otpStorage = new ConcurrentHashMap<>();
 
@@ -97,7 +101,11 @@ public class UserManagement {
 
             // Save the cart to the database
             cartRepository.save(userCart);
-
+            PondModel pond = new PondModel();
+            pond.setPondName("Pond");
+            ResReqPond res = new ResReqPond();
+            res.setPond(pond);
+            pondService.createP(res, savedUser.getId());
             resp.setStatusCode(200);
         } else {
             resp.setMessage("Error during sign up");
