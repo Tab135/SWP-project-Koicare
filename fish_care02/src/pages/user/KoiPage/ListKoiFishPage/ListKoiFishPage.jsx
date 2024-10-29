@@ -25,7 +25,7 @@ const ListKoiFishPage = () => {
                     headers: { Authorization: `Bearer ${token}` },
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
-                setPonds(response.data.pondList);
+                setPonds(response.data.pondList || []);
             } catch (error) {
                 console.error('Error fetching ponds', error);
             }
@@ -51,7 +51,7 @@ const ListKoiFishPage = () => {
                 headers: { Authorization: `Bearer ${token}` },
             };
             const response = await axios.get('http://localhost:8080/user/koi', config);
-            const koiList = response.data.koiList;
+            const koiList = response.data.koiList || [];
 
             if (koiList.length === 0) {
                 setMessage('No koi fish found.');
@@ -177,7 +177,7 @@ const ListKoiFishPage = () => {
                                 <p><strong>Length: </strong> {koi.length} cm</p>
                                 <p><strong>Age:</strong> {koi.age} years</p>
 
-                                <div className={`koi-actions ${koiFishList.length === 1 ? 'single-button' : ''}`}>
+                                <div className={`koi-action`}>
                                     <Link to={`/list-koi/${koi.koiId}`}>
                                         <button className="details-koi-button">Detail</button>
                                     </Link>

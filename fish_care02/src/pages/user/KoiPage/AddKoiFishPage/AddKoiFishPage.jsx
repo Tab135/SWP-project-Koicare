@@ -46,7 +46,7 @@ const AddKoiFishPage = () => {
                     }
                 };
                 const response = await axios.get('http://localhost:8080/user/pond', config);
-                setPonds(response.data.pondList);
+                setPonds(response.data.pondList || []);
             } catch (error) {
                 console.error("Error fetching ponds", error);
             }
@@ -126,6 +126,7 @@ const AddKoiFishPage = () => {
 
             if (response.status === 200) {
                 alert('Koi fish added successfully!');
+                navigate("/list-koi");
             } else {
                 alert('Failed to add koi fish.');
             }
@@ -142,6 +143,10 @@ const AddKoiFishPage = () => {
     return (
         <div className="add-fish-form-container">
             <h1>Create New Koi Fish</h1>
+            {ponds.length === 0 ? (
+                <p className="no-ponds-message">Currently, no ponds are available to add Koi fish. Please create a pond first.</p>
+            ) : (
+                <>
             <div className="add-image-upload-container">
                 {isImageUploaded ? (
                     <>
@@ -243,6 +248,8 @@ const AddKoiFishPage = () => {
                     Back to List
                 </button>
             </form>
+                </>
+                )}
         </div>
     );
 };

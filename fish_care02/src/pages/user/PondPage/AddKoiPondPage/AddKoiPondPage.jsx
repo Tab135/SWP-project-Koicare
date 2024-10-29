@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import './AddKoiPondPage.scss';
+import {useNavigate} from "react-router-dom";
 
 const AddKoiPondPage = () => {
     const [pond, setPond] = useState({
@@ -16,6 +17,7 @@ const AddKoiPondPage = () => {
         waterSource: ''
     });
 
+    const navigate = useNavigate();
     const [selectedFile, setSelectedFile] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
     const [isImageUploaded, setIsImageUploaded] = useState(false);
@@ -86,6 +88,7 @@ const AddKoiPondPage = () => {
 
             if (response.status === 200) {
                 alert('Pond added successfully!');
+                navigate("/list-ponds");
             } else {
                 alert('Failed to add pond.');
             }
