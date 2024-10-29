@@ -1,27 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Container, Alert, Spinner, Card } from "react-bootstrap";
 import ProductService from "../../ShopService";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./update.scss";
 import { FaUpload } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
 
 const UpdateProduct = () => {
   const { productId } = useParams();
-
   const [productData, setProductData] = useState({
     name: "",
     price: "",
     description: "",
-    amount: "",
-    categoryId: "", // Category field (ID)
+    amount: 0,
+    categoryId: 0,
   });
-
-  const [categories, setCategories] = useState([]); // Available categories
+  const [currentImage, setCurrentImage] = useState(""); // Holds the URL of the existing image
+  const [imageFiles, setImageFiles] = useState([]); // For new image files
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [imageFiles, setImageFiles] = useState([]); // To hold selected images
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "SHOP") {
+        navigate("/koicare");
+      }
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     // Fetch product data by ID to prefill the form
@@ -33,8 +48,9 @@ const UpdateProduct = () => {
             price: product.price || "",
             description: product.description || "",
             amount: product.amount || "",
-            categoryId: product.categoryId || "", // Prepopulate categoryId
+            categoryId: product.categoryId ? product.categoryId.toString() : "",
           });
+          setCurrentImage(product.productImageBase64); // Store the existing image URL
         } else {
           setError("Product not found.");
         }
@@ -59,13 +75,13 @@ const UpdateProduct = () => {
     const { name, value } = e.target;
     setProductData({
       ...productData,
-      [name]: value, // Ensure this updates categoryId correctly
+      [name]: value,
     });
   };
 
   const handleImageChange = (e) => {
     const files = e.target.files;
-    setImageFiles([...files]); // Update the state with the new files
+    setImageFiles([...files]); // Update with new selected images
   };
 
   const handleSubmit = async (e) => {
@@ -74,27 +90,23 @@ const UpdateProduct = () => {
     setError(null);
     setMessage(null);
 
-    if (imageFiles.length === 0) {
-      setError("Please select at least one image");
-      setLoading(false);
-      return;
-    }
-
-    // Create a new FormData object
     const formData = new FormData();
-    // Append the product data to the form data
     Object.keys(productData).forEach((key) => {
       formData.append(key, productData[key]);
     });
 
-    // Append the images to the form data
-    imageFiles.forEach((file) => formData.append("imageFile", file));
+    // Append new images or the existing image if no new images were selected
+    if (imageFiles.length > 0) {
+      imageFiles.forEach((file) => formData.append("imageFile", file));
+    } else if (currentImage) {
+      formData.append("existingImage", currentImage); // Use the current image URL if no new image is selected
+    }
 
     try {
-      // Call the updateProduct function and pass the formData
-      const response = await ProductService.updateProduct(productId, formData);
-      setImageFiles([]); // Reset image files after successful update
+      await ProductService.updateProduct(productId, formData);
       setMessage("Product updated successfully!");
+      setImageFiles([]); // Reset image files
+      navigate("/shop/dashboard");
     } catch (error) {
       console.error("Error updating product:", error);
       setError("Failed to update product. Please try again.");
@@ -112,7 +124,6 @@ const UpdateProduct = () => {
           {message && <Alert variant="success">{message}</Alert>}
 
           <Form onSubmit={handleSubmit}>
-            {/* Product Name */}
             <Form.Group className="mb-3 update-product-name">
               <Form.Label>Product Name</Form.Label>
               <Form.Control
@@ -125,7 +136,6 @@ const UpdateProduct = () => {
               />
             </Form.Group>
 
-            {/* Price */}
             <Form.Group className="mb-3 update-product-price">
               <Form.Label>Price</Form.Label>
               <Form.Control
@@ -138,9 +148,6 @@ const UpdateProduct = () => {
               />
             </Form.Group>
 
-            {/* Stock Quantity */}
-
-            {/* Description */}
             <Form.Group className="mb-3 update-product-description">
               <Form.Label>Description</Form.Label>
               <Form.Control
@@ -154,7 +161,6 @@ const UpdateProduct = () => {
               />
             </Form.Group>
 
-            {/* Amount */}
             <Form.Group className="mb-3 update-product-amount">
               <Form.Label>Amount</Form.Label>
               <Form.Control
@@ -167,26 +173,28 @@ const UpdateProduct = () => {
               />
             </Form.Group>
 
-            {/* Category */}
             <Form.Group className="mb-3 update-product-category">
               <Form.Label>Category</Form.Label>
-              <Form.Control
-                as="select"
-                name="categoryId"
-                value={productData.categoryId}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.categoryId} value={category.categoryId}>
-                    {category.categoryName}
-                  </option>
-                ))}
-              </Form.Control>
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <Form.Check
+                    type="radio"
+                    id={`category-${category.categoryId}`}
+                    key={category.categoryId}
+                    name="categoryId"
+                    label={category.categoryName}
+                    value={category.categoryId.toString()}
+                    checked={
+                      productData.categoryId === category.categoryId.toString()
+                    } // Check for selected category
+                    onChange={handleInputChange}
+                  />
+                ))
+              ) : (
+                <p>No categories available.</p>
+              )}
             </Form.Group>
 
-            {/* Image Upload */}
             <Form.Group className="mb-4">
               <Form.Label>Product Images</Form.Label>
               <Form.Control
@@ -195,19 +203,20 @@ const UpdateProduct = () => {
                 accept="image/*"
                 onChange={handleImageChange}
                 id="file-upload"
-                className="d-none" // Hide the default input
+                className="d-none"
               />
               <label
                 htmlFor="file-upload"
                 className="btn btn-outline-primary w-100"
               >
-                <FaUpload className="me-2" />
-                Choose Images
+                <FaUpload className="me-2" /> Choose Images
               </label>
-              {imageFiles.length > 0 && (
+              {imageFiles.length > 0 ? (
                 <small className="text-muted">
                   {imageFiles.length} file(s) selected
                 </small>
+              ) : (
+                <small className="text-muted">Using existing image</small>
               )}
             </Form.Group>
 

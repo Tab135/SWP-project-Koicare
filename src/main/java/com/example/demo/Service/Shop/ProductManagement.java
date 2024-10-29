@@ -235,6 +235,7 @@ public class ProductManagement {
         reqResProduct.setDescription(foundProduct.getDescription());
         reqResProduct.setAmount(foundProduct.getAmount());
         reqResProduct.setCategoryName(foundProduct.getCategory().getCategoryName());
+        reqResProduct.setCategoryId(foundProduct.getCategory().getCategoryId());
         double averageRating = calculateAverageRating(id);
         reqResProduct.setProductRating(averageRating);
 

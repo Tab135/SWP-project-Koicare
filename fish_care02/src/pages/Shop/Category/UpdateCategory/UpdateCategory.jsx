@@ -2,13 +2,26 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import CategoryService from "../../Dash board/CategoryService";
 import { Button } from "react-bootstrap";
+import { jwtDecode } from "jwt-decode";
 
 const UpdateCategory = () => {
   const { cateId } = useParams(); // Get the category ID from the URL
   const navigate = useNavigate(); // Hook for navigation
   const [categoryName, setCategoryName] = useState(""); // State for category name
   const [error, setError] = useState(null);
-
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "SHOP") {
+        navigate("/koicare");
+      }
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
   useEffect(() => {
     // Fetch the current category details
     const fetchCategory = async () => {
@@ -28,7 +41,7 @@ const UpdateCategory = () => {
     try {
       await CategoryService.updateCategory(cateId, { categoryName }); // Make sure to implement this method in CategoryService
       alert("Category updated successfully!");
-      navigate("/shop/product"); // Redirect to the dashboard after successful update
+      navigate("/shop/dashboard"); // Redirect to the dashboard after successful update
     } catch (error) {
       setError("Failed to update category: " + error.message);
     }

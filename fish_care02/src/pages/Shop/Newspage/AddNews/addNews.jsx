@@ -82,7 +82,7 @@ useEffect(() => {
       });
 
       if (response.ok) {
-        window.location.href = '/news';
+        window.location.href = '/shop/dashboard';
       } else {
         throw new Error('Failed to create news');
       }

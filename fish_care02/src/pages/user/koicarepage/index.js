@@ -98,7 +98,7 @@ const KoiCare = () => {
                 <div className="row">
                     <div className="koicare">
                             <div className="text_banner">
-                                <h1>Koi Fish care System</h1>
+                                <h1>Koi Fish Care System</h1>
                             </div>
                             <div className="menu_banner">
                             <ul>    

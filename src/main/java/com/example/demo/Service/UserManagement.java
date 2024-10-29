@@ -1,8 +1,10 @@
 package com.example.demo.Service;
 
 import com.example.demo.DTO.*;
+import com.example.demo.DTO.Shop.Cart;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
 import com.example.demo.Repo.RoleRepo;
+import com.example.demo.Repo.Shop.CartRepository;
 import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,14 +22,15 @@ public class UserManagement {
     @Autowired
     private UserRepo userRepo;
     @Autowired
-    private  RoleRepo roleRepo;
+    private RoleRepo roleRepo;
 
     @Autowired
     private JWTUtils jwtUtils;
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
+    @Autowired
+    private CartRepository cartRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -88,6 +91,13 @@ public class UserManagement {
         if (savedUser.getId() > 0) {
             resp.setUsers(savedUser);
             resp.setMessage("User signed up successfully");
+
+            Cart userCart = new Cart(savedUser, new Date());
+            userCart.setItems(new ArrayList<>());
+
+            // Save the cart to the database
+            cartRepository.save(userCart);
+
             resp.setStatusCode(200);
         } else {
             resp.setMessage("Error during sign up");
@@ -138,106 +148,106 @@ public class UserManagement {
         return userRepo.save(newUser);
     }
 
-    public ReqResUser Login(ReqResUser LoginRequest){
+    public ReqResUser Login(ReqResUser LoginRequest) {
         ReqResUser resp = new ReqResUser();
 
         try {
             authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(LoginRequest.getEmail(),LoginRequest.getPassword()));
+                    .authenticate(new UsernamePasswordAuthenticationToken(LoginRequest.getEmail(), LoginRequest.getPassword()));
 
             var user = userRepo.findByEmail(LoginRequest.getEmail()).orElseThrow();
-            var jwt = jwtUtils.generateToken(user,user.getId());
-            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(),user);
+            var jwt = jwtUtils.generateToken(user, user.getId());
+            var refreshToken = jwtUtils.generateRefreshToken(new HashMap<>(), user);
             resp.setStatusCode(200);
             resp.setRole(user.getRole().getName());
             resp.setToken(jwt);
             resp.setRefreshToken(refreshToken);
             resp.setMessage("Succesfully logged in");
-        }catch(Exception e){
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage(e.getMessage());
         }
         return resp;
     }
 
-    public ReqResUser Delete(int id)
-    {
+    public ReqResUser Delete(int id) {
         ReqResUser resp = new ReqResUser();
-        try{
+        try {
             Optional<UserModel> user = userRepo.findById(id);
-            if(user.isPresent()){
+            if (user.isPresent()) {
                 userRepo.deleteById(id);
                 resp.setStatusCode(200);
                 resp.setMessage("User deleted");
-            }
-            else {
+            } else {
                 resp.setStatusCode(404);
                 resp.setMessage("User not found");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage(e.getMessage());
         }
         return resp;
     }
-    public ReqResUser checkEmail(String email){
+
+    public ReqResUser checkEmail(String email) {
         ReqResUser resp = new ReqResUser();
-        try{
+        try {
             boolean check = userRepo.existsByEmail(email);
-            if (check){
+            if (check) {
                 resp.setStatusCode(200);
                 resp.setMessage("Found Email");
-            }
-            else {
+            } else {
                 resp.setStatusCode(404);
                 resp.setMessage("No Email found");
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage("Server Error");
         }
         return resp;
     }
-    public  ReqResUser getUserByID(int id){
+
+    public ReqResUser getUserByID(int id) {
         ReqResUser resp = new ReqResUser();
         try {
             UserModel user = userRepo.findById(id).orElseThrow();
             resp.setUsers(user);
             resp.setStatusCode(200);
             resp.setMessage("User Id:" + id);
-        }catch (Exception e){
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage("Server Error");
         }
         return resp;
     }
 
-    public ReqResUser updateUser(int userid, UserModel updateUser){
+    public ReqResUser updateUser(int userid, UserModel updateUser) {
         ReqResUser resp = new ReqResUser();
 
-        try{
+        try {
             Optional<UserModel> user = userRepo.findById(userid);
-            if(user.isPresent()){
+            if (user.isPresent()) {
                 UserModel existingUser = user.get();
                 existingUser.setEmail(updateUser.getEmail());
                 existingUser.setName(updateUser.getName());
-                if(updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()){
+                if (updateUser.getPassword() != null && !updateUser.getPassword().isEmpty()) {
                     existingUser.setPassword(passwordEncoder.encode(updateUser.getPassword()));
                 }
                 UserModel saved = userRepo.save(existingUser);
                 resp.setUsers(saved);
                 resp.setStatusCode(200);
                 resp.setMessage("Updated successfully");
-            }else {
+            } else {
                 resp.setStatusCode(404);
                 resp.setMessage("User not found");
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage("Server error: " + e.getMessage());
         }
         return resp;
     }
+
     public ReqResUser changePassword(String password, String email) {
         ReqResUser resp = new ReqResUser();
         try {
@@ -259,38 +269,38 @@ public class UserManagement {
         return resp;
     }
 
-    public ReqResUser myProfile(String email){
+    public ReqResUser myProfile(String email) {
         ReqResUser resp = new ReqResUser();
-        try{
+        try {
             Optional<UserModel> user = userRepo.findByEmail(email);
-            if(user.isPresent()){
+            if (user.isPresent()) {
                 resp.setUsers(user.get());
                 resp.setStatusCode(200);
                 resp.setMessage("success");
-            }else{
+            } else {
                 resp.setStatusCode(404);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage(e.getMessage());
         }
         return resp;
     }
 
-    public ReqResUser getAllUser(){
+    public ReqResUser getAllUser() {
         ReqResUser resp = new ReqResUser();
 
-        try{
+        try {
             List<UserModel> result = userRepo.findAll();
-            if(!result.isEmpty()){
+            if (!result.isEmpty()) {
                 resp.setUsersList(result);
                 resp.setStatusCode(200);
 
-            }else {
+            } else {
                 resp.setStatusCode(404);
                 resp.setMessage("No user found");
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             resp.setStatusCode(500);
             resp.setMessage(e.getMessage());
 
@@ -298,20 +308,20 @@ public class UserManagement {
         return resp;
     }
 
-    public ReqResUser refreshToken(ReqResUser token){
+    public ReqResUser refreshToken(ReqResUser token) {
         ReqResUser resp = new ReqResUser();
         try {
             String email = jwtUtils.extractUsername(token.getToken());
             UserModel users = userRepo.findByEmail(email).orElseThrow();
-            if (jwtUtils.isTokenValid(token.getToken(),users)){
+            if (jwtUtils.isTokenValid(token.getToken(), users)) {
 
-                var jwt = jwtUtils.generateToken(users,users.getId());
+                var jwt = jwtUtils.generateToken(users, users.getId());
                 resp.setToken(jwt);
                 resp.setRefreshToken(token.getToken());
                 resp.setMessage("Successfully refreshed token");
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             resp.setMessage(e.getMessage());
         }
         resp.setStatusCode(200);
@@ -320,9 +330,9 @@ public class UserManagement {
 
     public ReqResUser getAddress(int userId) {
         ReqResUser resp = new ReqResUser();
-        try{
+        try {
             Optional<UserModel> user = userRepo.findById(userId);
-            if(user.isPresent()) {
+            if (user.isPresent()) {
                 UserModel userData = user.get();
                 if (userData.getAddress() == null) {
                     resp.setAddress("");
@@ -332,25 +342,23 @@ public class UserManagement {
             } else {
                 resp.setError("No user found with the provided id");
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             resp.setError("Error at the get address" + e.getMessage());
         }
         return resp;
     }
 
-    public ReqResUser updateAddress(int userId, ReqResUser address){
+    public ReqResUser updateAddress(int userId, ReqResUser address) {
         ReqResUser resp = new ReqResUser();
-        try{
+        try {
             Optional<UserModel> user = userRepo.findById(userId);
-            if(user.isPresent()) {
+            if (user.isPresent()) {
                 UserModel exsitUser = user.get();
                 exsitUser.setAddress(address.getAddress());
                 UserModel result = userRepo.save(exsitUser);
                 resp.setUsers(result);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             resp.setMessage(e.getMessage());
         }
         return resp;

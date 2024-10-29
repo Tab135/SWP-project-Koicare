@@ -11,15 +11,22 @@ import {
   FaBox,
   FaList,
   FaShoppingCart,
+  FaBlogger,
+  FaRegNewspaper,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ROUTERS } from "../../../utis/router";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 // Import components
 import ProductTable from "./table/ProductTable";
 import CategoryTable from "./table/CategoryTable";
 import OrderTable from "./table/OrderTable";
 import StatCard from "./StatCard";
+import BlogTable from "./table/BlogTable";
+import DashBoardService from "./DashboardService";
+import NewsTable from "./table/NewsTable";
 
 const ShopDashboard = () => {
   const [products, setProducts] = useState([]);
@@ -32,6 +39,9 @@ const ShopDashboard = () => {
   const [totalStock, setTotalStock] = useState(0);
   const [totalOrders, setTotalOrders] = useState(0);
   const [view, setView] = useState("dashboard");
+  const [blogs, setBlogs] = useState([]);
+  const [newsItems, setNewsItems] = useState([]);
+  const navigate = useNavigate();
 
   const orderStatuses = ["PROCESSING", "SHIPPED", "DELIVERED", "CANCELED"];
 
@@ -47,7 +57,19 @@ const ShopDashboard = () => {
       },
     ],
   };
-
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "SHOP") {
+        navigate("/koicare");
+      }
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
   const fetchProducts = async () => {
     try {
       const productList = await ProductService.getAllProducts();
@@ -85,7 +107,24 @@ const ShopDashboard = () => {
       console.error("Error fetching total revenue:", error);
     }
   };
-
+  const fetchBlogs = async () => {
+    try {
+      const response = await DashBoardService.getAllBlogs();
+      console.log("Fetched Blogs:", response); // Verify data
+      setBlogs(response);
+    } catch (error) {
+      console.error("Error fetching blogs:", error);
+    }
+  };
+  const fetchNewsItems = async () => {
+    try {
+      const response = await DashBoardService.getAllNews();
+      console.log("Fetched News:", response); // Verify data
+      setNewsItems(response);
+    } catch (error) {
+      console.error("Error fetching news items:", error);
+    }
+  };
   const calculateTotals = (products, orders) => {
     setTotalProducts(products.length);
     setTotalStock(
@@ -136,19 +175,55 @@ const ShopDashboard = () => {
         orderStatus
       );
       console.log("Order updated successfully:", updatedOrder);
-      fetchOrders(); // Re-fetch orders to reflect the updated status
+      fetchOrders();
     } catch (error) {
       console.error("Error updating order status:", error);
     }
   };
+  const handleEditBlog = (blogId) => {
+    console.log("Edit blog with ID:", blogId);
+    // Add logic for editing a blog (e.g., redirect to edit page or open modal)
+  };
 
+  const handleDeleteBlog = async (blogId) => {
+    if (window.confirm("Are you sure you want to delete this blog?")) {
+      try {
+        await DashBoardService.deleteBlog(blogId);
+        setBlogs(blogs.filter((blog) => blog.id !== blogId));
+        alert("Blog deleted successfully");
+      } catch (error) {
+        console.error("Failed to delete blog:", error);
+      }
+    }
+  };
+  const handleEditNews = (newsId) => {
+    console.log("Edit news with ID:", newsId);
+    // Logic for editing a news item (e.g., redirect to edit page or open modal)
+  };
+
+  const handleDeleteNews = async (newsId) => {
+    if (window.confirm("Are you sure you want to delete this news item?")) {
+      try {
+        await DashBoardService.deleteNews(newsId);
+        setNewsItems(newsItems.filter((news) => news.id !== newsId));
+        alert("News item deleted successfully");
+      } catch (error) {
+        console.error("Failed to delete news item:", error);
+      }
+    }
+  };
   useEffect(() => {
-    Promise.all([
-      fetchProducts(),
-      fetchCategories(),
-      fetchOrders(),
-      fetchTotalRevenue(),
-    ]); // Fetch all data
+    const fetchData = async () => {
+      await Promise.all([
+        fetchProducts(),
+        fetchCategories(),
+        fetchOrders(),
+        fetchTotalRevenue(),
+        fetchBlogs(),
+        fetchNewsItems(),
+      ]);
+    };
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -179,7 +254,7 @@ const ShopDashboard = () => {
           <div className="data-table">
             <div className="d-flex justify-content-between align-items-center p-4">
               <h2 className="m-0">Categories</h2>
-              <Link to={ROUTERS.USER.AddCategory}>
+              <Link to={ROUTERS.USER.AddCate}>
                 <Button className="add-btn">
                   <FaPlus /> Add Category
                 </Button>
@@ -202,6 +277,38 @@ const ShopDashboard = () => {
             />
           </div>
         );
+      case "blogs":
+        return (
+          <div className="data-table">
+            <div className="d-flex justify-content-between align-items-center p-4">
+              <h2 className="p-4 m-0">Blogs</h2>
+              <Link to={ROUTERS.USER.CREATE_BLOG}>
+                <Button className="add-btn">
+                  <FaPlus /> Add Blogs
+                </Button>
+              </Link>
+            </div>
+            <BlogTable blogs={blogs} 
+            handleEdit={handleEditBlog}
+            handleDelete={handleDeleteBlog} />
+          </div>
+        );
+      case "news":
+        return (
+          <div className="data-table">
+            <div className="d-flex justify-content-between align-items-center p-4">
+              <h2 className="m-0">News</h2>
+              <Link to={ROUTERS.USER.News}>
+                <Button className="add-btn">
+                  <FaPlus /> Add News
+                </Button>
+              </Link>
+            </div>
+            <NewsTable newsItems={newsItems} 
+            handleEdit={handleEditNews}
+            handleDelete={handleDeleteNews} />
+          </div>
+        );
       default:
         return (
           <>
@@ -209,7 +316,7 @@ const ShopDashboard = () => {
               <StatCard
                 icon={<FaChartBar />}
                 title="Total Revenue"
-                value={`$${totalAmount.toFixed(2)}`} // Display the total revenue
+                value={`$${totalAmount ? totalAmount.toFixed(2) : "0.00"}`} // Check if totalAmount exists
                 color="#4338ca"
               />
               <StatCard
@@ -289,6 +396,18 @@ const ShopDashboard = () => {
             onClick={() => setView("orders")}
           >
             <FaShoppingCart className="me-2" /> Orders
+          </Button>
+          <Button
+            className={`nav-btn ${view === "blogs" ? "active" : ""}`}
+            onClick={() => setView("blogs")}
+          >
+            <FaBlogger className="me-2" /> Blogs
+          </Button>
+          <Button
+            className={`nav-btn ${view === "news" ? "active" : ""}`}
+            onClick={() => setView("news")}
+          >
+            <FaRegNewspaper className="me-2" /> News
           </Button>
         </div>
 

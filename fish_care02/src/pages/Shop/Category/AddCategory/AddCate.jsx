@@ -1,14 +1,27 @@
 // src/components/AddCategory.jsx
 
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import CategoryService from "../../Dash board/CategoryService";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const AddCate = () => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const navigate = useNavigate(); // Hook to programmatically navigate
-
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "SHOP") {
+        navigate("/koicare");
+      }
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
   const handleAddCategory = async (e) => {
     e.preventDefault();
     if (newCategoryName.trim() === "") {
@@ -19,7 +32,7 @@ const AddCate = () => {
     try {
       await CategoryService.addCategory({ categoryName: newCategoryName });
       alert("Category added successfully!");
-      navigate("/shop/product"); // Redirect after successful addition
+      navigate("/shop/dashboard"); // Redirect after successful addition
     } catch (error) {
       console.error("Error adding category:", error);
       alert("Failed to add category.");

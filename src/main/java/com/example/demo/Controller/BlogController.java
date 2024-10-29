@@ -94,6 +94,11 @@ public class BlogController {
         return ResponseEntity.ok(bService.listBlog());
     }
 
+    @GetMapping("/shop/blog")
+    public ResponseEntity<ReqResBlog> shopBLog(){
+        return ResponseEntity.ok(bService.listBlog());
+    }
+
     @GetMapping("/public/blog/{blogId}")
     public ResponseEntity<ReqResBlog> publicGetBlog(@PathVariable int blogId){
         return ResponseEntity.ok(bService.viewBlog(blogId));

@@ -295,6 +295,7 @@ public class OrderService implements IOrderService {
             reqResOrder.setId(order.getId());
             reqResOrder.setUserId(order.getUser().getId());
             reqResOrder.setUserName(order.getUser().getName());
+            reqResOrder.setAddress(order.getUser().getAddress());
             reqResOrder.setOrderDate(order.getDate());
             reqResOrder.setTotalAmount(order.getTotalAmount());
             reqResOrder.setOrderStatus(order.getOrderStatus());

@@ -11,11 +11,29 @@ public class ReqResTracking {
     private String error;
     private String message;
     private int orderId;
+    private String orderName;
+    private String address;
     private OrderStatus status;
     private LocalDateTime timestamp;
     private String productName;
     private String productImageBase64;
     private List<ProductInfo> products; // Use String to store Base64 encoded image
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
+    }
 
     public List<ProductInfo> getProducts() {
         return products;

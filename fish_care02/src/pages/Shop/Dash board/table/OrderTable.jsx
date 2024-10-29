@@ -7,7 +7,8 @@ const OrderTable = ({ orders, onUpdateStatus, orderStatuses }) => {
       <thead>
         <tr>
           <th>Order ID</th>
-          <th>User ID</th>
+          <th>User Name</th>
+          <th>User Address</th>
           <th>Order Status</th>
           <th>Update Status</th>
         </tr>
@@ -16,7 +17,8 @@ const OrderTable = ({ orders, onUpdateStatus, orderStatuses }) => {
         {orders.map((order) => (
           <tr key={order.id}>
             <td>{order.id}</td>
-            <td>{order.userId}</td>
+            <td>{order.userName}</td>
+            <td>{order.address}</td>
             <td>{order.orderStatus}</td>
             <td>
               <Dropdown>

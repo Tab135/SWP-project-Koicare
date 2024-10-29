@@ -14,10 +14,19 @@ public class ReqResOrder {
     private int id;
     private int userId;
     private String userName;
+    private String address;
     private LocalDateTime orderDate;
     private BigDecimal totalAmount;
     private OrderStatus orderStatus;
     private List<ReqResOrderItem> items;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
 
     public ReqResOrder() {
     }

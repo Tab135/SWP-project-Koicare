@@ -49,6 +49,11 @@ public class NewsController {
         return ResponseEntity.ok(newsService.listNews());
     }
 
+    @GetMapping("/shop/news")
+    public ResponseEntity<ReqResNews> News(){
+        return ResponseEntity.ok(newsService.listNews());
+    }
+
     @GetMapping("/public/news/{newsId}")
     public ResponseEntity<ReqResNews> getNews (@PathVariable int newsId){
         return ResponseEntity.ok(newsService.viewNews(newsId));

@@ -17,7 +17,6 @@ public class ReqResNews {
     private String newsContent;
     private LocalDate date;
     private String headline;
-
     private NewsModel news;
     private List<NewsModel> newsList;
     private int statusCode;

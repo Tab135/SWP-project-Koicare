@@ -26,7 +26,7 @@ const ProductTable = ({ products, handleDelete }) => (
             <Button variant="danger" onClick={() => handleDelete(product.id)}>
               <FaTrashAlt />
             </Button>
-            <Link to={`${ROUTERS.USER.UpdateProduct}/${product.id}`}>
+            <Link to={`/shop/updatePro/${product.id}`}>
               <Button variant="warning" className="ms-2">
                 <FaEdit />
               </Button>

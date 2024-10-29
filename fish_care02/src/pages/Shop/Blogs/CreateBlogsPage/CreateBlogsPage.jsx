@@ -1,57 +1,56 @@
-import React, { useEffect,useState } from 'react';
-import { Form, Button, Container, Alert, Spinner } from 'react-bootstrap';
-import ReactQuill from 'react-quill';
-import { useNavigate } from 'react-router-dom';
-import 'react-quill/dist/quill.snow.css';
+import React, { useEffect, useState } from "react";
+import { Form, Button, Container, Alert, Spinner } from "react-bootstrap";
+import ReactQuill from "react-quill";
+import { useNavigate } from "react-router-dom";
+import "react-quill/dist/quill.snow.css";
 
-import { jwtDecode } from 'jwt-decode';
-
-
+import { jwtDecode } from "jwt-decode";
 
 const CreateBlogsPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    image: null
+    title: "",
+    content: "",
+    image: null,
   });
   const navigate = useNavigate();
-useEffect(() => {
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-  if (token) {
-    const decodedToken = jwtDecode(token);
-    const role = decodedToken.role;
-    if (role !== 'SHOP') {
-      navigate('/koicare');
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "SHOP") {
+        navigate("/koicare");
+      }
+    } else {
+      navigate("/");
     }
-  } else {
-    navigate('/');
-  }
-}, [navigate]);
+  }, [navigate]);
   const [previewImage, setPreviewImage] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleContentChange = (value) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      content: value
+      content: value,
     }));
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        image: file
+        image: file,
       }));
 
       const reader = new FileReader();
@@ -67,24 +66,26 @@ useEffect(() => {
     try {
       setLoading(true);
       const formDataToSend = new FormData();
-      formDataToSend.append('title', formData.title);
-      formDataToSend.append('blogContent', formData.content);
+      formDataToSend.append("title", formData.title);
+      formDataToSend.append("blogContent", formData.content);
       if (formData.image) {
-        formDataToSend.append('image', formData.image);
+        formDataToSend.append("image", formData.image);
       }
 
-      const response = await fetch('http://localhost:8080/shop/blog/create', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8080/shop/blog/create", {
+        method: "POST",
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem("token")}`
+          Authorization: `Bearer ${
+            localStorage.getItem("token") || sessionStorage.getItem("token")
+          }`,
         },
-        body: formDataToSend
+        body: formDataToSend,
       });
 
       if (response.ok) {
-        window.location.href = '/blog';
+        window.location.href = "/shop/dashboard";
       } else {
-        throw new Error('Failed to create news');
+        throw new Error("Failed to create news");
       }
     } catch (err) {
       setError(err.message);
@@ -95,23 +96,22 @@ useEffect(() => {
 
   const removeImage = () => {
     setPreviewImage(null);
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      image: null
+      image: null,
     }));
   };
 
-
   const modules = {
     toolbar: [
-      [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-      [{ 'size': ['small', false, 'large', 'huge'] }],  // Font size options
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      ['link', 'image'],
-      [{ 'align': [] }],
-      ['clean']  // Remove formatting
-    ]
+      [{ header: "1" }, { header: "2" }, { font: [] }],
+      [{ size: ["small", false, "large", "huge"] }], // Font size options
+      ["bold", "italic", "underline", "strike"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link", "image"],
+      [{ align: [] }],
+      ["clean"], // Remove formatting
+    ],
   };
 
   return (
@@ -119,16 +119,18 @@ useEffect(() => {
       <div className="create-news-form-add">
         <h2>Create Blog Article</h2>
 
-        {error && (
-          <Alert variant="danger">{error}</Alert>
-        )}
+        {error && <Alert variant="danger">{error}</Alert>}
 
         <Form onSubmit={handleSubmit}>
           <div className="image-upload-section-add">
             <div className="image-upload-container-add">
               {previewImage ? (
                 <div className="preview-container-add">
-                  <img src={previewImage} alt="Preview" className="preview-image-add"/>
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="preview-image-add"
+                  />
                   <Button
                     variant="danger"
                     size="sm"
@@ -173,17 +175,13 @@ useEffect(() => {
               placeholder="Enter news content"
               required
               theme="snow"
-              style={{ minHeight: '200px' }}
-              modules={modules}  // Include the custom toolbar modules here
+              style={{ minHeight: "200px" }}
+              modules={modules} // Include the custom toolbar modules here
             />
           </Form.Group>
 
           <div className="button-group-add">
-            <Button
-              variant="primary"
-              type="submit"
-              disabled={loading}
-            >
+            <Button variant="primary" type="submit" disabled={loading}>
               {loading ? (
                 <>
                   <Spinner
@@ -196,12 +194,12 @@ useEffect(() => {
                   <span> Creating...</span>
                 </>
               ) : (
-                'Create News'
+                "Create News"
               )}
             </Button>
             <Button
               variant="secondary"
-              onClick={() => window.location.href = '/news'}
+              onClick={() => (window.location.href = "/news")}
             >
               Cancel
             </Button>

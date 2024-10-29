@@ -12,8 +12,11 @@ import {
 import ProductService from "../../ShopService";
 import { FaUpload } from "react-icons/fa";
 import "./addProduct.css"; // We'll create this file for custom styles
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 const AddProduct = () => {
+  const navigate = useNavigate();
   const [productData, setProductData] = useState({
     name: "",
     price: "",
@@ -26,6 +29,19 @@ const AddProduct = () => {
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      const role = decodedToken.role;
+      if (role !== "SHOP") {
+        navigate("/koicare");
+      }
+    } else {
+      navigate("/");
+    }
+  }, [navigate]);
   useEffect(() => {
     ProductService.getAllCategory()
       .then((data) => {
@@ -82,6 +98,7 @@ const AddProduct = () => {
         amount: 0,
       });
       setImageFiles([]);
+      navigate("/shop/dashboard");
     } catch (error) {
       setError("Failed to add product. Please try again.");
     } finally {
@@ -164,7 +181,7 @@ const AddProduct = () => {
                   )}
                 </Form.Group>
               </Col>
-             
+
               <Col md={4}>
                 <Form.Group className="mb-3">
                   <Form.Label>Amount</Form.Label>
