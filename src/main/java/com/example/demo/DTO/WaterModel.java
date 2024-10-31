@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,7 +19,7 @@ public class WaterModel {
     @JoinColumn(name = "pond_id", nullable = false) // Define foreign key column
     @JsonIgnore
     private PondModel pond;
-    private LocalDateTime date_time;
+    private LocalDate date;
     private float nitrite;                // Nitrite (NO2) mg/l
     private float nitrate;                // Nitrate (NO3) mg/l
     private float phosphate;              // Phosphate (PO4) mg/l
@@ -52,12 +53,12 @@ public class WaterModel {
         this.pond = pond;
     }
 
-    public LocalDateTime getDate_time() {
-        return date_time;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDate_time(LocalDateTime date_time) {
-        this.date_time = date_time;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public float getNitrite() {

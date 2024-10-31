@@ -7,6 +7,7 @@ import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.UserRepo;
+import com.example.demo.Repo.WaterRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class PondService {
     private UserRepo userR;
     @Autowired
     private KoiRepo koiR;
+    @Autowired
+    private WaterRepo waterR;
     public ResReqPond createP(ResReqPond request, int userId) {
         ResReqPond res = new ResReqPond();
         Optional<UserModel> user = userR.findById(userId);
@@ -101,7 +104,7 @@ byte[] picByte =request.getPicture().getBytes();
 
 
     public void deletePondById (int pondId){
-
+        waterR.deleteByPondId(pondId);
         pondR.deleteById(pondId);
     }
 

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+
 @RestController
 @CrossOrigin
 public class WaterController {
@@ -35,5 +37,9 @@ public class WaterController {
     @GetMapping("/user/WaterMonitor/WaterDetail/{waterId}")
     public ResponseEntity<ReqResWater> getWaterDetails(@PathVariable int waterId){
         return ResponseEntity.ok(waterM.detailsWater(waterId));
+    }
+    @GetMapping("/user/WaterMonitor/{start_date}/{end_date}")
+    public ResponseEntity<ReqResWater> listWaterByDate(@PathVariable LocalDate start_date, @PathVariable LocalDate end_date ){
+        return ResponseEntity.ok(waterM.listAllByDate(start_date, end_date));
     }
 }

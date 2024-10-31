@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,7 @@ public class WaterManagement {
 
             WaterModel monitorM = new WaterModel();
             monitorM.setPond(pm.get());
-            monitorM.setDate_time(addWater.getDate());
+            monitorM.setDate(addWater.getDate());
             monitorM.setNitrite(addWater.getNitrite());
             monitorM.setNitrate(addWater.getNitrate());
             monitorM.setPhosphate(addWater.getPhosphate());
@@ -121,7 +122,7 @@ public class WaterManagement {
             existingModel.setTotalChlorine(updatedModel.getTotalChlorine());
             existingModel.setOutdoorTemperature(updatedModel.getOutdoorTemperature());
             existingModel.setAmountFed(updatedModel.getAmountFed());
-            existingModel.setDate_time(updatedModel.getDate_time());
+            existingModel.setDate(updatedModel.getDate());
 
             // Save the updated model back to the database
             waterRepository.save(existingModel);
@@ -156,6 +157,18 @@ public class WaterManagement {
             resp.setError("error water parameter not found");
         }
         return  resp;
+    }
+
+    public ReqResWater listAllByDate(LocalDate start, LocalDate end){
+        ReqResWater resp = new ReqResWater();
+        List<WaterModel> result = waterRepository.findAllByDateBetween(start, end);
+        if (result != null && !result.isEmpty()) {
+            resp.setMessage("Water list retrieved successfully");
+            resp.setWaterModelList(result);
+        } else {
+            resp.setMessage("Water list empty");
+        }
+        return resp;
     }
 }
 
