@@ -7,6 +7,7 @@ import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResGrowth;
 import com.example.demo.Repo.GrowthRecordRepo;
 import com.example.demo.Repo.KoiRepo;
+import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ public class GrowthRecordService {
     private KoiRepo koiRepo;
     @Autowired
     private UserRepo userR;
+
 
     public ReqResGrowth addRecord(ReqResGrowth growth, Integer koiFishId, int userId){
         ReqResGrowth res = new ReqResGrowth();
@@ -78,18 +80,19 @@ public class GrowthRecordService {
             record.setWeight(growth.getWeight());
             record.setLength(growth.getLength());
             record.setPhysique(growth.getPhysique());
+            record.setPondId(koi.get().getPondId());
 
         if(preRecord.isPresent()) {
             if (preRecord.get().getWeight() != null) {
                 Double weightRate = ((growth.getWeight() - preWeight) / preWeight) * 100;
-                record.setWeightRate(Math.max(weightRate,0.0));
+                record.setWeightRate(weightRate);
             } else {
                 record.setWeightRate(0.0);
             }
 
             if (preRecord.get().getLength() != null) {
                 Double lengthRate = ((growth.getLength() - preLength) / preLength) * 100;
-                record.setLengthRate(Math.max(lengthRate, 0.0));
+                record.setLengthRate(lengthRate);
             } else {
                 record.setLengthRate(0.0);
             }
@@ -120,8 +123,8 @@ public class GrowthRecordService {
             if(nextRecord.isPresent()){
                 Double weightRate = ((nextRecord.get().getWeight()-growth.getWeight())/growth.getWeight())*100;
                 Double lengthRate = ((nextRecord.get().getLength()-growth.getLength())/growth.getLength())*100;
-                nextRecord.get().setWeightRate(Math.max(weightRate, 0.0));
-                nextRecord.get().setLengthRate(Math.max(lengthRate, 0.0));
+                nextRecord.get().setWeightRate(weightRate);
+                nextRecord.get().setLengthRate(lengthRate);
                 growRepo.save(nextRecord.get());
 
 
@@ -242,8 +245,8 @@ public class GrowthRecordService {
             if(nextRecord.isPresent() && preRecord.isPresent()){
                 Double weightRate = ((nextRecord.get().getWeight() - preRecord.get().getWeight())/preRecord.get().getWeight())*100;
                Double lengthRate = ((nextRecord.get().getLength()-preRecord.get().getLength())/preRecord.get().getLength())*100;
-               nextRecord.get().setWeightRate(Math.max(weightRate, 0.0));
-               nextRecord.get().setLengthRate(Math.max(lengthRate, 0.0));
+               nextRecord.get().setWeightRate(weightRate);
+               nextRecord.get().setLengthRate(lengthRate);
                growRepo.save(nextRecord.get());
 
             }
@@ -299,8 +302,8 @@ public class GrowthRecordService {
                 if(nextRecord.isPresent()){
                     Double weightRate = ((nextRecord.get().getWeight()-growth.getWeight())/growth.getWeight())*100;
                     Double lengthRate = ((nextRecord.get().getLength()-growth.getLength())/growth.getLength())*100;
-                    nextRecord.get().setWeightRate(Math.max(weightRate, 0.0));
-                    nextRecord.get().setLengthRate(Math.max(lengthRate, 0.0));
+                    nextRecord.get().setWeightRate(weightRate);
+                    nextRecord.get().setLengthRate(lengthRate);
                     growRepo.save(nextRecord.get());
                 }else{
                     koi.setWeight(result.getWeight());
@@ -312,8 +315,8 @@ public class GrowthRecordService {
                 if(preRecord.isPresent()){
                     Double weightRate = ((growth.getWeight()-preRecord.get().getWeight())/preRecord.get().getWeight())*100;
                     Double lengthRate = ((growth.getLength()-preRecord.get().getLength())/preRecord.get().getLength())*100;
-                    growth.setWeightRate(Math.max(weightRate, 0.0));
-                    growth.setLengthRate(Math.max(lengthRate, 0.0));
+                    growth.setWeightRate(weightRate);
+                    growth.setLengthRate(lengthRate);
                     growRepo.save(growth);
                 }
 

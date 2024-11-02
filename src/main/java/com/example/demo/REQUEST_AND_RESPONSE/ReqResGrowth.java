@@ -30,6 +30,15 @@ public class ReqResGrowth {
         return koiFishId;
     }
     private LocalDateTime updateAt;
+    private Integer pondId;
+
+    public Integer getPondId() {
+        return pondId;
+    }
+
+    public void setPondId(Integer pondId) {
+        this.pondId = pondId;
+    }
 
     public void setKoiFishId(Integer koiFishId) {
         this.koiFishId = koiFishId;
@@ -135,21 +144,7 @@ public class ReqResGrowth {
         this.updateAt = updateAt;
     }
 
-    public ReqResGrowth(Double lengthRate, Integer statusCode, String error, String message, Double weight, Double length, Double weightRate, LocalDate date, int koiFishId, String physique, GrowthRecord growthRecord, List<GrowthRecord> growthRecordList, LocalDateTime updateAt) {
-        this.lengthRate = lengthRate;
-        this.statusCode = statusCode;
-        this.error = error;
-        this.message = message;
-        this.weight = weight;
-        this.length = length;
-        this.weightRate = weightRate;
-        this.date = date;
-        this.koiFishId = koiFishId;
-        this.physique = physique;
-        this.growthRecord = growthRecord;
-        this.growthRecordList = growthRecordList;
-        this.updateAt = updateAt;
-    }
+
 
     public ReqResGrowth() {
     }

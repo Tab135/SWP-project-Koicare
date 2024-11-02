@@ -34,7 +34,6 @@ public class ReqResWater {
     private float totalChlorine;
     private int outdoorTemperature;
     private float amountFed;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDate date;
     private String message;
     private List<WaterModel> waterModelList;

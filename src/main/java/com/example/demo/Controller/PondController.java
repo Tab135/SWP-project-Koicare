@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -121,5 +122,10 @@ public class PondController {
         return ResponseEntity.ok(pService.moveFish(oldPond, newPondId, koiId, userId));
     }
 
+    @PostMapping("/pond/moveManyFish")
+    public ResponseEntity<ResReqPond> moveManyFish (@RequestHeader("Authorization") String token, @RequestParam("oldPond") int oldPond, @RequestParam("koiList")List<Integer> koiId, @RequestParam("newPond") int newPondId){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(pService.moveManyFish(oldPond, newPondId, koiId, userId));
+    }
 
 }

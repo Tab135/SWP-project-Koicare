@@ -26,6 +26,9 @@ public class GrowthRecord {
     @MapsId("koiId")
     private KoiFishModel koiFish;
     private LocalDateTime updateAt;
+    @ManyToOne()
+    @JoinColumn(name = "pond_id")
+    private PondModel pondId;
 
     public Double getLength() {
         return length;
@@ -101,15 +104,24 @@ public class GrowthRecord {
         this.updateAt = updateAt;
     }
 
-    public GrowthRecord(Double lengthRate, KoiStatisticId koiId, Double weight, Double length, String physique, Double weightRate, KoiFishModel koiFish, LocalDateTime updateAt) {
-        this.lengthRate = lengthRate;
+    public PondModel getPondId() {
+        return pondId;
+    }
+
+    public void setPondId(PondModel pondId) {
+        this.pondId = pondId;
+    }
+
+    public GrowthRecord(LocalDateTime updateAt, KoiStatisticId koiId, Double weight, Double length, String physique, Double weightRate, Double lengthRate, KoiFishModel koiFish, PondModel pondId) {
+        this.updateAt = updateAt;
         this.koiId = koiId;
         this.weight = weight;
         this.length = length;
         this.physique = physique;
         this.weightRate = weightRate;
+        this.lengthRate = lengthRate;
         this.koiFish = koiFish;
-        this.updateAt = updateAt;
+        this.pondId = pondId;
     }
 
     public GrowthRecord() {

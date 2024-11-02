@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.DTO.KoiFishModel;
 import com.example.demo.DTO.PondModel;
 import com.example.demo.DTO.UserModel;
+import com.example.demo.REQUEST_AND_RESPONSE.ResReqKoi;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
 import com.example.demo.Repo.KoiRepo;
 import com.example.demo.Repo.PondRepo;
@@ -271,5 +272,51 @@ public ResReqPond moveFish (int oldPondId, int newPondId, int fishId, int userId
         return res;
 }
 
+    public ResReqPond moveManyFish (int oldPondId, int newPondId, List<Integer> koiId, int userId){
+        Optional<PondModel> oldPond = pondR.findById(oldPondId);
+        Optional<PondModel> newPond = pondR.findById(newPondId);
+        Optional<UserModel> user = userR.findById(userId);
+        if(oldPond.isEmpty()){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(404);
+            result.setError("Old pond not found");
+            return result;
+        }
+        if(newPond.isEmpty()){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(404);
+            result.setError("New pond not found");
+            return result;
+        }
+        if(!oldPond.get().getUser().equals(user.get()) || !newPond.get().getUser().equals(user.get())){
+            ResReqPond result = new ResReqPond();
+            result.setStatusCode(403);
+            result.setError("Invalid user");
+            return result;
+        }
+        int fishMoved = 0;
+        for(Integer id: koiId){
+            Optional<KoiFishModel> koi = koiR.findById(id);
+            if(koi.isPresent() && koi.get().getPondId().equals(oldPond.get())){
+                koi.get().setPondId(newPond.get());
+                koiR.save(koi.get());
+                fishMoved++;
+            }else{
+                ResReqPond res = new ResReqPond();
+                res.setStatusCode(404);
+                res.setError("One or more not in old pond");
+                return res;
+            }
+        }
+        oldPond.get().setNumberOfFish(oldPond.get().getNumberOfFish()-fishMoved);
+        newPond.get().setNumberOfFish(newPond.get().getNumberOfFish()+fishMoved);
+        pondR.save(oldPond.get());
+        PondModel result = pondR.save(newPond.get());
+        ResReqPond res = new ResReqPond();
+        res.setPond(result);
+        res.setStatusCode(200);
+        res.setMessage("Move success");
+        return res;
+    }
 
 }
