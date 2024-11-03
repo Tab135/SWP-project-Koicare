@@ -20,7 +20,7 @@ const ProductTable = ({ products, handleDelete }) => (
         <tr key={product.id}>
           <td>{product.productName}</td>
           <td>{product.category?.categoryName || "No Category"}</td>
-          <td>{(product.price * 23000).toFixed(0)} VND</td>{" "}
+          <td>{(product.price ).toFixed(0)} VND</td>{" "}
           {/* Convert to VND and format */}
           <td>{product.amount}</td>
           <td>

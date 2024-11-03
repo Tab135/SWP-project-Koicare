@@ -199,7 +199,7 @@ const CreateBlogsPage = () => {
             </Button>
             <Button
               variant="secondary"
-              onClick={() => (window.location.href = "/news")}
+              onClick={() => (window.location.href = "/shop/dashboard")}
             >
               Cancel
             </Button>

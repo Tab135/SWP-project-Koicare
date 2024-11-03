@@ -242,8 +242,8 @@ const Statitic = () => {
                 {
                     label: 'length',
                     data: growthRecord.map(growthRecordList => growthRecordList.length),
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 75, 150, 0.2)',
+                    borderColor: 'rgba(75, 75, 150, 1)',
                     borderWidth: 1,
                     fill: false,
                 },

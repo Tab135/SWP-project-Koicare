@@ -21,8 +21,9 @@ public class SaltCalService {
             volume = pond.get().getVolume().floatValue();
         }
         float salt = (float) (volume * (Concentration / 100)); // calculate salt
-        saltCal.setSalt(Float.parseFloat(String.format("%.2f",salt)));
         float waterChange_ = salt * (waterChange /100);
+        salt += salt + waterChange_;
+        saltCal.setSalt(Float.parseFloat(String.format("%.2f",salt)));
         saltCal.setWater_change_salt(Float.parseFloat(String.format("%.2f",waterChange_)));
         return saltCal;
     }
