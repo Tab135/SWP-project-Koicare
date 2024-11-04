@@ -4,7 +4,6 @@ import com.example.demo.DTO.*;
 import com.example.demo.DTO.Shop.Cart;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResUser;
 import com.example.demo.REQUEST_AND_RESPONSE.ResReqPond;
-import com.example.demo.Repo.PondRepo;
 import com.example.demo.Repo.RoleRepo;
 import com.example.demo.Repo.Shop.CartRepository;
 import com.example.demo.Repo.UserRepo;
@@ -335,6 +334,44 @@ public class UserManagement {
         resp.setStatusCode(200);
         return resp;
     }
+
+    public ReqResUser getPhone(int userid) {
+        ReqResUser resp = new ReqResUser();
+        try {
+            Optional<UserModel> user = userRepo.findById(userid);
+            if (user.isPresent()) {
+                UserModel userData = user.get();
+                if (userData.getPhone() == null) {
+                    resp.setPhone("");
+                } else {
+                    resp.setPhone(userData.getPhone());
+                }
+            } else {
+                resp.setMessage("Failed to find the user with id: " + userid);
+            }
+        } catch (Exception e) {
+            resp.setMessage(e.getMessage());
+        }
+        return resp;
+    }
+    public  ReqResUser updatePhone(int userId, ReqResUser phoneNumber) {
+        ReqResUser resp = new ReqResUser();
+        try {
+            Optional<UserModel> users = userRepo.findById(userId);
+            if (users.isPresent()) {
+                UserModel userData = users.get();
+                userData.setPhone(phoneNumber.getPhone());
+                userRepo.save(userData);
+                resp.setMessage("Successfully updated phone number");
+            } else {
+                resp.setMessage("Failed to find the user with id: " + userId);
+            }
+        }catch (Exception e){
+            resp.setMessage(e.getMessage());
+        }
+        return resp;
+    }
+
 
     public ReqResUser getAddress(int userId) {
         ReqResUser resp = new ReqResUser();

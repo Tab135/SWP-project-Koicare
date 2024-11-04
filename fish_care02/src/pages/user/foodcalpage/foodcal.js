@@ -1,25 +1,60 @@
 import './foodcal.scss';
-import React, { useEffect,useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PondDropdown from './PondDropdown';
-const Foodcal = () =>{
+
+const Foodcal = () => {
     const [growth, setGrowth] = useState('');
     const [waterParameter, setWaterParameter] = useState('');
     const [pond_id, setPondId] = useState(null);
     const [error, setError] = useState(null);
-
     const [feedingTime, setFeedingTime] = useState('');
     const [foodAmount, setFoodAmount] = useState(0);
     const [message, setMessage] = useState('');
 
     useEffect(() => {
+        const fetchTemperature = async () => {
+            if (pond_id) {
+                try {
+                    let token = localStorage.getItem('token');
+                    if (!token) {
+                        token = sessionStorage.getItem('token');
+                    }
+                    const config = {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    };
+                    const response = await axios.get(`http://localhost:8080/public/WaterMonitor/temperature/${pond_id}`, config);
+                    const temperature = response.data.temperature;
+
+                    // Map temperature to waterParameter
+                    if (temperature >= 6 && temperature <= 8) setWaterParameter('6-8');
+                    else if (temperature >= 9 && temperature <= 12) setWaterParameter('9-12');
+                    else if (temperature >= 13 && temperature <= 16) setWaterParameter('13-16');
+                    else if (temperature >= 17 && temperature <= 20) setWaterParameter('17-20');
+                    else if (temperature >= 21 && temperature <= 28) setWaterParameter('21-28');
+                    else setError('Temperature out of expected range.');
+                } catch (error) {
+                    console.error('Error fetching temperature', error);
+                    setError('Failed to fetch pond temperature.');
+                }
+            }
+        };
+
+        fetchTemperature();
+    }, [pond_id]);
+
+    // Fetch food calculation recommendation
+    useEffect(() => {
         const fetchRecommendation = async () => {
             if (growth && waterParameter && pond_id) {
                 try {
                     let token = localStorage.getItem('token');
-                            if (!token) {
-                                token = sessionStorage.getItem('token');
-                            }
+                    if (!token) {
+                        token = sessionStorage.getItem('token');
+                    }
                     const config = {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -31,7 +66,7 @@ const Foodcal = () =>{
                         'Medium': 0.03,
                         'High': 0.04,
                     };
-                    const temperatureMapping= {
+                    const temperatureMapping = {
                         '6-8': 1,
                         '9-12': 2,
                         '13-16': 3,
@@ -45,7 +80,6 @@ const Foodcal = () =>{
                     };
 
                     const response = await axios.post(`http://localhost:8080/public/foodManange/${pond_id}`, payload, config);
-                    
                     setFeedingTime(response.data.feeding_time);
                     setFoodAmount(response.data.food_amount);
                     setMessage(response.data.message);
@@ -100,11 +134,12 @@ const Foodcal = () =>{
                 </div>
             </div>
             <div className='recommend-amount'>
-                    <h1 className='recommend-amount-h1'>Recommended amount:</h1>
-                    <h1 className='recommend-amount-h1'>{foodAmount || 0}g/day</h1>
+                <h1 className='recommend-amount-h1'>Recommended amount:</h1>
+                <h1 className='recommend-amount-h1'>{foodAmount || 0}g/day</h1>
                 {error && <div className="error">{error}</div>}
             </div>
         </div>
     );
 }
+
 export default Foodcal;

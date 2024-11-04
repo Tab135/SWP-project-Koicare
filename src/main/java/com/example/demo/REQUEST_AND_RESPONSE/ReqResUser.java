@@ -23,7 +23,16 @@ public class ReqResUser {
     private String email;
     private UserModel Users;
     private String address;
+    private String phone;
     private List<UserModel> UsersList;
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     public String getAddress() {
         return address;

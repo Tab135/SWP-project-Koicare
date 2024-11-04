@@ -127,5 +127,16 @@ public class UserController {
         int userId = jwt.extractUserId(token.replace("Bearer ",""));
         return ResponseEntity.ok(userManagement.updateAddress(userId, address));
     }
+    @GetMapping("/user/get-phone")
+    public ResponseEntity<ReqResUser> getPhone(@RequestHeader("Authorization") String token){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return  ResponseEntity.ok(userManagement.getPhone(userId));
+    }
+
+    @PostMapping("/user/update-phone")
+    public ResponseEntity<ReqResUser> updatePhone(@RequestHeader("Authorization") String token, @RequestBody ReqResUser phone) {
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return ResponseEntity.ok(userManagement.updatePhone(userId, phone));
+    }
 
 }

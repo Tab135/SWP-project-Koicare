@@ -42,4 +42,9 @@ public class WaterController {
     public ResponseEntity<ReqResWater> listWaterByDate(@PathVariable LocalDate start_date, @PathVariable LocalDate end_date ){
         return ResponseEntity.ok(waterM.listAllByDate(start_date, end_date));
     }
+    @GetMapping("/public/WaterMonitor/temperature/{pondId}")
+    public ResponseEntity<ReqResWater> getTemperature(@PathVariable int pondId) {
+        return ResponseEntity.ok(waterM.getTemperature(pondId));
+    }
+
 }

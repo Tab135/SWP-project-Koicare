@@ -136,6 +136,14 @@ public class WaterManagement {
 
         return req;
     }
+
+    public ReqResWater getTemperature(int pondId){
+        ReqResWater resp = new ReqResWater();
+        List<WaterModel> water = waterRepository.findByPondIdOrderByIdDesc(pondId);
+        resp.setTemperature(water.get(0).getTemperature());
+        return resp;
+    }
+
     public ReqResWater getWater(int pondId){
         ReqResWater resp = new ReqResWater();
 

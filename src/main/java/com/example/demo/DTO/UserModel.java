@@ -22,10 +22,19 @@ public class UserModel implements UserDetails {
     private String name;
     private String password;
     private String address;
+    private String phone;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private RoleModel role;
 
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -34,10 +43,6 @@ public class UserModel implements UserDetails {
     }
     @OneToOne(mappedBy = "user")
     private ForgotPassword forgotPassword;
-
-//    @OneToOne(mappedBy = "user")
-//    private ShopPaymentModel shopPaymentModel;
-
 
     public String getAddress() {
         return address;
