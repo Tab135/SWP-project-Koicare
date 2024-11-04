@@ -23,18 +23,14 @@ const WaterParameterModal = ({ pond_id }) => {
     amountFed: false, 
 
    });
-  const formatCurrentDate = () => {
-    const currentDate = new Date();
-    return currentDate.toLocaleString('en-CA', { 
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit', 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      second: '2-digit', 
-      hour12: false
-    }).replace(',', ''); 
+   const formatDateForInput = (date) => {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
+  
   const [formData, setFormData] = useState({
     nitrite: '', 
     nitrate: '', 
@@ -50,7 +46,7 @@ const WaterParameterModal = ({ pond_id }) => {
     totalChlorine: '', 
     outdoorTemperature: '', 
     amountFed: '', 
-    date: formatCurrentDate(),
+    date:  formatDateForInput(new Date()) ,
   });
   const toggleModal = () => setShowModal(!showModal);
   const getBorderColorForNitrite = (value) => {
@@ -166,11 +162,8 @@ const handleToggleMessage = (field) => { setShowMessage((prev) => ({ ...prev, [f
   
     const formDataWithDate = {
       ...formData,
-      date: formatCurrentDate(), 
+      date: formatDateForInput(new Date()), 
     };
-    console.log(formDataWithDate)
-  
-  
     axios.post(`http://localhost:8080/user/WaterMonitor/addWater/${pond_id}`, formDataWithDate, {
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -178,7 +171,6 @@ const handleToggleMessage = (field) => { setShowMessage((prev) => ({ ...prev, [f
         }
     })
     .then((response) => {
-        console.log('Response Data:', response.data); 
         alert('Water parameters added successfully!');
         toggleModal(); 
         window.location.reload();
@@ -209,7 +201,7 @@ const handleToggleMessage = (field) => { setShowMessage((prev) => ({ ...prev, [f
               <label>
                 Date:
                 <input
-                  type="datetime-local"
+                  type="date"
                   name="date"
                   value={formData.date}
                   onChange={handleInputChange}

@@ -47,7 +47,7 @@ const Statitic = () => {
             }
         }, [pondId]);
         const labels = waterData?.map(water => {
-            const date = new Date(water.date_time);
+            const date = new Date(water.date);
             return date.toISOString().split('T')[0]; 
         }) || [];
         const data = {

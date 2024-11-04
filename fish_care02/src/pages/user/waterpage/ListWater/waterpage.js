@@ -4,6 +4,7 @@ import React, { useEffect,useState } from 'react';
 import axios from "axios";
 import { MdOutlineCancel } from "react-icons/md";
 import Modal from 'react-modal';
+import WaterDetailsModal from "./WaterDetailsModal";
 
 Modal.setAppElement('#root');
 const WaterPage = () => {
@@ -23,6 +24,9 @@ const WaterPage = () => {
         co2: '',
         oxygen: ''
     });
+    const calculateCO2 = (carbonHardnessKH, pH) => {
+        return (12.839 * carbonHardnessKH * Math.pow(10, (6.37 - pH))).toFixed(2); 
+      };
     const openModal = (water) => {
         setSelectedWater(water);
         fetchWaterDetails(water.id);
@@ -38,10 +42,18 @@ const WaterPage = () => {
     };
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        setUpdatedDetails((prevDetails) => ({
-            ...prevDetails,
-            [name]: value,
-        }));
+        const newValue = value === '' ? '' : parseFloat(value);
+        setUpdatedDetails((prevDetails) => {
+            const updatedDetails = {
+                ...prevDetails,
+                [name]: newValue,
+            };
+            if (updatedDetails.carbonHardnessKH !== undefined && updatedDetails.pH !== undefined) {
+                updatedDetails.co2 = calculateCO2(updatedDetails.carbonHardnessKH, updatedDetails.pH);
+            }
+    
+            return updatedDetails;
+        });
     };
     const handleSave = async () => {
         try {
@@ -102,7 +114,6 @@ const WaterPage = () => {
                         };
                         const response = await axios.get(`http://localhost:8080/user/WaterMonitor/getWater/${pondId}`, config);
                         setWater(response.data.waterModelList);
-                        console.log(response.data.waterModelList);
                     } catch (error) {
                         console.error("Error fetching ponds", error);
                         setError("Could not fetch ponds.");
@@ -145,123 +156,124 @@ const WaterPage = () => {
                 return '';
               };
                const getBorderColorForNitrate = (value) => {
-    if (value <= 20) return 'green';
-    if (value > 20 && value <= 80) return 'orange';
-    if (value > 80) return 'red';
-    return '';
-  };
-  const getBorderColorForPhosate = (value) => {
-    if (value <= 0.035) return 'green';
-    if (value > 0.035 && value <= 1) return 'orange';
-    if (value > 1) return 'red';
-    return '';
-  };
-  const getBorderColorForAmmonium = (value) => {
-    if (value <= 0.1) return 'green';
-    if (value > 0.1 && value <= 0.5) return 'orange';
-    if (value > 0.5) return 'red';
-    return '';
-  };
-  const getBorderColorForOxygen = (value) => {
-    if (value > 6.5) return 'green';
-    if (value > 6 && value <= 6.5) return 'orange';
-    if (value <= 6) return 'red';
-    return '';
-  };
-  const getBorderColorForHardness = (value) => {
-    if (value <= 21) return 'green';
-    if (value > 21) return 'orange';
-    return '';
-  };
-  const getBorderColorTemperature = (value) => {
-    if (value >= 5 && value <= 26) return 'green'; 
-    if (value >= 4) return 'orange';               
-    if (value > 26 && value <= 28) return 'orange'; 
-    if  (value < 4) return 'red';
-    if (value > 28) return 'red';                   
-    return '';
-};
-const getBorderColorpH = (value) => {
-  if (value >= 6.9 && value <= 8) return 'green';        
-  if (value >= 6.6 && value < 6.9) return 'orange';      
-  if (value > 8 && value <= 8.4) return 'orange';        
-  if (value < 6.6) return 'red';                          
-  if (value > 8.4) return 'red';                          
-  return '';                                            
-};
-const getBorderColorsalt = (value) => {
-  if (value >= 0 && value <= 0.1) return 'green';        
-  if (value > 0.1 && value <= 0.6) return 'orange';              
-  if (value > 0.6) return 'red';                                                    
-  return '';                                            
-};
-const getBorderColorcarbon = (value) => {
-  if (value >= 4) return 'green';        
-  if (value >= 1 && value < 4) return 'orange';              
-  if (value <= 1) return 'red';                                                    
-  return '';                                            
-};
-const getBorderColorChlorine = (value) => {
-  if (value <= 0.001) return 'green';        
-  if (value > 0.001 && value <= 0.02) return 'orange';              
-  if (value > 0.02) return 'red';                                                    
-  return '';                                            
-};
-const getBorderColorCo2 = (value) => {
-  if (value >= 5 && value <=35) return 'green';        
-  if (value < 5) return 'orange';   
-  if (value > 35 && value <= 150) return 'orange';            
-  if (value > 150) return 'red';                                                    
-  return '';                                            
-};
-const isAnyParameterRed = (water) => {
-    return (
-        getBorderColorForNitrite(water.nitrite) === 'red' ||
-        getBorderColorForNitrate(water.nitrate) === 'red' ||
-        getBorderColorForPhosate(water.phosphate) === 'red' ||
-        getBorderColorForAmmonium(water.ammonium) === 'red' ||
-        getBorderColorForHardness(water.hardnessGH) === 'red' ||
-        getBorderColorForOxygen(water.oxygen) === 'red' ||
-        getBorderColorCo2(water.co2) === 'red' ||
-        getBorderColorTemperature(water.temperature) === 'red' ||
-        getBorderColorpH(water.pH) === 'red' ||
-        getBorderColorcarbon(water.carbonHardnessKH) === 'red' ||
-        getBorderColorsalt(water.salt) === 'red' ||
-        getBorderColorChlorine(water.totalChlorine) === 'red'
-    );
-};
+        if (value <= 20) return 'green';
+        if (value > 20 && value <= 80) return 'orange';
+        if (value > 80) return 'red';
+        return '';
+    };
+    const getBorderColorForPhosate = (value) => {
+        if (value <= 0.035) return 'green';
+        if (value > 0.035 && value <= 1) return 'orange';
+        if (value > 1) return 'red';
+        return '';
+    };
+    const getBorderColorForAmmonium = (value) => {
+        if (value <= 0.1) return 'green';
+        if (value > 0.1 && value <= 0.5) return 'orange';
+        if (value > 0.5) return 'red';
+        return '';
+    };
+    const getBorderColorForOxygen = (value) => {
+        if (value > 6.5) return 'green';
+        if (value > 6 && value <= 6.5) return 'orange';
+        if (value <= 6) return 'red';
+        return '';
+    };
+    const getBorderColorForHardness = (value) => {
+        if (value <= 21) return 'green';
+        if (value > 21) return 'orange';
+        return '';
+    };
+    const getBorderColorTemperature = (value) => {
+        if (value >= 5 && value <= 26) return 'green'; 
+        if (value >= 4) return 'orange';               
+        if (value > 26 && value <= 28) return 'orange'; 
+        if  (value < 4) return 'red';
+        if (value > 28) return 'red';                   
+        return '';
+        };
+        const getBorderColorpH = (value) => {
+        if (value >= 6.9 && value <= 8) return 'green';        
+        if (value >= 6.6 && value < 6.9) return 'orange';      
+        if (value > 8 && value <= 8.4) return 'orange';        
+        if (value < 6.6) return 'red';                          
+        if (value > 8.4) return 'red';                          
+        return '';                                            
+        };
+        const getBorderColorsalt = (value) => {
+        if (value >= 0 && value <= 0.1) return 'green';        
+        if (value > 0.1 && value <= 0.6) return 'orange';              
+        if (value > 0.6) return 'red';                                                    
+        return '';                                            
+        };
+        const getBorderColorcarbon = (value) => {
+        if (value >= 4) return 'green';        
+        if (value >= 1 && value < 4) return 'orange';              
+        if (value <= 1) return 'red';                                                    
+        return '';                                            
+        };
+        const getBorderColorChlorine = (value) => {
+        if (value <= 0.001) return 'green';        
+        if (value > 0.001 && value <= 0.02) return 'orange';              
+        if (value > 0.02) return 'red';                                                    
+        return '';                                            
+        };
+        const getBorderColorCo2 = (value) => {
+        if (value >= 5 && value <=35) return 'green';        
+        if (value < 5) return 'orange';   
+        if (value > 35 && value <= 150) return 'orange';            
+        if (value > 150) return 'red';                                                    
+        return '';                                            
+        };
+    const isAnyParameterRed = (water) => {
+        return (
+            getBorderColorForNitrite(water.nitrite) === 'red' ||
+            getBorderColorForNitrate(water.nitrate) === 'red' ||
+            getBorderColorForPhosate(water.phosphate) === 'red' ||
+            getBorderColorForAmmonium(water.ammonium) === 'red' ||
+            getBorderColorForHardness(water.hardnessGH) === 'red' ||
+            getBorderColorForOxygen(water.oxygen) === 'red' ||
+            getBorderColorCo2(water.co2) === 'red' ||
+            getBorderColorTemperature(water.temperature) === 'red' ||
+            getBorderColorpH(water.pH) === 'red' ||
+            getBorderColorcarbon(water.carbonHardnessKH) === 'red' ||
+            getBorderColorsalt(water.salt) === 'red' ||
+            getBorderColorChlorine(water.totalChlorine) === 'red'
+        );
+    };
 
-const isAnyParameterOrange = (water) => {
-    return (
-        getBorderColorForNitrite(water.nitrite) === 'orange' ||
-        getBorderColorForNitrate(water.nitrate) === 'orange' ||
-        getBorderColorForPhosate(water.phosphate) === 'orange' ||
-        getBorderColorForAmmonium(water.ammonium) === 'orange' ||
-        getBorderColorForHardness(water.hardnessGH) === 'orange' ||
-        getBorderColorForOxygen(water.oxygen) === 'orange' ||
-        getBorderColorCo2(water.co2) === 'orange' ||
-        getBorderColorTemperature(water.temperature) === 'orange' ||
-        getBorderColorpH(water.pH) === 'orange' ||
-        getBorderColorcarbon(water.carbonHardnessKH) === 'orange' ||
-        getBorderColorsalt(water.salt) === 'orange' ||
-        getBorderColorChlorine(water.totalChlorine) === 'orange'
-    );
-}; 
-const getBorderColorForWaterCard = (water) => {
-    if (isAnyParameterRed(water)) {
-        return '2px solid red';
-    } else if (isAnyParameterOrange(water)) {
-        return '2px solid orange';
-    }
-    return '2px solid green';
-};
+    const isAnyParameterOrange = (water) => {
+        return (
+            getBorderColorForNitrite(water.nitrite) === 'orange' ||
+            getBorderColorForNitrate(water.nitrate) === 'orange' ||
+            getBorderColorForPhosate(water.phosphate) === 'orange' ||
+            getBorderColorForAmmonium(water.ammonium) === 'orange' ||
+            getBorderColorForHardness(water.hardnessGH) === 'orange' ||
+            getBorderColorForOxygen(water.oxygen) === 'orange' ||
+            getBorderColorCo2(water.co2) === 'orange' ||
+            getBorderColorTemperature(water.temperature) === 'orange' ||
+            getBorderColorpH(water.pH) === 'orange' ||
+            getBorderColorcarbon(water.carbonHardnessKH) === 'orange' ||
+            getBorderColorsalt(water.salt) === 'orange' ||
+            getBorderColorChlorine(water.totalChlorine) === 'orange'
+        );
+    }; 
+    const getBorderColorForWaterCard = (water) => {
+        if (isAnyParameterRed(water)) {
+            return '2px solid red';
+        } else if (isAnyParameterOrange(water)) {
+            return '2px solid orange';
+        }
+        return '2px solid green';
+    };
         return(
                 <div className="water-list-container">
                     {error && <p className="error-message">{error}</p>}
                     {successMessage && <p className="success-message">{successMessage}</p>}
                     <div className="water-grid">
                         {Array.isArray(waters) && waters.length > 0 ? (
-                            waters.map((water) => (
+                            waters.sort((a, b) => new Date(b.date) - new Date(a.date)) 
+                            .map((water) => (
                                 <div 
                                 key={water.id} 
                                 className="water-card"
@@ -273,13 +285,15 @@ const getBorderColorForWaterCard = (water) => {
                             <div className="water-content">
                                 <div className="water-contentheader">
                                 <div className="water-date">
-                                    <p><strong>Date:</strong> {water.date_time}</p>
+                                    <p><strong>Date:</strong> {water.date}</p>
                                 </div >
-                                    <div className="water_close_button">
+                                    <div className="water_close_button"  onClick={(e) => {
+                                            e.stopPropagation(); 
+                                            handleDeletePond(water.id);
+                                            }}>
                                         {waters.length > 1 && (
                                             <span
-                                                className="close"
-                                                onClick={() => handleDeletePond(water.id)}>
+                                                className="close">
                                                 <MdOutlineCancel />
                                             </span>
                                         )} 
@@ -425,165 +439,18 @@ return (
         <div className="container">
         <div className="row">       
             <WaterList pondId={PondId}/>
-            <Modal
-    isOpen={modalIsOpen}
-    onRequestClose={closeModal}
-    contentLabel="Water Details Modal"
-    className="water-details-modal"
->
-    {selectedWater && waterDetails ? (
-        <div>
-            <h2>{selectedWater.date_time}</h2>
-            <form>
-                <div className="form-group">
-                    <div>
-                        <label>Nitrite:</label>
-                        <input 
-                            type="text" 
-                            name="nitrite" 
-                            value={updatedDetails.nitrite || ''} 
-                            onChange={handleInputChange} 
-                            readOnly={!isEditMode}  
-                        />
-                    </div>
-                    <div>
-                        <label>Nitrate:</label>
-                        <input 
-                            type="text" 
-                            name="nitrate" 
-                            value={updatedDetails.nitrate || ''} 
-                            onChange={handleInputChange} 
-                            readOnly={!isEditMode}  
-                        />
-                    </div>
-                    <div>
-                        <label>Phosphate:</label>
-                        <input 
-                            type="text" 
-                            name="phosphate" 
-                            value={updatedDetails.phosphate || ''} 
-                            onChange={handleInputChange} 
-                            readOnly={!isEditMode}  
-                        />
-                    </div>
-                    <div>
-                    <label>Ammonium:</label>
-                    <input 
-                        type="text" 
-                        name="ammonium" 
-                        value={updatedDetails.ammonium || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Hardness GH:</label>
-                    <input 
-                        type="text" 
-                        name="hardnessGH" 
-                        value={updatedDetails.hardnessGH || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Temperature:</label>
-                    <input 
-                        type="text" 
-                        name="temperature" 
-                        value={updatedDetails.temperature || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>pH:</label>
-                    <input 
-                        type="text" 
-                        name="pH" 
-                        value={updatedDetails.pH || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Carbon Hardness KH:</label>
-                    <input 
-                        type="text" 
-                        name="carbonHardnessKH" 
-                        value={updatedDetails.carbonHardnessKH || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Salt:</label>
-                    <input 
-                        type="text" 
-                        name="salt" 
-                        value={updatedDetails.salt || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Total Chlorine:</label>
-                    <input 
-                        type="text" 
-                        name="totalChlorine" 
-                        value={updatedDetails.totalChlorine || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Outdoor Temperature:</label>
-                    <input 
-                        type="text" 
-                        name="outdoorTemperature" 
-                        value={updatedDetails.outdoorTemperature || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>Amount Fed:</label>
-                    <input 
-                        type="text" 
-                        name="amountFed" 
-                        value={updatedDetails.amountFed || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                    <div>
-                    <label>CO2:</label>
-                    <input 
-                        type="text" 
-                        name="co2" 
-                        value={updatedDetails.co2 || ''} 
-                        onChange={handleInputChange} 
-                        readOnly={!isEditMode}  
-                    />
-                    </div>
-                </div>
-                <div className="button-group">
-                    {!isEditMode ? (
-                        <button type="button" onClick={() => setIsEditMode(true)}>Edit</button> 
-                    ) : (
-                        <>
-                            <button type="button" onClick={handleSave}>Save</button>
-                            <button type="button" onClick={() => setIsEditMode(false)}>Cancel</button> 
-                        </>
-                    )}
-                    <button type="button" onClick={closeModal}>Close</button>
-                </div>
-            </form>
-        </div>
-    ) : (
-        <p>Loading water details...</p>
-    )}
-</Modal>
+            <WaterDetailsModal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            selectedWater={selectedWater}
+            waterDetails={waterDetails}
+            updatedDetails={updatedDetails}
+            isEditMode={isEditMode}
+            setIsEditMode={setIsEditMode}
+            handleInputChange={handleInputChange}
+            handleSave={handleSave}
+            closeModal={closeModal}
+            />
         </div>
         </div> 
     </div>
