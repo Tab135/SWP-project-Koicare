@@ -31,7 +31,6 @@ public class KoiService {
         ResReqKoi res = new ResReqKoi();
 
         Optional<UserModel> user = userR.findById(userId);
-        Optional<KoiFishModel> checkKoi = koiR.findByKoiName(request.getKoiName());
         Optional<PondModel> pond = pondR.findById(pondId);
         if(pond.isPresent() && !pond.get().getUser().equals(user.get())){
             res.setStatusCode(403);
@@ -143,11 +142,7 @@ public class KoiService {
         ResReqKoi res = new ResReqKoi();
         Optional<KoiFishModel> koi = koiR.findById(koiId);
         Optional<UserModel> user = userR.findById(userId);
-        if(koi.isEmpty()){
-            res.setStatusCode(404);
-            res.setError("Empty");
-            return res;
-        }
+
         if(user.isPresent() &&!koi.get().getUserId().equals(user.get())){
             res.setStatusCode(403);
             res.setError("Invalid user");

@@ -19,7 +19,7 @@ public class WaterModel {
     @JoinColumn(name = "pond_id", nullable = false) // Define foreign key column
     @JsonIgnore
     private PondModel pond;
-    private LocalDate date;
+    private LocalDateTime date;
     private float nitrite;                // Nitrite (NO2) mg/l
     private float nitrate;                // Nitrate (NO3) mg/l
     private float phosphate;              // Phosphate (PO4) mg/l
@@ -53,11 +53,11 @@ public class WaterModel {
         this.pond = pond;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

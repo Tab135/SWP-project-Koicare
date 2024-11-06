@@ -5,6 +5,7 @@ import com.example.demo.DTO.WaterModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,6 @@ public interface WaterRepo extends JpaRepository<WaterModel,Integer> {
     void deleteById(int id);
     List<WaterModel> findAllByPondId(int pondId);
     void deleteByPondId(int pondId);
-    List<WaterModel> findAllByDateBetween(LocalDate startDate, LocalDate endDate);
+    List<WaterModel> findAllByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
     List<WaterModel> findByPondIdOrderByIdDesc(int pond_id);
 }
