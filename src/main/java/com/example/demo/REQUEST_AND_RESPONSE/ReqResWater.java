@@ -34,7 +34,7 @@ public class ReqResWater {
     private float totalChlorine;
     private int outdoorTemperature;
     private float amountFed;
-    private LocalDate date;
+    private LocalDateTime date;
     private String message;
     private List<WaterModel> waterModelList;
     private WaterModel waterModel;
@@ -183,11 +183,11 @@ public class ReqResWater {
         this.amountFed = amountFed;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

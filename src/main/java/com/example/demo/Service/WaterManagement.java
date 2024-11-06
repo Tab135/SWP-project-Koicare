@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -167,7 +168,7 @@ public class WaterManagement {
         return  resp;
     }
 
-    public ReqResWater listAllByDate(LocalDate start, LocalDate end){
+    public ReqResWater listAllByDateTime(LocalDateTime start, LocalDateTime end){
         ReqResWater resp = new ReqResWater();
         List<WaterModel> result = waterRepository.findAllByDateBetween(start, end);
         if (result != null && !result.isEmpty()) {

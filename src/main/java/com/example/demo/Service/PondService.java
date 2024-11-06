@@ -112,18 +112,11 @@ byte[] picByte =request.getPicture().getBytes();
     public ResReqPond updatePond(int userId, int pondId, ResReqPond request){
         ResReqPond res = getPond(pondId, userId);
         PondModel pond = res.getPond();
-        Optional<PondModel> checkName = pondR.findByPondName(request.getPondName());
         Optional<UserModel> user = userR.findById(userId);
         if(user.isEmpty()){
             ResReqPond result = new ResReqPond();
             result.setStatusCode(404);
             result.setError("User not found");
-            return result;
-        }
-        if(checkName.isPresent() && !checkName.get().getUser().equals(user.get())){
-            ResReqPond result = new ResReqPond();
-            result.setStatusCode(403);
-            result.setError("Invalid user");
             return result;
         }
 
