@@ -8,6 +8,10 @@ const ListKoiFishPage = () => {
     const [selectedPond, setSelectedPond] = useState('');
     const [ponds, setPonds] = useState([]);
     const [message, setMessage] = useState('');
+    const [selectedKoi, setSelectedKoi] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [newPond, setNewPond] = useState('');
+
 
     useEffect(() => {
         const fetchPonds = async () => {
@@ -107,7 +111,7 @@ const ListKoiFishPage = () => {
     const handleDeleteKoi = async (koiId) => {
         let pondId = selectedPond;
         if (!pondId) {
-            const deleteWithoutKoiId = koiFishList.find(koi => koi.koiId == koiId);
+            const deleteWithoutKoiId = koiFishList.find(koi => koi.koiId === koiId);
             if(!deleteWithoutKoiId){
                 alert("Koi fish not found");
                 return;
@@ -145,6 +149,64 @@ const ListKoiFishPage = () => {
         }
     };
 
+    const handleKoiSelection = (koiId) => {
+        setSelectedKoi((prevState) =>
+            prevState.includes(koiId) ? prevState.filter((id) => id !== koiId) : [...prevState, koiId]
+        );
+    };
+
+    const handleMoveFish = async () => {
+        if (!selectedPond) {
+            alert('Please select a pond before moving the fish.');
+            return;
+        }
+
+        if (!newPond) {
+            alert('Please select a new pond to move the fish.');
+            return;
+        }
+
+        let token = localStorage.getItem('token');
+        if (!token) {
+            token = sessionStorage.getItem('token');
+        }
+
+        try {
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+
+            const params = new URLSearchParams();
+            params.append('oldPond', selectedPond);
+            params.append('newPond', newPond);
+            selectedKoi.forEach(id => params.append('koiList', id));
+
+            await axios.post('http://localhost:8080/user/pond/moveManyFish', null,
+                {
+                    params,
+                    headers: config.headers,
+                }
+            );
+
+            alert('Fish moved successfully!');
+            setIsModalOpen(false);
+            setSelectedKoi('');
+            fetchAllKoiFish();
+        } catch (error) {
+            console.error('Error moving koi fish', error);
+            alert('Failed to move koi fish.');
+        }
+    };
+
+    const handleMoveFishButtonClick = () => {
+        if (!selectedPond) {
+            alert('Please select a pond first before moving the fish.');
+            return;
+        }
+
+        setIsModalOpen(true);
+    };
+
     return (
         <div className="koi-fish-list-container">
             <h1>Koi Fish List</h1>
@@ -159,6 +221,7 @@ const ListKoiFishPage = () => {
                     ))}
                 </select>
             </div>
+
 
             {message && <p>{message}</p>}
 
@@ -181,20 +244,52 @@ const ListKoiFishPage = () => {
                                     <Link to={`/list-koi/${koi.koiId}`}>
                                         <button className="details-koi-button">Detail</button>
                                     </Link>
-                                        <button className="delete-koi-button"
-                                                onClick={() => handleDeleteKoi(koi.koiId)}>
-                                            Delete
-                                        </button>
+                                    <button className="delete-koi-button"
+                                            onClick={() => handleDeleteKoi(koi.koiId)}>
+                                        Delete
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
             ) : null}
-
+            <button onClick={handleMoveFishButtonClick} className="move-fish-button">
+                Move Koi Fish
+            </button>
             <Link to="/add-koi">
                 <button className="add-koi-button">Add New Koi Fish</button>
             </Link>
+            {isModalOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2>Select Pond and Fish to Move</h2>
+                        <label>Select New Pond:</label>
+                        <select value={newPond} onChange={(e) => setNewPond(e.target.value)}>
+                            <option value="">-- Select a Pond --</option>
+                            {ponds.map((pond) => (
+                                <option key={pond.id} value={pond.id}>
+                                    Pond {pond.pondName}
+                                </option>
+                            ))}
+                        </select>
+                        <div className="koi-list-to-move">
+                            {koiFishList.map((koi) => (
+                                <div key={koi.koiId} className="koi-fish-item">
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedKoi.includes(koi.koiId)}
+                                        onChange={() => handleKoiSelection(koi.koiId)}
+                                    />
+                                    <label>{koi.koiName} (Pond: {koi.pondId?.pondName || 'Unknown'})</label>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={handleMoveFish}>Move Selected Fish</button>
+                        <button onClick={() => setIsModalOpen(false)}>Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

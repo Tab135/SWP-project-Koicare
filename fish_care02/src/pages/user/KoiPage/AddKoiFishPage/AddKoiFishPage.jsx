@@ -180,76 +180,85 @@ const AddKoiFishPage = () => {
                 />
             </div>
 
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <div>
-                    <label>Koi Name:</label>
-                    <input type="text" name="koiName" value={koiFish.koiName} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Age:</label>
-                    <input type="number" name="age" value={koiFish.age} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Weight:</label>
-                    <input type="number" name="weight" value={koiFish.weight} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Length:</label>
-                    <input type="number" name="length" value={koiFish.length} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Variety:</label>
-                    <input type="text" name="variety" value={koiFish.variety} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Sex:</label>
-                    <select name="sex" value={koiFish.sex} onChange={handleChange} required>
-                        <option value="">Select</option>
-                        <option value="Male">Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div>
-                    <label>Price:</label>
-                    <input type="number" name="price" value={koiFish.price} onChange={handleChange} required/>
-                </div>
+                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                        <div>
+                            <label>Koi Name:</label>
+                            <input type="text" name="koiName" value={koiFish.koiName} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>Age:</label>
+                            <input type="number" name="age" value={koiFish.age} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>Weight:</label>
+                            <input type="number" name="weight" value={koiFish.weight} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>Length:</label>
+                            <input type="number" name="length" value={koiFish.length} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>Variety:</label>
+                            <input type="text" name="variety" value={koiFish.variety} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>Sex:</label>
+                            <select name="sex" value={koiFish.sex} onChange={handleChange} required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>Price:</label>
+                            <input type="number" name="price" value={koiFish.price} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>
+                                Physique:
+                                <select name="physique" value={koiFish.physique} onChange={handleChange}
+                                        required>
+                                    <option value="" disabled>Select a physique</option>
+                                    <option value="Slim">Slim</option>
+                                    <option value="Normal">Normal</option>
+                                    <option value="Corpulent">Corpulent</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div>
+                            <label>In Pond Since:</label>
+                            <input type="date" name="inPondSince" value={koiFish.inPondSince} onChange={handleChange}
+                                   required
+                                   max={new Date().toISOString().split("T")[0]}/>
+                        </div>
+                        <div>
+                            <label>Breeder:</label>
+                            <input type="text" name="breeder" value={koiFish.breeder} onChange={handleChange} required/>
+                        </div>
+                        <div>
+                            <label>Origin:</label>
+                            <input type="text" name="origin" value={koiFish.origin} onChange={handleChange} required/>
+                        </div>
 
-                <div>
-                    <label>Physique:</label>
-                    <input type="text" name="physique" value={koiFish.physique} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>In Pond Since:</label>
-                    <input type="date" name="inPondSince" value={koiFish.inPondSince} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Breeder:</label>
-                    <input type="text" name="breeder" value={koiFish.breeder} onChange={handleChange} required/>
-                </div>
-                <div>
-                    <label>Origin:</label>
-                    <input type="text" name="origin" value={koiFish.origin} onChange={handleChange} required/>
-                </div>
+                        <div>
+                            <label>Select Pond:</label>
+                            <select name="pondId" value={selectedPond} onChange={handlePondChange} required>
+                                <option value="">-- Select a Pond --</option>
+                                {ponds.map((pond) => (
+                                    <option key={pond.id} value={pond.id}>
+                                        {pond.pondName}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                <div>
-                    <label>Select Pond:</label>
-                    <select name="pondId" value={selectedPond} onChange={handlePondChange} required>
-                        <option value="">-- Select a Pond --</option>
-                        {ponds.map((pond) => (
-                            <option key={pond.id} value={pond.id}>
-                                {pond.pondName}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
-                <button type="submit">Add Koi Fish</button>
-                <button className="back-to-list-button" onClick={handleBackToList}>
-                    Back to List
-                </button>
-            </form>
+                        <button type="submit">Add Koi Fish</button>
+                        <button className="back-to-list-button" onClick={handleBackToList}>
+                            Back to List
+                        </button>
+                    </form>
                 </>
-                )}
+            )}
         </div>
     );
 };

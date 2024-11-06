@@ -74,13 +74,6 @@ const KoiDetailPage = () => {
                 };
                 const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
                 setGrowthRecords(response.data.growthRecordList);
-
-                const today = new Date().toISOString().split('T')[0];
-                const todayRecordExists = response.data.growthRecordList.some(record => {
-                    const recordDate = new Date(record.koiId.date).toISOString().split('T')[0];
-                    return recordDate === today;
-                });
-                setCanAddGrowthRecord(!todayRecordExists);
             } catch (error) {
                 console.error('Error fetching growth records', error);
                 setErrorMessage('Failed to fetch growth records.');
@@ -213,6 +206,15 @@ const KoiDetailPage = () => {
             return;
         }
 
+        const dateExists = growthRecords.some(record =>
+            new Date(record.koiId.date).toDateString() === new Date(growthRecord.date).toDateString()
+        )
+
+        if (dateExists && !editMode) {
+            alert("This date has already been added. Please select a different date.");
+            return;
+        }
+
         let token = localStorage.getItem('token');
         if (!token) {
             token = sessionStorage.getItem('token');
@@ -290,6 +292,7 @@ const KoiDetailPage = () => {
             alert('Failed to delete growth record');
         }
     };
+
     const handleSelectPond = (e) => {
         const selectedPondId = e.target.value;
         setKoiEditData({ ...koiEditData, pondId: selectedPondId });
@@ -307,6 +310,7 @@ const KoiDetailPage = () => {
             navigate("/list-koi");
         };
 
+        console.log(growthRecords, "koi")
         return (
             <div className="koi-detail-container">
                 <h1>Koi Fish Details</h1>
@@ -344,57 +348,64 @@ const KoiDetailPage = () => {
                         <h2>Growth Records</h2>
                         {growthRecords.length > 0 ? (
                             <ul>
-                                {growthRecords.map((record, index) => (
-                                    <li key={record.koiId.date}>
-                                        <div>
-                                            <strong>Date:</strong> {new Date(record.koiId.date).toLocaleDateString()}
-                                        </div>
-                                        <div className="record-details">
+                                {growthRecords.slice().reverse().map((record, index) => {
+
+                                    return (
+                                        <li key={record.koiId.date}>
                                             <div>
-                                                <strong>Length:</strong> {record.length} cm
+                                                <strong>Date:</strong> {new Date(record.koiId.date).toLocaleDateString()}
                                             </div>
-                                            <div>
-                                                <strong>Weight:</strong> {record.weight} g
+
+                                            <div className="record-details">
+                                                <div>
+                                                    <strong>Pond:</strong> {record.pondId.pondName}
+                                                </div>
+                                                <div>
+                                                    <strong>Length:</strong> {record.length} cm
+                                                </div>
+                                                <div>
+                                                    <strong>Weight:</strong> {record.weight} g
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div className="record-details">
-                                            <div>
-                                                <strong>Physique:</strong> {record.physique}
+                                            <div className="record-details">
+                                                <div>
+                                                    <strong>Physique:</strong> {record.physique}
+                                                </div>
+                                                <div>
+                                                    <strong>Weight
+                                                        Rate:</strong> {record.weightRate ? record.weightRate.toFixed(2) + '%' : '0'}
+                                                </div>
+                                                <div>
+                                                    <strong>Length
+                                                        Rate:</strong> {record.lengthRate ? record.lengthRate.toFixed(2) + '%' : '0'}
+                                                </div>
                                             </div>
-                                            <div>
-                                                <strong>Weight
-                                                    Rate:</strong> {record.weightRate ? record.weightRate.toFixed(2) + '%' : '0'}
-                                            </div>
-                                            <div>
-                                                <strong>Length
-                                                    Rate:</strong> {record.lengthRate ? record.lengthRate.toFixed(2) + '%' : '0'}
-                                            </div>
-                                        </div>
-                                        <div className="button-container">
-                                            <button className="edit-koi-button" onClick={() => handleEdit(record)}>Edit
-                                            </button>
-                                            {index !== 1 && (
-                                            <button className="delete-button"
-                                                    onClick={() => handleDelete(record)}>Delete
-                                            </button>
+                                            <div className="button-container">
+                                                <button className="edit-koi-button"
+                                                        onClick={() => handleEdit(record)}>Edit
+                                                </button>
+                                                {index !== 0 && (
+                                                    <button className="delete-button"
+                                                            onClick={() => handleDelete(record)}>Delete
+                                                    </button>
                                                 )}
-                                        </div>
-                                    </li>
-                                ))}
+                                            </div>
+                                        </li>
+                                    );
+                                })}
                             </ul>
                         ) : (
                             <p>No growth records available.</p>
                         )}
-                        {canAddGrowthRecord ? (
-                            <button onClick={handleAddGrowthRecord}>Add Growth Record</button>
-                        ) : (
-                            <p>You can only add one growth record per day.</p>
-                        )}
-
                     </div>
-                    <button className="back-to-list-button" onClick={handleBackToList}>
-                        Back to List
-                    </button>
+                    <div className="Add-Growth">
+                        <button onClick={handleAddGrowthRecord}>Add Growth Record</button>
+                    </div>
+                    <div className="Back-to-list">
+                        <button className="back-to-list-button" onClick={handleBackToList}>
+                            Back to List
+                        </button>
+                    </div>
                 </div>
 
                 {showGrowthModal && (
@@ -402,6 +413,15 @@ const KoiDetailPage = () => {
                         <div className="modal-content-koi">
                             <h2>{editMode ? 'Edit Growth Record' : 'Add Growth Record'}</h2>
                             <form onSubmit={handleSubmit}>
+                                {!editMode && (
+                                    <>
+                                        <label>Date:</label>
+                                        <input type="date" name="date" value={growthRecord.date}
+                                               onChange={handleInputChange} required
+                                               min={new Date(koiDetails.inPondSince).toISOString().split("T")[0]}
+                                               max={new Date().toISOString().split("T")[0]} />
+                                    </>
+                                )}
                                 <label>
                                     Length (cm):
                                     <input type="number" name="length" value={growthRecord.length}
@@ -445,12 +465,8 @@ const KoiDetailPage = () => {
                                     <label htmlFor="image-upload" className="change-image-button">
                                         Change Image
                                     </label>
-                                    <input
-                                        type="file"
-                                        id="image-upload"
-                                        name="image"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
+                                    <input type="file" id="image-upload" name="image" accept="image/*"
+                                           onChange={handleImageChange}
                                         style={{display: 'none'}}
                                     />
                                     {selectedImage && (
