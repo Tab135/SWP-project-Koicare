@@ -11,14 +11,16 @@ const Sidebar = ({ onMenuClick }) => {
         <div className="sidebar">
             <h2>DashBoard</h2>
             <ul>
-            <button onClick={() => onMenuClick('listUser')} className="menu-button">
+                <li>
+                    <button onClick={() => onMenuClick('listUser ')} className="menu-button">
                         List User
                     </button>
-            </ul>
-            <ul>
+            </li>
+            <li>
             <button onClick={() => onMenuClick('Total Revenue')} className="menu-button">
-                  Total Revenue
+                  Product
                     </button>
+                </li>
             </ul>
             <div className="home-button-container">
         <button onClick={() =>  navigate('/')} className="home-button">
@@ -28,31 +30,37 @@ const Sidebar = ({ onMenuClick }) => {
         </div>
     );
 };
+
 const Dashboard = () => {
-    const [activeContent, setActiveContent] = useState(''); 
-  const navigate = useNavigate();
-useEffect(() => {
-  const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-  if (token) {
-    const decodedToken = jwtDecode(token);
-    const role = decodedToken.role;
-    if (role !== 'ADMIN') {
-      navigate('/koicare');
-    }
-  } else {
-    navigate('/');
-  }
-}, [navigate]);
+    const [activeContent, setActiveContent] = useState('Total Revenue');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            const role = decodedToken.role;
+            if (role !== 'ADMIN') {
+                navigate('/koicare');
+            }
+        } else {
+            navigate('/');
+        }
+    }, [navigate]);
+
     const handleMenuClick = (content) => {
         setActiveContent(content);
     };
     return (
         <div className="dashboard">
-              <Sidebar  onMenuClick={handleMenuClick}/>
-              <div className="content">
-                {activeContent === 'listUser' && <UserList />} 
-                {activeContent === 'Total Revenue' && <LineShop />} 
-                {activeContent === '' && <h1>Welcome to the Dashboard</h1>}
+            <Sidebar onMenuClick={handleMenuClick} />
+            <div className="content">
+                {activeContent === 'listUser ' && <UserList />}
+                {activeContent === 'Total Revenue' && (
+                    <div className="revenue-report">
+                        <LineShop />
+                    </div>
+                )}
                 {activeContent === 'home' && <h1>Welcome to the Dashboard</h1>}
             </div>
             </div>
