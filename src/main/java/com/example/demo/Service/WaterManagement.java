@@ -4,6 +4,7 @@ import com.example.demo.DTO.PondModel;
 import com.example.demo.DTO.WaterModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResWater;
 import com.example.demo.Repo.PondRepo;
+import com.example.demo.Repo.UserRepo;
 import com.example.demo.Repo.WaterRepo;
 import jakarta.transaction.Transactional;
 
@@ -22,6 +23,8 @@ public class WaterManagement {
     private WaterRepo waterRepository;
     @Autowired
     private PondRepo pondRepository;
+    @Autowired
+    private UserRepo userRepo;
     @Transactional
     public ReqResWater addWaterMeasurement(ReqResWater addWater, int pond_id) {
         ReqResWater req = new ReqResWater();
@@ -168,13 +171,27 @@ public class WaterManagement {
         return  resp;
     }
 
-    public ReqResWater listAllByDateTime(LocalDateTime start, LocalDateTime end){
+    public ReqResWater listAllByDateTime(LocalDateTime start, LocalDateTime end, int pondId, int userId){
         ReqResWater resp = new ReqResWater();
-        List<WaterModel> result = waterRepository.findAllByDateBetween(start, end);
+        Optional<PondModel> pond = pondRepository.findById(pondId);
+        if(pond.isEmpty()){
+            resp.setStatusCode(404);
+            resp.setError("Pond not found");
+            return resp;
+        }
+        if(pond.get().getUser().getId() != userId){
+            resp.setStatusCode(403);
+            resp.setError("Invalid user");
+            return resp;
+        }
+        List<WaterModel> result = waterRepository.findAllByDateBetweenAndPondId(start, end, pondId);
+
         if (result != null && !result.isEmpty()) {
+            resp.setStatusCode(200);
             resp.setMessage("Water list retrieved successfully");
             resp.setWaterModelList(result);
         } else {
+            resp.setStatusCode(404);
             resp.setMessage("Water list empty");
         }
         return resp;

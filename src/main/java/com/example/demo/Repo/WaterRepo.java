@@ -14,6 +14,6 @@ public interface WaterRepo extends JpaRepository<WaterModel,Integer> {
     void deleteById(int id);
     List<WaterModel> findAllByPondId(int pondId);
     void deleteByPondId(int pondId);
-    List<WaterModel> findAllByDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<WaterModel> findAllByDateBetweenAndPondId(LocalDateTime startDate, LocalDateTime endDate, int pondId);
     List<WaterModel> findByPondIdOrderByIdDesc(int pond_id);
 }
