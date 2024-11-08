@@ -19,31 +19,40 @@ public class OrderTrackingService {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Transactional // Ensures consistency if this is part of a larger transaction
     public ReqResTracking createOrderTracking(int orderId, OrderStatus status) {
-        // Create a new response object
+        // Initialize the response object
         ReqResTracking req = new ReqResTracking();
         req.setOrderId(orderId);
         req.setStatus(status);
         req.setTimestamp(LocalDateTime.now());
 
-        // Retrieve the order from the repository
-        Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
+        try {
+            // Retrieve the order from the repository
+            Order order = orderRepository.findById(orderId)
+                    .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderId));
 
-        // Create and populate the OrderTracking entity
-        OrderTracking orderTracking = new OrderTracking();
-        orderTracking.setOrder(order);
-        orderTracking.setStatus(status); // Set the status from the input parameter
-        orderTracking.setTimestamp(req.getTimestamp()); // Use the current timestamp
+            // Create and populate the OrderTracking entity
+            OrderTracking orderTracking = new OrderTracking();
+            orderTracking.setOrder(order);
+            orderTracking.setStatus(status); // Set the status from the input parameter
+            orderTracking.setTimestamp(req.getTimestamp()); // Use the current timestamp
 
-        // Save the tracking entity
-        trackingRepository.save(orderTracking);
+            // Save the tracking entity
+            trackingRepository.save(orderTracking);
 
-        // Set response fields
-        req.setStatusCode(200);
-        req.setMessage("Order tracking entry created successfully.");
+            // Set response fields for successful creation
+            req.setStatusCode(200);
+            req.setMessage("Order tracking entry created successfully.");
+        } catch (Exception e) {
+            // Handle exceptions, set error response fields if needed
+            req.setStatusCode(500);
+            req.setMessage("Failed to create order tracking entry: " + e.getMessage());
+        }
+
         return req;
     }
+
 
     @Transactional
     public List<ReqResTracking> listOrderTrackingByUser(int userId) {
@@ -126,7 +135,6 @@ public class OrderTrackingService {
                 productList.add(productInfo);
             }
         }
-
         trackingResponse.setProducts(productList); // Add product list to response
         trackingResponse.setStatusCode(200);
         trackingResponse.setMessage("Order tracking entry retrieved successfully.");

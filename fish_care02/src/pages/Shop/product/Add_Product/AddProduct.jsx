@@ -23,6 +23,8 @@ const AddProduct = () => {
     description: "",
     categoryId: "",
     amount: "",
+    createAt: "", // New field
+    expiresAt: "",
   });
   const [imageFiles, setImageFiles] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -106,6 +108,8 @@ const AddProduct = () => {
         description: "",
         categoryId: "",
         amount: 0,
+        createAt: "",
+        expiresAt: "",
       });
       setImageFiles([]);
       navigate("/shop/dashboard");
@@ -201,6 +205,34 @@ const AddProduct = () => {
                     placeholder="Enter amount"
                     value={productData.amount}
                     onChange={handleInputChange}
+                  />
+                </Form.Group>
+              </Col>
+
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Creation Date</Form.Label>
+                  <Form.Control
+                    type="datetime-local"
+                    name="createAt"
+                    value={productData.createAt}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
+
+            <Row>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Expiration Date</Form.Label>
+                  <Form.Control
+                    type="datetime-local"
+                    name="expiresAt"
+                    value={productData.expiresAt}
+                    onChange={handleInputChange}
+                    required
                   />
                 </Form.Group>
               </Col>

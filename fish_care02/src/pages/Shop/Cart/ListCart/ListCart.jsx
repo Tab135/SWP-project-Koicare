@@ -8,10 +8,11 @@ import {
   Alert,
   Button,
   Spinner,
+  Form,
 } from "react-bootstrap";
 import { FaImage, FaTrash } from "react-icons/fa";
 import CartService from "../CartService";
-import "./_list.scss"; // Adjust the import path as necessary
+import "./_list.scss";
 import OrderService from "../../Order/OrderService";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -19,12 +20,11 @@ import { jwtDecode } from "jwt-decode";
 const extractUserId = (token) => {
   const payload = token.split(".")[1];
   const decodedPayload = JSON.parse(atob(payload));
-
-  return decodedPayload.userId; // Adjust according to your token's structure
+  return decodedPayload.userId;
 };
 
 const ListCart = () => {
-  const { userId } = useParams(); // Assuming you're using the userId from the URL
+  const { userId } = useParams();
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -38,13 +38,11 @@ const ListCart = () => {
         setLoading(true);
         const token =
           localStorage.getItem("token") || sessionStorage.getItem("token");
-        if (!token) {
-          throw new Error("User not authenticated.");
-        }
+        if (!token) throw new Error("User not authenticated.");
         const userId = extractUserId(token.replace("Bearer ", ""));
         const cartData = await CartService.getCartByUser();
         setCartItems(cartData.items);
-        setCartItemCount(cartData.items.length); // Set initial count
+        setCartItemCount(cartData.items.length);
         await handleGetTotalPrice();
       } catch (err) {
         setError(err.message);
@@ -55,6 +53,7 @@ const ListCart = () => {
 
     fetchCartItems();
   }, []);
+
   useEffect(() => {
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -78,19 +77,21 @@ const ListCart = () => {
     }
   };
 
-  const handleQuantityChange = async (cartItemId, change) => {
+  const handleQuantityChange = async (cartItemId, quantity) => {
+    const updatedItems = cartItems.map((item) => {
+      if (item.id === cartItemId) {
+        const validQuantity = Math.min(quantity, item.product.amount); // Ensure quantity does not exceed stock
+        return { ...item, quantity: Math.max(validQuantity, 1) };
+      }
+      return item;
+    });
+
+    setCartItems(updatedItems);
+    const updatedItem = updatedItems.find((item) => item.id === cartItemId);
+    const productId = updatedItem.product.id;
+
     try {
-      const updatedItems = cartItems.map((item) => {
-        if (item.id === cartItemId) {
-          const newQuantity = item.quantity + change;
-          return { ...item, quantity: Math.max(newQuantity, 1) }; // Ensure quantity doesn't go below 1
-        }
-        return item;
-      });
-      const updatedItem = updatedItems.find((item) => item.id === cartItemId);
-      const productId = updatedItem.product.id;
       await CartService.updateCart(productId, updatedItem.quantity);
-      setCartItems(updatedItems);
       await handleGetTotalPrice();
     } catch (err) {
       setError(err.message);
@@ -103,10 +104,8 @@ const ListCart = () => {
       setCartItems((prevItems) =>
         prevItems.filter((item) => item.id !== cartItemId)
       );
-
-      // Decrease the cart item count
       setCartItemCount((prevCount) => Math.max(prevCount - 1, 0));
-      localStorage.setItem(`cartItemCount_${userId}`, cartItemCount - 1); // Update local storage
+      localStorage.setItem(`cartItemCount_${userId}`, cartItemCount - 1);
       await handleGetTotalPrice();
     } catch (err) {
       setError(err.message);
@@ -117,9 +116,9 @@ const ListCart = () => {
     try {
       setLoading(true);
       const orderResponse = await OrderService.createOrder();
-      const orderId = orderResponse.id; // Ensure this is correct
+      const orderId = orderResponse.id;
       console.log("Order created with ID:", orderId);
-      navigate(`/user/order/getOrder/${orderId}`); // Use orderId here
+      navigate(`/user/order/getOrder/${orderId}`);
       alert("Order created successfully!");
     } catch (err) {
       setError(err.message);
@@ -174,22 +173,20 @@ const ListCart = () => {
                         })
                         .replace("₫", "đ")}
                     </Card.Text>
+                    <Card.Text>
+                      <strong>Available Stock:</strong> {item.product.amount}
+                    </Card.Text>
                     <div className="d-flex align-items-center">
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => handleQuantityChange(item.id, -1)}
-                        className="me-2 quantity-button"
-                      >
-                        -
-                      </Button>
-                      <span className="my-auto">{item.quantity}</span>
-                      <Button
-                        variant="outline-secondary"
-                        onClick={() => handleQuantityChange(item.id, 1)}
-                        className="ms-2 quantity-button"
-                      >
-                        +
-                      </Button>
+                      <Form.Control
+                        type="number"
+                        value={item.quantity}
+                        min="1"
+                        max={item.product.amount} // Set max to the available amount of product
+                        onChange={(e) =>
+                          handleQuantityChange(item.id, Number(e.target.value))
+                        }
+                        style={{ width: "80px", marginRight: "10px" }}
+                      />
                       <Button
                         variant="danger"
                         onClick={() => handleRemoveFromCart(item.id)}

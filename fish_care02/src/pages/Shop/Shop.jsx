@@ -41,6 +41,8 @@ const Shop = () => {
   const [cartItemCount, setCartItemCount] = useState(0);
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -55,6 +57,20 @@ const Shop = () => {
         setCartItemCount(Number(storedCount));
       }
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoryData = await ProductService.getAllCategory();
+        console.log("Fetched categories:", categoryData); // Debugging line
+        setCategories(categoryData);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -76,15 +92,16 @@ const Shop = () => {
     const fetchCartItemCount = async () => {
       if (Id) {
         try {
-          const response = await CartService.countItemsInCart(Id);
-          setCartItemCount(response.data);
+          const response = await CartService.getCartByUser(); // Make sure this points to your API endpoint
+          const itemNumber = response.data.itemNumber; // Extract itemNumber from response
+          setCartItemCount(itemNumber); // Update cartItemCount to reflect itemNumber
         } catch (error) {
           console.error("Error fetching cart item count:", error);
         }
       }
     };
 
-    fetchCartItemCount();
+    fetchCartItemCount(); // Call function to set cartItemCount
   }, [Id]);
 
   const handleAddToCart = async (productId) => {
@@ -107,9 +124,7 @@ const Shop = () => {
 
       // Proceed to add the product to the cart
       await CartService.addProductToCart(productId, 1);
-      const newCount = cartItemCount + 1;
-      setCartItemCount(newCount);
-      localStorage.setItem(`cartItemCount_${Id}`, newCount);
+
       setToastMessage("Product added to cart successfully!");
       setShowToast(true);
 
@@ -122,8 +137,13 @@ const Shop = () => {
     }
   };
 
-  const filteredProducts = products.filter((product) =>
-    product.productName.toLowerCase().includes(searchTerm.toLowerCase())
+  // Separate filtering based on search term and selected category
+  const filteredProducts = products.filter(
+    (product) =>
+      product.productName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      (selectedCategory
+        ? product.category.categoryName === selectedCategory // Compare with categoryName
+        : true)
   );
 
   return (
@@ -137,17 +157,33 @@ const Shop = () => {
 
       <Container>
         <Row className="justify-content-center mb-4">
-          <Col xs={12} md={6} lg={4}>
-            <div className="search-bar-container">
-              <Form.Control
-                type="text"
-                placeholder="Search products..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="search-input"
-              />
-            </div>
+          {/* Category Dropdown */}
+          <Col xs={12} md={4}>
+            <Form.Control
+              as="select"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="mb-2"
+            >
+              <option value="">All Categories</option>
+              {categories.map((category) => (
+                <option key={category.categoryId} value={category.categoryName}>
+                  {category.categoryName}
+                </option>
+              ))}
+            </Form.Control>
           </Col>
+          {/* Search Input */}
+          <Col xs={12} md={4}>
+            <Form.Control
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="search-input"
+            />
+          </Col>
+          {/* Cart Icon */}
           <Col xs="auto" className="d-flex align-items-center">
             <Link to="/user/cart/getCartByUser" className="cart-button-link">
               <div className="cart-button">
@@ -168,57 +204,64 @@ const Shop = () => {
           <Alert variant="danger">{error}</Alert>
         ) : filteredProducts.length > 0 ? (
           <Row xs={1} sm={2} md={3} lg={4} className="g-4">
-            {filteredProducts.map((product) => (
-              <Col key={product.id}>
-                <Card className="product-card">
-                  <div className="product-image-container">
-                    {product.productImage ? (
-                      <img
-                        src={`data:image/jpeg;base64,${product.productImage}`}
-                        alt={product.productName}
-                        className="product-image"
-                      />
-                    ) : (
-                      <div className="placeholder-image">
-                        <FaImage size={40} />
-                      </div>
-                    )}
-                  </div>
-                  <Card.Body>
-                    <h3 className="product-title">{product.productName}</h3>
-                    <div className="product-price">
-                      {/* Ensure the price is formatted as VND */}
-                      {product.price
-                        .toLocaleString("vi-VN", {
-                          style: "currency",
-                          currency: "VND",
-                        })
-                        .replace("₫", "đ")}
+            {filteredProducts.map((product) => {
+              // Check if the amount is 0 and skip rendering this product
+              if (product.amount === 0) {
+                return null; // Don't render the product if amount is 0
+              }
+
+              return (
+                <Col key={product.id}>
+                  <Card className="product-card">
+                    <div className="product-image-container">
+                      {product.productImage ? (
+                        <img
+                          src={`data:image/jpeg;base64,${product.productImage}`}
+                          alt={product.productName}
+                          className="product-image"
+                        />
+                      ) : (
+                        <div className="placeholder-image">
+                          <FaImage size={40} />
+                        </div>
+                      )}
                     </div>
-                    {product.description && (
-                      <p className="product-description">
-                        {product.description}
-                      </p>
-                    )}
-                    {product.amount && (
-                      <div className="product-amount">
-                        Stock: {product.amount}
+                    <Card.Body>
+                      <h3 className="product-title">{product.productName}</h3>
+
+                      <div className="product-price">
+                        {product.price
+                          .toLocaleString("vi-VN", {
+                            style: "currency",
+                            currency: "VND",
+                          })
+                          .replace("₫", "đ")}
                       </div>
-                    )}
-                    <div className="mt-auto">
-                      <AddToCart
-                        userId={Id}
-                        productId={product.id}
-                        onAdd={handleAddToCart}
-                      />
-                      <Link to={`/public/product/${product.id}`}>
-                        <Button variant="info">View Details</Button>
-                      </Link>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            ))}
+                      {product.description && (
+                        <p className="product-description">
+                          {product.description}
+                        </p>
+                      )}
+                      {product.amount && (
+                        <div className="product-amount">
+                          Stock: {product.amount}
+                        </div>
+                      )}
+                      <div className="mt-auto">
+                        <AddToCart
+                          userId={Id}
+                          productId={product.id}
+                          onAdd={handleAddToCart}
+                        />
+                        <Link to={`/public/product/${product.id}`}>
+                          <Button variant="info">View Details</Button>
+                        </Link>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              );
+            })}
           </Row>
         ) : (
           <Alert variant="info" className="text-center">

@@ -11,10 +11,11 @@ const UpdateProduct = () => {
   const { productId } = useParams();
   const [productData, setProductData] = useState({
     name: "",
-    price: "",
+    price: 0,
     description: "",
     amount: 0,
     categoryId: 0,
+    expiresAt: "", // Corrected here to match backend expected field name
   });
   const [currentImage, setCurrentImage] = useState(""); // Holds the URL of the existing image
   const [imageFiles, setImageFiles] = useState([]); // For new image files
@@ -49,6 +50,7 @@ const UpdateProduct = () => {
             description: product.description || "",
             amount: product.amount || "",
             categoryId: product.categoryId ? product.categoryId.toString() : "",
+            expiresAt: product.expiresAt || "", // Ensure the field matches the backend name
           });
           setCurrentImage(product.productImageBase64); // Store the existing image URL
         } else {
@@ -83,6 +85,10 @@ const UpdateProduct = () => {
       return;
     } else if (name === "price" && (numericValue < 1 || isNaN(numericValue))) {
       setError("Price must be a positive number greater than 0.");
+      return;
+    } else if (name === "expiresAt" && isNaN(Date.parse(value))) {
+      // Make sure this field matches
+      setError("Please enter a valid expiration date.");
       return;
     } else {
       setError(null); // Clear error if input is valid
@@ -187,7 +193,16 @@ const UpdateProduct = () => {
                 required
               />
             </Form.Group>
-
+            <Form.Group className="mb-3 update-product-expireAt">
+              <Form.Label>Expiration Date</Form.Label>
+              <Form.Control
+                type="datetime-local"
+                name="expiresAt" // Corrected here to match backend expected field name
+                value={productData.expiresAt}
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
             <Form.Group className="mb-3 update-product-category">
               <Form.Label>Category</Form.Label>
               {categories.length > 0 ? (
@@ -201,7 +216,7 @@ const UpdateProduct = () => {
                     value={category.categoryId.toString()}
                     checked={
                       productData.categoryId === category.categoryId.toString()
-                    } // Check for selected category
+                    }
                     onChange={handleInputChange}
                   />
                 ))

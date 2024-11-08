@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Service
@@ -59,21 +61,20 @@ public class ProductManagement {
         return req;
     }
 
+    @Transactional
     public ReqResProduct addPro(ReqResProduct addPro, MultipartFile imageFile) {
         ReqResProduct req = new ReqResProduct();
-
+        System.out.println(addPro);
         try {
-
-
+            // Validate product data
             if (addPro.getName() == null || addPro.getPrice().compareTo(BigDecimal.ZERO) <= 0 ||
-                    addPro.getCategoryId() <= 0 ||
-                    addPro.getAmount() <= 0) {
-
+                    addPro.getCategoryId() <= 0 || addPro.getAmount() <= 0) {
                 req.setMessage("Invalid product data");
                 req.setStatusCode(400); // Bad Request
                 return req;
             }
 
+            // Check if category exists
             Optional<CategoryModel> cm = cateRepo.findByCategoryId(addPro.getCategoryId());
             if (!cm.isPresent()) {
                 req.setMessage("Category not found");
@@ -81,6 +82,14 @@ public class ProductManagement {
                 return req;
             }
 
+            // Validate expiration date
+            if (addPro.getExpiresAt() != null && !addPro.getExpiresAt().isAfter(LocalDateTime.now())) {
+                req.setMessage("The expiration date must be in the future.");
+                req.setStatusCode(400); // Bad Request
+                return req;
+            }
+
+            // Create new product model
             ProductModel pm = new ProductModel();
             pm.setProductName(addPro.getName());
             pm.setPrice(addPro.getPrice());
@@ -89,10 +98,18 @@ public class ProductManagement {
             pm.setProductRating(0.0);
             pm.setAmount(addPro.getAmount());
 
+            // Set createdAt to now if not provided
+            LocalDateTime createdAt = (addPro.getCreateAt() != null) ? addPro.getCreateAt() : LocalDateTime.now();
+            pm.setCreatedAt(createdAt);
+
+            // Calculate expiration date: if no expiration date is provided, use createdAt + 12 months
+            LocalDateTime expiresAt = (addPro.getExpiresAt() != null) ? addPro.getExpiresAt() : createdAt.plusMonths(12);
+            pm.setExpiresAt(expiresAt);
+
             // Handle image upload if provided
             if (imageFile != null && !imageFile.isEmpty()) {
                 byte[] imageBytes = imageFile.getBytes();
-                pm.setProductImage(imageBytes);  // Make sure ProductModel has byte[] field for image
+                pm.setProductImage(imageBytes);  // Ensure ProductModel has a byte[] field for image
             }
 
             // Save the product to the database
@@ -108,6 +125,7 @@ public class ProductManagement {
 
         return req;
     }
+
 
     @Transactional
     public ReqResProduct delePro(int id) {
@@ -181,6 +199,17 @@ public class ProductManagement {
                     throw new RuntimeException("Failed to process image file", e);
                 }
             }
+            // Update expiresAt if provided and ensure it is a future date
+            if (reqResProduct.getExpiresAt() != null) {
+                if (reqResProduct.getExpiresAt().isAfter(LocalDateTime.now())) {
+                    existingProduct.setExpiresAt(reqResProduct.getExpiresAt());
+                    System.out.println("ExpiresAt: " + reqResProduct.getExpiresAt());
+                } else {
+                    response.setMessage("The expiration date must be in the future.");
+                    response.setStatusCode(400);
+                    return response;
+                }
+            }
 
             // Save the updated product
             proRepository.save(existingProduct);
@@ -235,13 +264,27 @@ public class ProductManagement {
         reqResProduct.setStatusCode(200); // OK
         reqResProduct.setName(foundProduct.getProductName());
         reqResProduct.setPrice(foundProduct.getPrice());
-        reqResProduct.setDescription(foundProduct.getDescription());
+        reqResProduct.setDescription(foundProduct.getDescription() != null ? foundProduct.getDescription() : "No description available");
         reqResProduct.setAmount(foundProduct.getAmount());
-        reqResProduct.setCategoryName(foundProduct.getCategory().getCategoryName());
-        reqResProduct.setCategoryId(foundProduct.getCategory().getCategoryId());
+        reqResProduct.setCategoryName(foundProduct.getCategory() != null ? foundProduct.getCategory().getCategoryName() : "No category");
+        reqResProduct.setCategoryId(foundProduct.getCategory() != null ? foundProduct.getCategory().getCategoryId() : 0);
+
         double averageRating = calculateAverageRating(id);
         reqResProduct.setProductRating(averageRating);
 
+        // Check if the product is expired
+        boolean isExpired = foundProduct.getExpiresAt() != null && foundProduct.getExpiresAt().isBefore(LocalDateTime.now());
+        reqResProduct.setExpired(isExpired); // Assuming ReqResProduct has a setExpired() method
+        if (foundProduct.getExpiresAt() != null) {
+            long monthsBetween = ChronoUnit.MONTHS.between(LocalDateTime.now(), foundProduct.getExpiresAt());
+            if (monthsBetween < 0) {
+                reqResProduct.setExpirationPeriod("Expired");
+            } else {
+                reqResProduct.setExpirationPeriod(monthsBetween + " months");
+            }
+        } else {
+            reqResProduct.setExpirationPeriod("No expiration date set");
+        }
         // Convert product image to Base64 if present
         if (foundProduct.getProductImage() != null && foundProduct.getProductImage().length > 0) {
             String base64Image = Base64.getEncoder().encodeToString(foundProduct.getProductImage());
@@ -251,6 +294,7 @@ public class ProductManagement {
         reqResProduct.setMessage("Product details retrieved successfully");
         return reqResProduct;
     }
+
 
     public double calculateAverageRating(int productId) {
         List<ReviewModel> reviews = reviewRepo.findByProductId(productId);

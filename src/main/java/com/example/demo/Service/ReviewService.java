@@ -1,10 +1,12 @@
 package com.example.demo.Service;
 
 
+import com.example.demo.DTO.Shop.OrderTracking;
 import com.example.demo.DTO.Shop.ProductModel;
 import com.example.demo.DTO.ReviewModel;
 import com.example.demo.DTO.UserModel;
 import com.example.demo.REQUEST_AND_RESPONSE.ReqResReview;
+import com.example.demo.Repo.Shop.OrderTrackingRepository;
 import com.example.demo.Repo.Shop.ProductRepo;
 import com.example.demo.Repo.ReviewRepo;
 import com.example.demo.Repo.UserRepo;
@@ -25,13 +27,14 @@ public class ReviewService {
     private UserRepo userRepo;
     @Autowired
     private ProductRepo productRepo;
-
+    @Autowired
+    private OrderTrackingRepository orderTrackingRepository;
 
     public ReqResReview writeReview(ReqResReview review, int userId, int pondId) {
         ReqResReview resp = new ReqResReview();
         ReviewModel reviewModel = new ReviewModel();
 
-        // Fetch user and product using their IDs
+
         UserModel user = userRepo.findById(userId).orElseThrow();
         ProductModel product = productRepo.findById(pondId).orElseThrow();
 

@@ -8,6 +8,7 @@
     import jakarta.persistence.*;
 
     import java.math.BigDecimal;
+    import java.time.LocalDateTime;
     import java.util.ArrayList;
     import java.util.List;
 
@@ -44,11 +45,14 @@
 
         private long amount;
 
+        private LocalDateTime createdAt;
+
+        private LocalDateTime expiresAt;
 
         public ProductModel() {
         }
 
-        public ProductModel(int id, long amount, double productRating, byte[] productImage, String description, BigDecimal price, String productName, CategoryModel category) {
+        public ProductModel(int id, long amount, double productRating, byte[] productImage, String description, BigDecimal price, String productName, CategoryModel category , LocalDateTime createdAt , LocalDateTime expiresAt) {
             this.id = id;
             this.amount = amount;
             this.productRating = productRating;
@@ -57,9 +61,33 @@
             this.price = price;
             this.productName = productName;
             this.category = category;
+            this.createdAt = createdAt;
+            this.expiresAt = expiresAt;
         }
 
+        public List<ReviewModel> getReviews() {
+            return reviews;
+        }
 
+        public void setReviews(List<ReviewModel> reviews) {
+            this.reviews = reviews;
+        }
+
+        public LocalDateTime getExpiresAt() {
+            return expiresAt;
+        }
+
+        public void setExpiresAt(LocalDateTime expiresAt) {
+            this.expiresAt = expiresAt;
+        }
+
+        public LocalDateTime getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+        }
 
         public long getAmount() {
             return amount;

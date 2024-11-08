@@ -6,6 +6,7 @@ import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,10 +23,46 @@ public class ReqResProduct {
     private long amount;
     private double productRating;
     private MultipartFile productImage;
-    private String productImageBase64; // CamelCase for consistency
+    private String productImageBase64;
+    private LocalDateTime createAt;
+    private LocalDateTime expiresAt;
+    private boolean expired;
+    private String expirationPeriod;// CamelCase for consistency
     private String message;
     private ProductModel productM;
     private List<ProductModel> productList;
+
+    public String getExpirationPeriod() {
+        return expirationPeriod;
+    }
+
+    public void setExpirationPeriod(String expirationPeriod) {
+        this.expirationPeriod = expirationPeriod;
+    }
+
+    public boolean isExpired() {
+        return expired;
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
+    public LocalDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
 
     public double getProductRating() {
         return productRating;

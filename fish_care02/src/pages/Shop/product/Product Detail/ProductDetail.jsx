@@ -4,7 +4,6 @@ import ProductService from "../../ShopService";
 import ReviewService from "./ReviewService";
 import StarRating from "./StarRating";
 import { jwtDecode } from "jwt-decode";
-
 import {
   Container,
   Card,
@@ -15,10 +14,9 @@ import {
   Form,
   Button,
 } from "react-bootstrap";
-import { FaStar, FaUser, FaRegClock } from "react-icons/fa";
+import { FaStar, FaUser } from "react-icons/fa";
 import "./productdetail.scss";
 import { useNavigate } from "react-router-dom";
-
 
 const ProductDetail = () => {
   const { productId } = useParams();
@@ -60,7 +58,7 @@ const ProductDetail = () => {
   };
 
   const handleSubmitReview = async (e) => {
-    e.preventDefault(); // Call this at the beginning to prevent default form submission behavior
+    e.preventDefault();
 
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -102,6 +100,7 @@ const ProductDetail = () => {
   return (
     <div className="product-detail-page">
       <Container>
+        {error && <Alert variant="danger">{error}</Alert>}
         {product ? (
           <>
             <div className="product-section">
@@ -111,7 +110,7 @@ const ProductDetail = () => {
                     <div className="image-container">
                       <img
                         src={`data:image/jpeg;base64,${product.productImageBase64}`}
-                        alt={product.productName}
+                        alt={product.name}
                         className="product-image"
                       />
                     </div>
@@ -151,6 +150,11 @@ const ProductDetail = () => {
                   <div className="description">
                     <h3>Description</h3>
                     <p>{product.description}</p>
+                  </div>
+                  <div className="period-info">
+                    <h3>Availability Period</h3>
+                    <p>{product.expirationPeriod}</p>{" "}
+                    {/* Displaying the expiration period here */}
                   </div>
                 </Col>
               </Row>

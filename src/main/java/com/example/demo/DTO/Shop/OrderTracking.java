@@ -1,5 +1,6 @@
 package com.example.demo.DTO.Shop;
 
+import com.example.demo.DTO.UserModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class OrderTracking {
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status", nullable = false)
     private OrderStatus status;
+
 
 
 

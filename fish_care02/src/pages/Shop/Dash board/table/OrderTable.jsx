@@ -1,7 +1,20 @@
 import React from "react";
-import { Table, Button, Dropdown } from "react-bootstrap";
+import { Table, Dropdown } from "react-bootstrap";
 
 const OrderTable = ({ orders, onUpdateStatus, orderStatuses }) => {
+  // Define the order workflow sequence
+  const statusWorkflow = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED"];
+
+  // Helper function to get the next allowed status
+  const getNextStatusOptions = (currentStatus) => {
+    const currentIndex = statusWorkflow.indexOf(currentStatus);
+    if (currentIndex === -1) return []; // If status is not found in the workflow
+    if (currentIndex < statusWorkflow.length - 1) {
+      return [statusWorkflow[currentIndex + 1], "CANCELED"]; // Next status and "CANCELED" are allowed
+    }
+    return []; // No more statuses allowed, only "CANCELED"
+  };
+
   return (
     <Table striped bordered hover>
       <thead>
@@ -21,21 +34,25 @@ const OrderTable = ({ orders, onUpdateStatus, orderStatuses }) => {
             <td>{order.address}</td>
             <td>{order.orderStatus}</td>
             <td>
-              <Dropdown>
-                <Dropdown.Toggle variant="success" id="dropdown-basic">
-                  Select Order Status
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  {orderStatuses.map((orderStatus) => (
-                    <Dropdown.Item
-                      key={orderStatus}
-                      onClick={() => onUpdateStatus(order.id, orderStatus)} // Use orderStatus here
-                    >
-                      {orderStatus}
-                    </Dropdown.Item>
-                  ))}
-                </Dropdown.Menu>
-              </Dropdown>
+              {order.orderStatus !== "SHIPPED" && (
+                <Dropdown>
+                  <Dropdown.Toggle variant="success" id="dropdown-basic">
+                    Update Status
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    {getNextStatusOptions(order.orderStatus).map(
+                      (nextStatus) => (
+                        <Dropdown.Item
+                          key={nextStatus}
+                          onClick={() => onUpdateStatus(order.id, nextStatus)}
+                        >
+                          {nextStatus}
+                        </Dropdown.Item>
+                      )
+                    )}
+                  </Dropdown.Menu>
+                </Dropdown>
+              )}
             </td>
           </tr>
         ))}

@@ -160,6 +160,7 @@ const ListOrder = () => {
                   })
                   .replace("₫", "đ")}
               </h5>
+              
               <h5>
                 Order Date:{" "}
                 {new Date(order.orderDate).toLocaleString() || "N/A"}
