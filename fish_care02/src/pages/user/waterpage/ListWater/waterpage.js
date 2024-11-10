@@ -40,16 +40,31 @@ const WaterPage = () => {
         setSelectedWater(null);
         setWaterDetails(null);
     };
+    const formatDisplayDate = (isoDate) => {
+        return new Date(isoDate).toLocaleString('en-US', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+        });
+    };
     const handleInputChange = (event) => {
         const { name, value } = event.target;
-        const newValue = value === '' ? '' : parseFloat(value);
+        
         setUpdatedDetails((prevDetails) => {
             const updatedDetails = {
                 ...prevDetails,
-                [name]: newValue,
+                [name]: value, // Lưu giá trị dưới dạng chuỗi
             };
-            if (updatedDetails.carbonHardnessKH !== undefined && updatedDetails.pH !== undefined) {
-                updatedDetails.co2 = calculateCO2(updatedDetails.carbonHardnessKH, updatedDetails.pH);
+    
+            // Chuyển đổi giá trị sang số khi cần thiết để tính toán CO2
+            const carbonHardnessKH = parseFloat(updatedDetails.carbonHardnessKH);
+            const pH = parseFloat(updatedDetails.pH);
+            
+            if (!isNaN(carbonHardnessKH) && !isNaN(pH)) {
+                updatedDetails.co2 = calculateCO2(carbonHardnessKH, pH);
             }
     
             return updatedDetails;
@@ -88,18 +103,6 @@ const WaterPage = () => {
             const [waters, setWater] = useState([]);
             const [error, setError] = useState(null);
             const [successMessage, setSuccessMessage] = useState(null);
-            const formatCurrentDate = () => {
-                const currentDate = new Date();
-                return currentDate.toLocaleString('en-CA', { 
-                  year: 'numeric', 
-                  month: '2-digit', 
-                  day: '2-digit', 
-                  hour: '2-digit', 
-                  minute: '2-digit', 
-                  second: '2-digit', 
-                  hour12: false
-                }).replace(',', ''); 
-              };
             useEffect(() => {
                 const fetchWaters = async () => {
                     try {
@@ -285,7 +288,7 @@ const WaterPage = () => {
                             <div className="water-content">
                                 <div className="water-contentheader">
                                 <div className="water-date">
-                                    <p><strong>Date:</strong> {water.date}</p>
+                                <p><strong>Date:</strong> {formatDisplayDate(water.date)}</p>
                                 </div >
                                     <div className="water_close_button"  onClick={(e) => {
                                             e.stopPropagation(); 

@@ -1,4 +1,4 @@
-// WaterDetailsModal.js
+
 import React from 'react';
 import Modal from 'react-modal';
 
@@ -75,6 +75,16 @@ const borderColorFunctions = {
         return '';
     }
 };
+const formatDisplayDate = (isoDate) => {
+    return new Date(isoDate).toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true
+    });
+};
 const optimalRanges = {
     nitrite: { min: 0, max: 0.1 },
     nitrate: { min: 0, max: 20 },
@@ -89,17 +99,10 @@ const optimalRanges = {
     totalChlorine: { min: 0, max: 0.001 },
     co2: { min: 5, max: 35 }
 };
-const calculateOutOfRange = (paramName, value) => {
-    const range = optimalRanges[paramName];
-    if (!range) return null;
-    
-    if (value < range.min) {
-        return { status: "below", difference: range.min - value };
-    } else if (value > range.max) {
-        return { status: "above", difference: value - range.max };
-    }
-    return { status: "in range", difference: 0 };
-};
+const additionalParameters = {
+    amountFed: null, 
+    outdoorTemperature: null, 
+  };
 const WaterDetailsModal = ({
     isOpen,
     onRequestClose,
@@ -122,7 +125,7 @@ const WaterDetailsModal = ({
     >
       {selectedWater && waterDetails ? (
     <div>
-        <h2>{selectedWater.date_time}</h2>
+        <h2>{formatDisplayDate(selectedWater.date)}</h2>
         <form>
             <table className="water-details-table">
                 <thead>
@@ -134,59 +137,64 @@ const WaterDetailsModal = ({
                     </tr>
                 </thead>
                 <tbody>
-                {Object.entries(borderColorFunctions).map(([param, getBorderColor], index) => {
-                const value = updatedDetails[param] || 0;
-                const { min, max } = optimalRanges[param] || {};
-                const isInRange = min !== undefined && max !== undefined && value >= min && value <= max;
-                const outOfRangeInfo = min !== undefined && max !== undefined
-                ? value < min
-                    ? `Below by ${(min - value).toFixed(2)}`
-                    : value > max
-                    ? `Above by ${(value - max).toFixed(2)}`
-                    : "In Range"
-                : "N/A";
-    
-                return (
-                    <tr key={index}>
-                        <td><label>{param.charAt(0).toUpperCase() + param.slice(1)}:</label></td>
-                        <td>
-                            <input
+                    {Object.entries({ ...borderColorFunctions, ...additionalParameters }).map(
+                        ([param, getBorderColor], index) => {
+                        const value = updatedDetails[param] || 0;
+                        const { min, max } = optimalRanges[param] || {};
+                        const isRangeDefined = min !== undefined && max !== undefined;
+                        const isInRange = isRangeDefined && value >= min && value <= max;
+                        const outOfRangeInfo = isRangeDefined
+                            ? value < min
+                            ? `Below by ${(min - value).toFixed(2)}`
+                            : value > max
+                            ? `Above by ${(value - max).toFixed(2)}`
+                            : "In Range"
+                            : "";
+
+                        return (
+                            <tr key={index}>
+                            <td>
+                                <label>{param.charAt(0).toUpperCase() + param.slice(1)}:</label>
+                            </td>
+                            <td>
+                                <input
                                 type="text"
                                 name={param}
                                 value={updatedDetails[param] !== undefined ? updatedDetails[param] : ''}
                                 onChange={handleInputChange}
                                 readOnly={!isEditMode}
                                 style={{
-                                    borderColor: getBorderColor(value),
-                                    color: getBorderColor(value),
+                                    borderColor: getBorderColor ? getBorderColor(value) : '',
+                                    color: getBorderColor ? getBorderColor(value) : '',
                                 }}
-                            />
-                        </td>
-                        <td>
-                            {min !== undefined && max !== undefined ? (
-                                `${min} - ${max}`
-                            ) : (
-                                'N/A'
-                            )}
-                        </td>
-                        <td style={{ color: outOfRangeInfo.includes("Above") || outOfRangeInfo.includes("Below") ? "red" : "green" }}>
-                            {outOfRangeInfo}
-                        </td>
-                    </tr>
-                );
-            })}
-                </tbody>
+                                />
+                            </td>
+                            <td>
+                                {isRangeDefined ? `${min} - ${max}` : ''}
+                            </td>
+                            <td
+                                style={{
+                                color: outOfRangeInfo.includes("Above") || outOfRangeInfo.includes("Below") ? "red" : "green"
+                                }}
+                            >
+                                {outOfRangeInfo}
+                            </td>
+                            </tr>
+                        );
+                        }
+                    )}
+                    </tbody>
             </table>
-            <div className="button-group">
+            <div className="button_Water-group">
                 {!isEditMode ? (
-                    <button type="button" onClick={() => setIsEditMode(true)}>Edit</button>
-                ) : (
+                    <button className='button_Water-edit' type="button" onClick={() => setIsEditMode(true)}>Edit</button>
+                ) : (   
                     <>
-                        <button type="button" onClick={handleSave}>Save</button>
-                        <button type="button" onClick={() => setIsEditMode(false)}>Cancel</button>
+                        <button className='button_Water-edit' type="button" onClick={handleSave}>Save</button>
+                        <button className='button_Water-cancel' type="button" onClick={() => setIsEditMode(false)}>Cancel</button>
                     </>
                 )}
-                <button type="button" onClick={closeModal}>Close</button>
+                <button className='button_Water-close' type="button" onClick={closeModal}>Close</button>
             </div>
         </form>
     </div>
