@@ -24,10 +24,7 @@ const HomePage = () => {
                                 <span>Looking for an all-in-one platform to easily manage your koi pond, water quality, and feeding schedules?</span>
                                 <p>Our Koi Care Page is here to help!</p>
                                 <p>Start using the Koi Care Page today and give your Koi the best care they deserve!</p>
-                                <div className="login-advertise">
-                                       <Link to={ROUTERS.USER.LOGIN}> login now!</Link>
-                                </div>
-                                </div>   
+                            </div>
                         </div>
                         <div className="col-xl-6 col-lg-6 col-md-6 col advertise-img">
                                 <img  src={(koi)} alt="image"/>

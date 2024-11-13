@@ -109,6 +109,11 @@ const ListKoiFishPage = () => {
     };
 
     const handleDeleteKoi = async (koiId) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this Koi fish?');
+        if (!confirmDelete) {
+            return;
+        }
+
         let pondId = selectedPond;
         if (!pondId) {
             const deleteWithoutKoiId = koiFishList.find(koi => koi.koiId === koiId);
@@ -121,7 +126,6 @@ const ListKoiFishPage = () => {
                 alert("Pond ID not found for the selected koi.");
                 return;
             }
-
         }
 
         let token = localStorage.getItem('token');

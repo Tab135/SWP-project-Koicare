@@ -34,5 +34,24 @@ class UserService {
       throw err; // Rethrow the error to handle it in the calling function
     }
   }
+  static async changePassword(currentPassword, newPassword, token) {
+    if (!currentPassword || !newPassword || !token) {
+      throw new Error("Missing current password, new password, or authentication token");
+    }
+
+    try {
+      const response = await axios.post(
+          `${UserService.BASE_URL}/adminusershop/changepassword/${currentPassword}/${newPassword}`,
+          {},
+          {
+            headers: {Authorization: `Bearer ${token}`},
+          }
+      );
+      return response.data;
+    } catch (err) {
+      console.error("Error changing password:", err.response ? err.response.data : err.message);
+      throw err;
+    }
+  }
 }
 export default UserService;

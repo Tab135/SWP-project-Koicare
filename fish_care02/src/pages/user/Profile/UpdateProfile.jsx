@@ -9,6 +9,7 @@ import {
   Button,
   Card,
   Alert,
+  Modal,
 } from "react-bootstrap";
 import { ROUTERS } from "../../../utis/router";
 import { jwtDecode } from "jwt-decode";
@@ -23,6 +24,12 @@ function UpdateProfile() {
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwords, setPasswords] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
 
   useEffect(() => {
     fetchProfileInfo();
@@ -56,6 +63,14 @@ function UpdateProfile() {
     setProfileInfo({ ...profileInfo, [name]: value });
   };
 
+  const handlePasswordChange = (event) => {
+    const { name, value } = event.target;
+    setPasswords((prevPasswords) => ({
+      ...prevPasswords,
+      [name]: value,
+    }));
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
@@ -78,6 +93,33 @@ function UpdateProfile() {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      let token = localStorage.getItem("token") || sessionStorage.getItem("token");
+      const response = await UserService.changePassword(
+          passwords.currentPassword,
+          passwords.newPassword,
+          token
+      );
+
+      if (response.statusCode === 200) {
+        alert("Password changed successfully!");
+        setShowPasswordModal(false);
+        setPasswords({ currentPassword: "", newPassword: "" });
+      } else {
+        setError("Current password is incorrect. Please try again.");
+      }
+    } catch (error) {
+      setError("An error occurred while changing the password. Please try again.");
+      console.error("Error changing password:", error);
+    } finally {
+      setLoading(false);
+      setShowPasswordModal(false);
     }
   };
 
@@ -130,10 +172,54 @@ function UpdateProfile() {
                   </Button>
                 </div>
               </Form>
+              <div className="d-grid mt-3">
+                <Button variant="secondary" onClick={() => setShowPasswordModal(true)}>
+                  Change Password
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>
       </Row>
+
+      <Modal show={showPasswordModal} onHide={() => setShowPasswordModal(false)} backdrop={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Change Password</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Current Password</Form.Label>
+              <Form.Control
+                  type="password"
+                  name="currentPassword"
+                  value={passwords.currentPassword}
+                  onChange={handlePasswordChange}
+                  required
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>New Password</Form.Label>
+              <Form.Control
+                  type="password"
+                  name="newPassword"
+                  value={passwords.newPassword}
+                  onChange={handlePasswordChange}
+                  required
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowPasswordModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={handleChangePassword} disabled={passwordLoading}>
+            {passwordLoading ? "Changing..." : "Change Password"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }

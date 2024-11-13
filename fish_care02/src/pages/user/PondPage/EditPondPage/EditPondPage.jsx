@@ -118,7 +118,7 @@ const EditPondPage = () => {
                             <img src={`data:image/png;base64, ${previewUrl}`} alt="Preview" className="image-preview" />
                             <button
                                 type="button"
-                                className="change-image-button"
+                                className="change-image-button-editpond"
                                 onClick={() => document.querySelector('input[type="file"]').click()}
                             >
                                 Change Image
