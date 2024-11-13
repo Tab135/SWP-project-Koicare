@@ -21,6 +21,15 @@ public class ReqResReview {
     private int productId;
     private List<ReviewModel> listReview;
     private String message;
+    private int error;
+
+    public int getError() {
+        return error;
+    }
+
+    public void setError(int error) {
+        this.error = error;
+    }
 
     public String getUserName() {
         return userName;

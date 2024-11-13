@@ -36,4 +36,8 @@ public class ReviewController {
     public ResponseEntity<List<ReqResReview>> list(@PathVariable int productId) {
         return ResponseEntity.ok(review.listReviewByProductId(productId));
     }
+    @GetMapping("/public/review/canReview/{productId}/{userId}")
+    public ResponseEntity<Boolean> canReview(@PathVariable int userId, @PathVariable int productId) {
+        return ResponseEntity.ok(review.CanReview(userId, productId));
+    }
 }

@@ -22,6 +22,7 @@ const ProductDetail = () => {
   const { productId } = useParams();
   const [product, setProduct] = useState(null);
   const navigate = useNavigate();
+  const [canReview, setCanReview] = useState(false);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -37,6 +38,16 @@ const ProductDetail = () => {
         ]);
         setProduct(productData);
         setReviews(reviewData);
+
+        // Check if user can review
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        if (token) {
+          const decodedToken = jwtDecode(token);
+          const userId = decodedToken.userId;
+          const response = await fetch(`http://localhost:8080/public/review/canReview/${productId}/${userId}`);
+          const canReviewData = await response.json();
+          setCanReview(canReviewData);
+        }
       } catch (err) {
         console.error("Error fetching data:", err);
         setError("Error fetching data: " + err.message);
@@ -60,8 +71,7 @@ const ProductDetail = () => {
   const handleSubmitReview = async (e) => {
     e.preventDefault();
 
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
+    const token = localStorage.getItem("token") || sessionStorage.getItem("token");
     if (!token) {
       navigate("/login");
       return;
@@ -95,6 +105,42 @@ const ProductDetail = () => {
       console.error("Error posting review:", err);
       setError("Error posting review: " + err.message);
     }
+  };
+
+  const renderReviewForm = () => {
+    if (!canReview) {
+      return null;
+    }
+
+    return (
+      <div className="review-form-section">
+        <h3>Write a Review</h3>
+        <Form onSubmit={handleSubmitReview}>
+          <Form.Group className="rating-group">
+            <Form.Label>Your Rating</Form.Label>
+            <StarRating
+              rating={newReview.rating}
+              onRatingChange={handleStarRatingChange}
+            />
+          </Form.Group>
+          <Form.Group className="comment-group">
+            <Form.Label>Your Review</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={4}
+              name="comment"
+              value={newReview.comment}
+              onChange={handleReviewChange}
+              placeholder="Share your thoughts about this product..."
+              required
+            />
+          </Form.Group>
+          <Button type="submit" className="submit-review-btn">
+            Submit Review
+          </Button>
+        </Form>
+      </div>
+    );
   };
 
   return (
@@ -153,8 +199,7 @@ const ProductDetail = () => {
                   </div>
                   <div className="period-info">
                     <h3>Availability Period</h3>
-                    <p>{product.expirationPeriod}</p>{" "}
-                    {/* Displaying the expiration period here */}
+                    <p>{product.expirationPeriod}</p>
                   </div>
                 </Col>
               </Row>
@@ -198,33 +243,7 @@ const ProductDetail = () => {
                 )}
               </div>
 
-              <div className="review-form-section">
-                <h3>Write a Review</h3>
-                <Form onSubmit={handleSubmitReview}>
-                  <Form.Group className="rating-group">
-                    <Form.Label>Your Rating</Form.Label>
-                    <StarRating
-                      rating={newReview.rating}
-                      onRatingChange={handleStarRatingChange}
-                    />
-                  </Form.Group>
-                  <Form.Group className="comment-group">
-                    <Form.Label>Your Review</Form.Label>
-                    <Form.Control
-                      as="textarea"
-                      rows={4}
-                      name="comment"
-                      value={newReview.comment}
-                      onChange={handleReviewChange}
-                      placeholder="Share your thoughts about this product..."
-                      required
-                    />
-                  </Form.Group>
-                  <Button type="submit" className="submit-review-btn">
-                    Submit Review
-                  </Button>
-                </Form>
-              </div>
+              {renderReviewForm()}
             </div>
           </>
         ) : (

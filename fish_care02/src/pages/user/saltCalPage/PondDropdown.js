@@ -54,7 +54,7 @@ const PondDropdown = ({ setPondId, setPondVolume }) => {
     }, [ponds, setPondId, setPondVolume]);
 
     return (
-        <div className='pond-name-dropdown'>
+        <div>
             {error && <p>{error}</p>}
             <select id="pond-select" onChange={handleChange} value={selectedPond.id || ''}>
                 {!isPondSelected && <option value="">select pond</option>}

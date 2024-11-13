@@ -51,7 +51,7 @@ const LineShop = () => {
       };
 
       const productResponse = await axios.get(`http://localhost:8080/public/product`, config);
-      setProducts(productResponse.data);
+      setProducts(productResponse.data || []);
     } catch (error) {
       console.error("Error fetching product data:", error);
     }

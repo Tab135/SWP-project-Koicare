@@ -38,10 +38,9 @@
   
    
     .salt-cal {
-    background: rgba( 255, 255, 255, 0.1 );
+    background: white;
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
-    backdrop-filter: blur( 13px );
-    -webkit-backdrop-filter: blur( 13px );
+
     border-radius: 10px;
       padding: 30px;
       width: 100%;
@@ -179,3 +178,9 @@
 }
 
 }
+.pond-name-dropdown {
+    background: grey;
+    }
+.pond-name {
+    background: white;
+    }
