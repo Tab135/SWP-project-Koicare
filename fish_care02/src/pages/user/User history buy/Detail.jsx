@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import HistoryOrder from "./HistoryOrder"; // Adjust the import path as necessary
-import "./detail.scss"; // Import the SCSS file
+import HistoryOrder from "./HistoryOrder";
+import "./detail.scss";
 
 const Detail = () => {
-  const { orderId } = useParams(); // Extract orderId from the URL
+  const { orderId } = useParams();
   const [orderDetail, setOrderDetail] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +13,7 @@ const Detail = () => {
   useEffect(() => {
     const fetchOrderDetail = async () => {
       try {
-        const orderData = await HistoryOrder.getOrderDetail(orderId); // Fetch order by ID
+        const orderData = await HistoryOrder.getOrderDetail(orderId);
         setOrderDetail(orderData);
       } catch (err) {
         console.error("Error fetching order details:", err);
@@ -27,75 +27,119 @@ const Detail = () => {
   }, [orderId]);
 
   const handleBackToHistory = () => {
-    navigate("/user/track/history"); // Navigate back to order history page
+    navigate("/user/track/history");
   };
 
-  // Render loading state
   if (loading) {
     return (
-      <div className="d-flex align-items-center justify-content-center min-vh-100">
-        <div className="spinner-border text-primary" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
+      <div className="loading-container">
+        <div className="loader"></div>
+        <p>Loading order details...</p>
       </div>
     );
   }
 
-  // Render error state
   if (error) {
     return (
-      <div className="container py-4">
-        <div className="alert alert-danger" role="alert">
-          <h4 className="alert-heading">Error</h4>
+      <div className="error-container">
+        <div className="error-content">
+          <i className="fas fa-exclamation-circle"></i>
+          <h2>Oops! Something went wrong</h2>
           <p>{error}</p>
+          <button onClick={handleBackToHistory} className="btn-back">
+            Return to Order History
+          </button>
         </div>
       </div>
     );
   }
 
-  // Render order detail
   return (
-    <div className="container py-5 order-detail-container">
-      <h1 className="mb-4 text-center">Order Detail</h1>
+    <div className="order-detail-container">
+      <div className="order-header">
+        <h1>Order Details</h1>
+        <span
+          className="order-status"
+          data-status={orderDetail?.status?.toLowerCase()}
+        >
+          {orderDetail?.status || "N/A"}
+        </span>
+      </div>
+
       {orderDetail &&
       orderDetail.products &&
       orderDetail.products.length > 0 ? (
-        <div className="card order-card shadow">
-          <h5 className="card-title">Order ID: {orderDetail.orderId}</h5>
-          <p className="card-text">
-            <strong>Status:</strong> {orderDetail.status || "N/A"}
-          </p>
-          <p className="card-text">
-            <strong>Date:</strong>{" "}
-            {new Date(orderDetail.timestamp).toLocaleDateString()}
-          </p>
-          {orderDetail.products.map((product, index) => (
-            <div key={index} className="product-item">
-              {product.productImageBase64 && (
-                <img
-                  src={product.productImageBase64}
-                  alt={product.productName}
-                  className="card-img-top product-image"
-                />
-              )}
-              <div className="card-body">
-                <p className="card-text">
-                  <strong>Product:</strong> {product.productName || "N/A"}
-                </p>
+        <div className="order-content">
+          <div className="order-info">
+            <div className="info-section">
+              <h3>Order Information</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <label>Order Date</label>
+                  <span>
+                    {new Date(orderDetail.timestamp).toLocaleDateString()}
+                  </span>
+                </div>
+                <div className="info-item">
+                  <label>Total Amount</label>
+                  <span className="price">
+                    {orderDetail.totalAmount
+                      ? `${orderDetail.totalAmount.toLocaleString()} VND`
+                      : "0.00 VND"}
+                  </span>
+                </div>
               </div>
             </div>
-          ))}
-          <button
-            onClick={handleBackToHistory}
-            className="btn btn-outline-primary mt-3"
-          >
-            Back to Order History
+
+            <div className="info-section">
+              <h3>Customer Details</h3>
+              <div className="info-grid">
+                <div className="info-item">
+                  <label>Name</label>
+                  <span>{orderDetail.userName || "N/A"}</span>
+                </div>
+                <div className="info-item">
+                  <label>Delivery Address</label>
+                  <span>{orderDetail.userAddress || "N/A"}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="products-section">
+            <h3>Ordered Products</h3>
+            <div className="products-grid">
+              {orderDetail.products.map((product, index) => (
+                <div key={index} className="product-card">
+                  {product.productImageBase64 && (
+                    <div className="product-image-container">
+                      <img
+                        src={product.productImageBase64}
+                        alt={product.productName}
+                        className="product-image"
+                      />
+                    </div>
+                  )}
+                  <div className="product-info">
+                    <h4>{product.productName || "N/A"}</h4>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button onClick={handleBackToHistory} className="btn-back">
+            <i className="fas fa-arrow-left"></i> Back to Order History
           </button>
         </div>
       ) : (
-        <p className="text-center text-muted">
-          No details found for this order.
-        </p>
+        <div className="empty-state">
+          <i className="fas fa-box-open"></i>
+          <p>No details found for this order.</p>
+          <button onClick={handleBackToHistory} className="btn-back">
+            Return to Order History
+          </button>
+        </div>
       )}
     </div>
   );

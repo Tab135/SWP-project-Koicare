@@ -1,78 +1,229 @@
-// detail.scss
-
 .order-detail-container {
-  padding: 30px; // Increased padding for a more spacious layout
-  background-color: #f9f9f9; // Light background for contrast
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
 
-  h1 {
-    font-size: 2.5rem; // Larger title for emphasis
-    color: #343a40; // Darker color for better contrast
-    margin-bottom: 30px; // Space below the title
-  }
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
 
-  .order-card {
-    padding: 20px;
-    border-radius: 10px; // More rounded corners for a softer look
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); // Deeper shadow for depth
-    background-color: #ffffff; // White background for the card
-    margin-bottom: 30px; // Space below the card
-
-    .card-title {
-      font-size: 1.8rem; // Larger font size for the order ID
-      color: #007bff; // Primary color for the title
-      margin-bottom: 15px; // Space below the title
+    h1 {
+      font-size: 2rem;
+      color: #2d3748;
+      margin: 0;
     }
 
-    .card-text {
-      font-size: 1.1rem; // Slightly larger text for better readability
-      color: #495057; // Darker grey for text
-      margin-bottom: 10px; // Space below text
-    }
+    .order-status {
+      padding: 0.5rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.875rem;
 
-    .product-item {
-      display: flex;
-      align-items: center;
-      margin-bottom: 20px; // Increased space between product items
-      padding: 15px; // Add padding for better spacing
-      border: 1px solid #e0e0e0; // Light border for product items
-      border-radius: 8px; // Rounded corners for product items
-      transition: box-shadow 0.3s; // Smooth shadow transition
-
-      &:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); // Shadow effect on hover
+      &[data-status="pending"] {
+        background-color: #fff3dc;
+        color: #b7791f;
       }
 
-      .product-image {
-        width: 100px; // Adjust the width for better visibility
-        height: auto; // Maintain aspect ratio
-        margin-right: 15px; // Space between image and text
-        border-radius: 5px; // Rounded corners for images
-        object-fit: cover; // Ensure the image covers the area without distortion
+      &[data-status="completed"] {
+        background-color: #e6ffed;
+        color: #2f855a;
       }
 
-      .card-body {
-        flex: 1; // Allow the text to take up the remaining space
+      &[data-status="cancelled"] {
+        background-color: #fff5f5;
+        color: #c53030;
       }
     }
   }
 
-  .text-muted {
-    margin-top: 20px;
-    font-size: 1.1rem; // Slightly larger text for better readability
-    color: #6c757d; // Muted color for less emphasis
+  .order-content {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
   }
 
-  .btn {
-    width: 100%; // Make the button full width
-    padding: 12px; // Add padding for better touch targets
-    border-radius: 5px; // Rounded corners for the button
-    transition: background-color 0.3s, transform 0.2s; // Smooth transition
-    background-color: #007bff; // Primary button color
-    color: #fff; // White text color
+  .info-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid #edf2f7;
 
-    &:hover {
-      background-color: #0056b3; // Darker shade on hover
-      transform: translateY(-2px); // Slight lift effect
+    h3 {
+      font-size: 1.25rem;
+      color: #2d3748;
+      margin-bottom: 1rem;
     }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+
+      .info-item {
+        label {
+          display: block;
+          font-size: 0.875rem;
+          color: #718096;
+          margin-bottom: 0.5rem;
+        }
+
+        span {
+          font-size: 1rem;
+          color: #2d3748;
+          font-weight: 500;
+
+          &.price {
+            color: #3182ce;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+
+  .products-section {
+    padding: 1.5rem;
+
+    h3 {
+      font-size: 1.25rem;
+      color: #2d3748;
+      margin-bottom: 1.5rem;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1.5rem;
+
+      .product-card {
+        background: #f7fafc;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s;
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+
+        .product-image-container {
+          aspect-ratio: 1;
+          overflow: hidden;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+          }
+        }
+
+        .product-info {
+          padding: 1rem;
+
+          h4 {
+            font-size: 1rem;
+            color: #2d3748;
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
+.loading-container {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #3182ce;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  p {
+    margin-top: 1rem;
+    color: #718096;
+  }
+}
+
+.error-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .error-content {
+    text-align: center;
+
+    i {
+      font-size: 3rem;
+      color: #e53e3e;
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      color: #718096;
+      margin-bottom: 1.5rem;
+    }
+  }
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #3182ce;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin: 1.5rem;
+
+  &:hover {
+    background-color: #2c5282;
+  }
+
+  i {
+    font-size: 0.875rem;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  i {
+    font-size: 3rem;
+    color: #a0aec0;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #718096;
+    margin-bottom: 1.5rem;
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

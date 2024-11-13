@@ -75,7 +75,7 @@ public class OrderTrackingService {
                     tracking.setTimestamp(entry.getTimestamp());
 
                     // Assuming each OrderItem has a reference to ProductModel
-                    OrderItem firstOrderItem = orderItems.get(0);
+                    tracking.setUserName(entry.getOrder().getUser().getName());                    OrderItem firstOrderItem = orderItems.get(0);
                     ProductModel product = firstOrderItem.getProduct();
 
                     if (product != null) {
@@ -110,11 +110,17 @@ public class OrderTrackingService {
         OrderTracking orderTracking = latestTrackingEntry.get();
         Order order = orderTracking.getOrder();
         ReqResTracking trackingResponse = new ReqResTracking();
-
+        trackingResponse.setUserName(order.getUser().getName());
         trackingResponse.setOrderId(orderId);
         trackingResponse.setStatus(orderTracking.getStatus());
         trackingResponse.setTimestamp(orderTracking.getTimestamp());
+        trackingResponse.setUserName(order.getUser().getName());  // Assuming Order model has a reference to User model
 
+        // Add userAddress if it's available in the Order model
+        trackingResponse.setUserAddress(order.getUser().getAddress());  // Assuming User model has address field
+
+        // Set totalAmount, assuming it's stored in the Order model
+        trackingResponse.setTotalAmount(order.getTotalAmount());
         // List to hold product details
         List<ProductInfo> productList = new ArrayList<>();
 

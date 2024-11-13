@@ -1,7 +1,24 @@
 import axios from "axios";
-
+import GuestCartService from "../Guest/GuestCartService";
 class CartService {
   static base_url = "http://localhost:8080/user/cart";
+  static async mergeGuestCart() {
+    const guestCart = GuestCartService.getGuestCart();
+    if (guestCart.length === 0) return;
+
+    try {
+      // Add each guest cart item to the user's cart
+      for (const item of guestCart) {
+        await this.addProductToCart(item.productId, item.quantity);
+      }
+
+      // Clear the guest cart after successful merge
+      GuestCartService.clearGuestCart();
+    } catch (error) {
+      console.error("Error merging guest cart:", error);
+      throw error;
+    }
+  }
 
   static async addProductToCart(productId, quantity) {
     // Ensure productId and quantity are numbers
