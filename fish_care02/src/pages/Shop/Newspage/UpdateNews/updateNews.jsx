@@ -33,7 +33,7 @@ const UpdateNews = () => {
     // Fetch existing news data
     const fetchNewsData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/public/news/${newsId}`);
+        const response = await fetch(`http://170.64.198.85:8080/public/news/${newsId}`);
         if (!response.ok) throw new Error('Failed to fetch news data');
         const data = await response.json();
 
@@ -44,7 +44,7 @@ const UpdateNews = () => {
         });
 
         // Fetch and set image preview if exists
-        const imageResponse = await fetch(`http://localhost:8080/public/news/${newsId}/image`);
+        const imageResponse = await fetch(`http://170.64.198.85:8080/public/news/${newsId}/image`);
         if (imageResponse.ok) {
           const base64Image = await imageResponse.text();
           if (base64Image && base64Image !== "Image not found") {
@@ -101,7 +101,7 @@ const UpdateNews = () => {
         formDataToSend.append('image', formData.image);
       }
 
-      const response = await fetch(`http://localhost:8080/shop/news/${newsId}/update`, {
+      const response = await fetch(`http://170.64.198.85:8080/shop/news/${newsId}/update`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token') || sessionStorage.getItem('token')}`

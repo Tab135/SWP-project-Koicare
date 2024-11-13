@@ -44,7 +44,7 @@ const ProductDetail = () => {
         if (token) {
           const decodedToken = jwtDecode(token);
           const userId = decodedToken.userId;
-          const response = await fetch(`http://localhost:8080/public/review/canReview/${productId}/${userId}`);
+          const response = await fetch(`http://170.64.198.85:8080/public/review/canReview/${productId}/${userId}`);
           const canReviewData = await response.json();
           setCanReview(canReviewData);
         }

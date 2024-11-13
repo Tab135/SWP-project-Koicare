@@ -1,7 +1,7 @@
 import axios from "axios";
 import GuestCartService from "../Guest/GuestCartService";
 class CartService {
-  static base_url = "http://localhost:8080/user/cart";
+  static base_url = "http://170.64.198.85:8080/user/cart";
   static async mergeGuestCart() {
     const guestCart = GuestCartService.getGuestCart();
     if (guestCart.length === 0) return;

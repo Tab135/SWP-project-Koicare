@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class ProductService {
-  static base_url = "http://localhost:8080";
+  static base_url = "http://170.64.198.85:8080";
   static async getAllCategory() {
     try {
       const response = await axios.get(

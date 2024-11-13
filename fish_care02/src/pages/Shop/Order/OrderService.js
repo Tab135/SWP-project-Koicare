@@ -1,7 +1,7 @@
 import axios from "axios";
 class OrderService {
-  static base_url = "http://localhost:8080/user";
-  static API = "http://localhost:8080/shop";
+  static base_url = "http://170.64.198.85:8080/user";
+  static API = "http://170.64.198.85:8080/shop";
   static buildEndpoint(endpoint) {
     return `${this.API}${endpoint}`;
   }
@@ -54,7 +54,7 @@ class OrderService {
     const token = this.getToken();
     try {
       const response = await axios.get(
-        `http://localhost:8080/shop/order/listStatus`, // Adjust the endpoint as necessary
+        `http://170.64.198.85:8080/shop/order/listStatus`, // Adjust the endpoint as necessary
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -75,7 +75,7 @@ class OrderService {
     const token = this.getToken();
     try {
       const response = await axios.put(
-        `http://localhost:8080/shop/order/updateStatus/${orderId}`,
+        `http://170.64.198.85:8080/shop/order/updateStatus/${orderId}`,
         newStatus, // Should be a string if OrderStatus is an enum
         {
           headers: {
@@ -93,7 +93,7 @@ class OrderService {
   static async getTotalRevenue() {
     const token = this.getToken();
     try {
-      const response = await axios.get(`http://localhost:8080/shop/total`, {
+      const response = await axios.get(`http://170.64.198.85:8080/shop/total`, {
         headers: {
           Authorization: `Bearer ${token}`, // Corrected string interpolation
           "Content-Type": "application/json",

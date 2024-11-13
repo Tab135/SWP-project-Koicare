@@ -72,7 +72,7 @@ const CreateBlogsPage = () => {
         formDataToSend.append("image", formData.image);
       }
 
-      const response = await fetch("http://localhost:8080/shop/blog/create", {
+      const response = await fetch("http://170.64.198.85:8080/shop/blog/create", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${

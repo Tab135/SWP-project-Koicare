@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class ReviewService {
-  static base_url = "http://localhost:8080"; // Assuming this is your base API URL
+  static base_url = "http://170.64.198.85:8080"; // Assuming this is your base API URL
 
   // Helper function to get token from local or session storage
   static getToken() {

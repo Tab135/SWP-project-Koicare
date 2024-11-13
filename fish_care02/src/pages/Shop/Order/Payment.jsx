@@ -37,7 +37,7 @@ const Payment = () => {
         console.log("Calling API with orderId:", orderId);
 
         const response = await axios.get(
-          `http://localhost:8080/user/payment/payment-success`,
+          `http://170.64.198.85:8080/user/payment/payment-success`,
           {
             params: {
               orderId: orderId,

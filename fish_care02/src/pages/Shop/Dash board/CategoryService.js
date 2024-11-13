@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class CategoryService {
-  static API_URL = "http://localhost:8080";
+  static API_URL = "http://170.64.198.85:8080";
 
   static getToken() {
     return localStorage.getItem("token") || sessionStorage.getItem("token");

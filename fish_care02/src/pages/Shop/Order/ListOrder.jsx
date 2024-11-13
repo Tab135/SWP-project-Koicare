@@ -58,8 +58,8 @@ const ListOrder = () => {
 
         // Fetch address and phone in parallel
         const [addressResponse, phoneResponse] = await Promise.all([
-          axios.get("http://localhost:8080/user/get-address", { headers }),
-          axios.get("http://localhost:8080/user/get-phone", { headers })
+          axios.get("http://170.64.198.85:8080/user/get-address", { headers }),
+          axios.get("http://170.64.198.85:8080/user/get-phone", { headers })
         ]);
 
         setAddress(addressResponse.data.address || "");
@@ -94,12 +94,12 @@ const ListOrder = () => {
       // Update both address and phone in parallel
       await Promise.all([
         axios.post(
-          "http://localhost:8080/user/update-address",
+          "http://170.64.198.85:8080/user/update-address",
           { address },
           { headers }
         ),
         axios.post(
-          "http://localhost:8080/user/update-phone",
+          "http://170.64.198.85:8080/user/update-phone",
           { phone },
           { headers }
         )
