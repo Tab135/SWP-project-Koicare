@@ -100,7 +100,20 @@
     padding: 8px;
     display: block;
 }
-
+.pond-name-dropdown select {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+  }
+  
+  .pond-name-dropdown select option {
+    background-color: white;  /* Ensures options also have a white background */
+    color: #333;
+  }
+  
 .koi_dropdown-item {
     display: flex;
     align-items: center;
