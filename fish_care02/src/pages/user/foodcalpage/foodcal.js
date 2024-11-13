@@ -24,7 +24,7 @@ const Foodcal = () => {
                             'Content-Type': 'application/json'
                         }
                     };
-                    const response = await axios.get(`http://localhost:8080/public/WaterMonitor/temperature/${pond_id}`, config);
+                    const response = await axios.get(`http://170.64.198.85:8080/public/WaterMonitor/temperature/${pond_id}`, config);
                     const temperature = response.data.temperature;
 
                     // Map temperature to waterParameter
@@ -76,7 +76,7 @@ const Foodcal = () => {
                         temperature: temperatureMapping[waterParameter],
                     };
 
-                    const response = await axios.post(`http://localhost:8080/public/foodManange/${pond_id}`, payload, config);
+                    const response = await axios.post(`http://170.64.198.85:8080/public/foodManange/${pond_id}`, payload, config);
                     setResult(response.data)
                     console.log(response.data)
                 } catch (error) {

@@ -43,7 +43,7 @@ import News from "./pages/Shop/Newspage/AddNews/addNews";
 import ViewNews from "./pages/user/newspage/Viewnews/viewNews";
 import ListNews from "./pages/user/newspage/ListNew/listNews";
 import UpdateNews from "./pages/Shop/Newspage/UpdateNews/updateNews";
-import AboutUs from "./pages/admin/dashboard/User/about us Page/aboutus";
+import AboutUs from "./pages/user/about us Page/aboutus";
 
 const RouterControl = () => {
   const publicRoutes = [

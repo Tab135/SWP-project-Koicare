@@ -49,7 +49,7 @@ const KoiDetailPage = () => {
                 const config = {
                     headers: { Authorization: `Bearer ${token}` }
                 };
-                const response = await axios.get(`http://localhost:8080/user/koi/detail/${koiId}`, config);
+                const response = await axios.get(`http://170.64.198.85:8080/user/koi/detail/${koiId}`, config);
                 setKoiDetails(response.data.koi);
                 setKoiEditData(response.data.koi);
                 console.log(response.data.koi);
@@ -72,7 +72,7 @@ const KoiDetailPage = () => {
                 const config = {
                     headers: {Authorization: `Bearer ${token}`}
                 };
-                const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
+                const response = await axios.get(`http://170.64.198.85:8080/user/${koiId}/records`, config);
                 setGrowthRecords(response.data.growthRecordList);
             } catch (error) {
                 console.error('Error fetching growth records', error);
@@ -92,7 +92,7 @@ const KoiDetailPage = () => {
                     const config = {
                         headers: { Authorization: `Bearer ${token}` }
                     };
-                    const response = await axios.get(`http://localhost:8080/user/pond`, config)
+                    const response = await axios.get(`http://170.64.198.85:8080/user/pond`, config)
                     setPond(response.data.pondList);
                     console.log(response.data.pondList);
                 } catch (error) {
@@ -178,10 +178,10 @@ const KoiDetailPage = () => {
         const pondId = koiDetails.pondId.id;
 
         try {
-            await axios.put(`http://localhost:8080/user/${pondId}/${koiId}`, formData, config);
+            await axios.put(`http://170.64.198.85:8080/user/${pondId}/${koiId}`, formData, config);
             alert('Koi details updated successfully');
             setShowKoiModal(false);
-            const response = await axios.get(`http://localhost:8080/user/koi/detail/${koiId}`, config);
+            const response = await axios.get(`http://170.64.198.85:8080/user/koi/detail/${koiId}`, config);
             setKoiDetails(response.data.koi);
         } catch (error) {
             console.error('Error updating koi details', error);

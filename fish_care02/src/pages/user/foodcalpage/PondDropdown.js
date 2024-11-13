@@ -19,7 +19,7 @@ const PondDropdown = ({ setPondId }) => {
                         Authorization: `Bearer ${token}`,
                     },
                 };
-                const response = await axios.get('http://localhost:8080/user/pond', config);
+                const response = await axios.get('http://170.64.198.85:8080/user/pond', config);
                 setPonds(response.data.pondList);
 
                 const storedPondId = localStorage.getItem('selectedPondId');
