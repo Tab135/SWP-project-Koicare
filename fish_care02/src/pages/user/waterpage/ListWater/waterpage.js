@@ -56,10 +56,8 @@ const WaterPage = () => {
         setUpdatedDetails((prevDetails) => {
             const updatedDetails = {
                 ...prevDetails,
-                [name]: value, // Lưu giá trị dưới dạng chuỗi
+                [name]: value,
             };
-    
-            // Chuyển đổi giá trị sang số khi cần thiết để tính toán CO2
             const carbonHardnessKH = parseFloat(updatedDetails.carbonHardnessKH);
             const pH = parseFloat(updatedDetails.pH);
             
@@ -320,7 +318,7 @@ const WaterPage = () => {
                                             color: getBorderColorForNitrate(water.nitrate),
                                             }}
                                         >
-                                            {water.nitrate} L
+                                            {water.nitrate} mg/L
                                         </span>
                                     </p>
                                     <p><strong>Phosphate:</strong> {" "}
@@ -329,7 +327,7 @@ const WaterPage = () => {
                                             color: getBorderColorForPhosate(water.phosphate),
                                             }}
                                         >
-                                            {water.phosphate} 
+                                            {water.phosphate} mg/L
                                         </span>
                                     </p>
                                     <p><strong>ammonium:</strong> {" "} 
@@ -338,7 +336,7 @@ const WaterPage = () => {
                                             color: getBorderColorForAmmonium(water.ammonium),
                                             }}
                                         >
-                                            {water.ammonium} 
+                                            {water.ammonium} mg/L
                                         </span>    
                                     </p>
                                     <p><strong>hardnessGH:</strong> {" "}
@@ -347,7 +345,7 @@ const WaterPage = () => {
                                             color: getBorderColorForHardness(water.hardnessGH),
                                             }}
                                         >
-                                            {water.hardnessGH} 
+                                            {water.hardnessGH}°dH
                                         </span> 
                                     </p>
                                     <p><strong>Oxygen:</strong> {" "}
@@ -356,7 +354,7 @@ const WaterPage = () => {
                                             color: getBorderColorForOxygen(water.oxygen),
                                             }}
                                         >
-                                            {water.oxygen} 
+                                            {water.oxygen} mg/L
                                         </span> 
                                     </p>
                                     <p><strong>CO2:</strong> {" "}
@@ -365,7 +363,7 @@ const WaterPage = () => {
                                             color: getBorderColorCo2(water.co2),
                                             }}
                                         >
-                                            {water.co2} 
+                                            {water.co2} mg/L
                                         </span> 
                                     </p>
                                     </div>
@@ -376,9 +374,9 @@ const WaterPage = () => {
                                             color: getBorderColorTemperature(water.temperature),
                                             }}
                                         >
-                                            {water.temperature} 
+                                            {water.temperature} °C
                                         </span>
-                                     W</p>
+                                     </p>
                                     <p><strong>pH:</strong> {" "}
                                     <span
                                             style={{
@@ -394,7 +392,7 @@ const WaterPage = () => {
                                             color: getBorderColorcarbon(water.carbonHardnessKH),
                                             }}
                                         >
-                                            {water.carbonHardnessKH} 
+                                            {water.carbonHardnessKH} °dH
                                         </span>
                                     </p>
                                     <p><strong>Salt:</strong> {" "}
@@ -403,7 +401,7 @@ const WaterPage = () => {
                                             color: getBorderColorsalt(water.salt),
                                             }}
                                         >
-                                            {water.salt} 
+                                            {water.salt} %
                                         </span>
                                     </p>
                                     <p><strong>Total Chlorine:</strong> {" "}
@@ -412,11 +410,11 @@ const WaterPage = () => {
                                             color: getBorderColorChlorine(water.totalChlorine),
                                             }}
                                         >
-                                            {water.totalChlorine} 
+                                            {water.totalChlorine} mg/L
                                         </span>
                                     </p>
-                                    <p><strong>Amount Fed:</strong> {water.amountFed}</p>
-                                    <p><strong>Outdoor Temperature:</strong> {water.outdoorTemperature}</p>
+                                    <p><strong>Amount Fed:</strong> {water.amountFed} g</p>
+                                    <p><strong>Outdoor Temperature:</strong> {water.outdoorTemperature} °C</p>
                                     </div>
                                 </div>
                             </div>
