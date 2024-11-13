@@ -39,6 +39,7 @@ export const ROUTERS = {
         ViewNews:"/public/news/:newsId",
         ListNews:"/public/news",
         UpdateNews:"/shop/updatenews/:newsId",
+        AboutUs: "/koicare/aboutus",
 
 
     },

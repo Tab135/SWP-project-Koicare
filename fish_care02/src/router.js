@@ -43,6 +43,8 @@ import News from "./pages/Shop/Newspage/AddNews/addNews";
 import ViewNews from "./pages/user/newspage/Viewnews/viewNews";
 import ListNews from "./pages/user/newspage/ListNew/listNews";
 import UpdateNews from "./pages/Shop/Newspage/UpdateNews/updateNews";
+import AboutUs from "./pages/admin/dashboard/User/about us Page/aboutus";
+
 const RouterControl = () => {
   const publicRoutes = [
     { path: ROUTERS.USER.HOME, element: <Homepage /> },
@@ -59,6 +61,7 @@ const RouterControl = () => {
     { path: ROUTERS.USER.ListNews,element:<ListNews/>},
     { path: ROUTERS.USER.LIST_BLOGS, element: <ListBlogsPage /> },
     { path: ROUTERS.USER.BlogDetail, element: <BlogDetail /> },
+    { path: ROUTERS.USER.AboutUs, element: <AboutUs/>}
   ];
 
   const protectedRoutes = [

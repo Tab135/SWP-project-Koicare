@@ -34,7 +34,7 @@ const PondDropdown = ({ setPondId, setPondVolume }) => {
                 }
             } catch (error) {
                 console.error('Error fetching ponds', error);
-                setError('Không thể lấy danh sách hồ.');
+                setError('not pond found.');
             }
         };
 

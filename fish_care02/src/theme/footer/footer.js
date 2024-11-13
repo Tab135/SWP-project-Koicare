@@ -46,17 +46,17 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/shop" className="text-white-50 hover-white">
+                <Link to="/public/product" className="text-white-50 hover-white">
                   Shop
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-white-50 hover-white">
+                <Link to="/public/blog/list" className="text-white-50 hover-white">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-white-50 hover-white">
+                <Link to="/koicare/aboutus" className="text-white-50 hover-white">
                   Contact
                 </Link>
               </li>

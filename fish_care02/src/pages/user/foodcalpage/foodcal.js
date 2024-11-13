@@ -8,9 +8,7 @@ const Foodcal = () => {
     const [waterParameter, setWaterParameter] = useState('');
     const [pond_id, setPondId] = useState(null);
     const [error, setError] = useState(null);
-    const [feedingTime, setFeedingTime] = useState('');
-    const [foodAmount, setFoodAmount] = useState(0);
-    const [message, setMessage] = useState('');
+    const [result, setResult] = useState(null);
 
     useEffect(() => {
         const fetchTemperature = async () => {
@@ -30,12 +28,11 @@ const Foodcal = () => {
                     const temperature = response.data.temperature;
 
                     // Map temperature to waterParameter
-                    if (temperature >= 6 && temperature <= 8) setWaterParameter('6-8');
+                    if (temperature <= 6 && temperature <= 8) setWaterParameter('6-8');
                     else if (temperature >= 9 && temperature <= 12) setWaterParameter('9-12');
                     else if (temperature >= 13 && temperature <= 16) setWaterParameter('13-16');
                     else if (temperature >= 17 && temperature <= 20) setWaterParameter('17-20');
-                    else if (temperature >= 21 && temperature <= 28) setWaterParameter('21-28');
-                    else setError('Temperature out of expected range.');
+                    else if (temperature >= 21 && temperature >= 28) setWaterParameter('21-28');
                 } catch (error) {
                     console.error('Error fetching temperature', error);
                     setError('Failed to fetch pond temperature.');
@@ -80,9 +77,8 @@ const Foodcal = () => {
                     };
 
                     const response = await axios.post(`http://localhost:8080/public/foodManange/${pond_id}`, payload, config);
-                    setFeedingTime(response.data.feeding_time);
-                    setFoodAmount(response.data.food_amount);
-                    setMessage(response.data.message);
+                    setResult(response.data)
+                    console.log(response.data)
                 } catch (error) {
                     console.error('Error calculating food', error);
                     setError('Failed to get food recommendation.');
@@ -124,18 +120,20 @@ const Foodcal = () => {
                         </div>
                     </div>
                     <div className='col-xl-6 col-lg-6 col-md-6'>
-                        <div className='food-cal-page-info'>
-                            <h2>Information</h2>
-                            <p>Feeding Time: {feedingTime || 'N/A'}</p>
-                            <p>Food Amount: {foodAmount || 0}g/day</p>
-                            <p>Message: {message || 'No message'}</p>
-                        </div>
+                        {result && (
+                            <div className="result">
+                                <h2>Information</h2>
+                                <p>Feeding Time : {result.feeding_time} </p>
+                                <p>Food Amount: {result.food_amount} g/day</p>
+                                <p>Message: {result.message}</p>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
             <div className='recommend-amount'>
                 <h1 className='recommend-amount-h1'>Recommended amount:</h1>
-                <h1 className='recommend-amount-h1'>{foodAmount || 0}g/day</h1>
+                {result && ( <h1 className='recommend-amount-h1'>{result.food_amount}g/day</h1> )}
                 {error && <div className="error">{error}</div>}
             </div>
         </div>

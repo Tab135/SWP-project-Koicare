@@ -1,4 +1,4 @@
-import { memo, useState,useEffect  } from "react";
+import { memo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./koicare.scss"
 import { ROUTERS } from "../../../utis/router";
@@ -9,26 +9,26 @@ import { FaCalculator } from "react-icons/fa6";
 import { IoStatsChart } from "react-icons/io5";
 import { FaShoppingCart } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa6";
-import 'react-multi-carousel/lib/styles.css';
 import { jwtDecode } from "jwt-decode";
+import 'react-multi-carousel/lib/styles.css';
 const KoiCare = () => {
-  const navigate = useNavigate();
-  useEffect(() => {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
-    if (token) {
-      const decodedToken = jwtDecode(token);
-      const role = decodedToken.role;
-      if (role === "SHOP") {
-        navigate("/shop/dashboard");
+    const navigate = useNavigate();
+    useEffect(() => {
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
+      if (token) {
+        const decodedToken = jwtDecode(token);
+        const role = decodedToken.role;
+        if (role === "SHOP") {
+          navigate("/shop/dashboard");
+        }
+        else if(role === "ADMIN"){
+          navigate("/admin/dashboard")
+        }
+      } else {
+        navigate("/");
       }
-      else if(role === "ADMIN"){
-        navigate("/admin/dashboard")
-      }
-    } else {
-      navigate("/");
-    }
-  }, [navigate]);
+    }, [navigate]);
     const[menus, setmenu] = useState([
         {
             name: 
@@ -104,7 +104,7 @@ const KoiCare = () => {
                     <span>About Koi care</span>
                 </>
             ),
-            path: "#",
+            path: ROUTERS.USER.AboutUs,
         },
      
         
