@@ -65,7 +65,7 @@ const ListKoiFishPage = () => {
             setKoiFishList(koiList);
         } catch (error) {
             console.error('Error fetching koi fish', error);
-            setMessage('Error fetching koi fish.');
+            setMessage('No koi fish in this pond.');
         }
     };
 
@@ -192,6 +192,7 @@ const ListKoiFishPage = () => {
             setIsModalOpen(false);
             setSelectedKoi('');
             fetchAllKoiFish();
+            window.location.reload();
         } catch (error) {
             console.error('Error moving koi fish', error);
             alert('Failed to move koi fish.');
