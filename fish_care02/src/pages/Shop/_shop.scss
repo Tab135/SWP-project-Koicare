@@ -6,12 +6,19 @@ $card-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 $transition-speed: 0.3s;
 $border-radius: 12px;
 
+// Container styling
 .shop-container {
   min-height: 100vh;
   padding: 2rem 1rem;
-  background: rgba( 0, 0, 0, 0.25 ); // Semi-transparent background
-  backdrop-filter: blur(5px); // Blur effect for the background
-  border-radius: $border-radius; // Rounded corners for the shop container
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
+  border-radius: $border-radius;
+  transition: background $transition-speed ease, box-shadow $transition-speed ease;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
 
   .search-bar-container {
     margin-bottom: 2rem;
@@ -20,21 +27,26 @@ $border-radius: 12px;
     .search-input {
       border-radius: $border-radius;
       padding: 1rem 1.5rem;
-      border: 2px solid rgba(229, 231, 235, 0.5); // Semi-transparent border
+      border: 2px solid rgba(229, 231, 235, 0.5);
       transition: all $transition-speed ease;
       font-size: 1rem;
       box-shadow: $card-shadow;
 
       &:focus {
         border-color: $primary-color;
-        box-shadow: 0 0 0 3px rgba(67, 56, 202, 0.1);
+        box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.15);
         outline: none;
+      }
+
+      &::placeholder {
+        color: rgba(107, 114, 128, 0.8); // Light placeholder text
       }
     }
   }
 
+  // Cart button styling
   .cart-button {
-    background-color: rgba(255, 255, 255, 0.8); // Semi-transparent white
+    background-color: rgba(255, 255, 255, 0.8);
     border: 2px solid $primary-color;
     color: $primary-color;
     width: 48px;
@@ -50,7 +62,8 @@ $border-radius: 12px;
     &:hover {
       background-color: $primary-color;
       color: white;
-      transform: translateY(-2px);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
     }
 
     .cart-badge {
@@ -66,31 +79,36 @@ $border-radius: 12px;
     }
   }
 
+  // Product card styling
   .product-card {
     border: none;
     border-radius: $border-radius;
-    background: rgba(255, 255, 255, 0.9); // Semi-transparent white for the card
+    background: rgba(255, 255, 255, 0.9);
     transition: all $transition-speed ease;
     height: 100%;
     overflow: hidden;
     box-shadow: $card-shadow;
-
-    backdrop-filter: blur(10px); // Add blur effect to the card
+    position: relative;
 
     &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 
       .product-image {
         transform: scale(1.05);
+      }
+
+      .product-title {
+        color: $secondary-color;
       }
     }
 
     .product-image-container {
       height: 200px;
       overflow: hidden;
-      background-color: rgba(249, 250, 251, 0.8); // Semi-transparent background
+      background-color: rgba(249, 250, 251, 0.8);
       border-radius: $border-radius $border-radius 0 0;
+      transition: background $transition-speed ease;
 
       .product-image {
         width: 100%;
@@ -111,6 +129,11 @@ $border-radius: 12px;
 
     .card-body {
       padding: 1.5rem;
+      transition: padding $transition-speed ease;
+
+      &:hover {
+        padding: 1.7rem;
+      }
     }
 
     .product-title {
@@ -119,6 +142,7 @@ $border-radius: 12px;
       color: #1f2937;
       margin-bottom: 0.75rem;
       line-height: 1.4;
+      transition: color $transition-speed ease;
     }
 
     .product-price {
@@ -140,11 +164,12 @@ $border-radius: 12px;
       color: #374151;
       margin-bottom: 1rem;
       padding: 0.5rem;
-      background-color: rgba(243, 244, 246, 0.7); // Semi-transparent background
+      background-color: rgba(243, 244, 246, 0.7);
       border-radius: 6px;
       display: inline-block;
     }
 
+    // Button styling
     .btn {
       padding: 0.75rem 1.5rem;
       font-weight: 500;
@@ -153,6 +178,11 @@ $border-radius: 12px;
       width: 100%;
       margin-bottom: 0.5rem;
 
+      &:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
       &-primary {
         background-color: $primary-color;
         border-color: $primary-color;
@@ -160,7 +190,6 @@ $border-radius: 12px;
         &:hover {
           background-color: $secondary-color;
           border-color: $secondary-color;
-          transform: translateY(-2px);
         }
       }
 
@@ -172,7 +201,6 @@ $border-radius: 12px;
         &:hover {
           background-color: #0284c7;
           border-color: #0284c7;
-          transform: translateY(-2px);
         }
       }
     }
@@ -185,18 +213,19 @@ $border-radius: 12px;
   top: 20px;
   right: 20px;
   z-index: 1000;
-  background-color: rgba(16, 185, 129, 0.9); // Semi-transparent background
+  background-color: rgba(16, 185, 129, 0.9);
   color: white;
   padding: 1rem 1.5rem;
   border-radius: $border-radius;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  animation: slideIn 0.3s ease-out;
+  animation: slideIn $transition-speed ease-out;
 
   &.hide {
-    animation: slideOut 0.3s ease-in forwards;
+    animation: slideOut $transition-speed ease-in forwards;
   }
 }
 
+// Animation for toast notification
 @keyframes slideIn {
   from {
     transform: translateX(100%);
@@ -231,6 +260,26 @@ $border-radius: 12px;
 
       .card-body {
         padding: 1rem;
+      }
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .shop-container {
+    padding: 0.5rem;
+
+    .product-card {
+      .product-image-container {
+        height: 160px;
+      }
+
+      .card-body {
+        padding: 0.75rem;
+      }
+
+      .btn {
+        padding: 0.6rem 1.2rem;
       }
     }
   }

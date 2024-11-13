@@ -90,22 +90,22 @@ const Shop = () => {
   // Get cart item count based on logged-in user
   useEffect(() => {
     const fetchCartItemCount = async () => {
-      if (Id) {
-        try {
+      try {
+        if (Id) {
           const response = await CartService.getCartByUser();
-          setCartItemCount(response.data.itemNumber); // Use the number of items in the cart
-        } catch (error) {
-          console.error("Error fetching cart item count:", error);
+          const itemNumber = response?.data?.itemNumber || 0;
+          setCartItemCount(itemNumber);
+        } else {
+          // Get cart count from guest cart
+          const guestCartCount = GuestCartService.getGuestCartCount();
+          setCartItemCount(guestCartCount);
         }
-      } else {
-        // If no user, check for items in session storage
-        const cartItems = sessionStorage.getItem("cartItems");
-        setCartItemCount(cartItems ? JSON.parse(cartItems).length : 0);
+      } catch (error) {
+        console.error("Error fetching cart item count:", error);
       }
     };
-
     fetchCartItemCount();
-  }, [Id]);
+  }, [Id, isLoggedIn]);
   useEffect(() => {
     const token =
       localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -118,9 +118,9 @@ const Shop = () => {
       const mergeGuestCart = async () => {
         try {
           await CartService.mergeGuestCart();
-          // After merging, update the cart item count
           const response = await CartService.getCartByUser();
-          setCartItemCount(response.data.itemNumber);
+          const itemNumber = response?.data?.itemNumber ?? 0; // Use optional chaining and a default value
+          setCartItemCount(itemNumber);
         } catch (error) {
           console.error("Error merging guest cart:", error);
         }
@@ -150,7 +150,7 @@ const Shop = () => {
         // Add to user cart if logged in
         await CartService.addProductToCart(productId, 1);
         const response = await CartService.getCartByUser();
-        setCartItemCount(response.data.itemNumber);
+        setCartItemCount(response?.data?.itemNumber || 0);
         setToastMessage("Product added to cart successfully!");
         setShowToast(true);
       }
@@ -209,11 +209,7 @@ const Shop = () => {
             />
           </Col>
           <Col xs="auto" className="d-flex align-items-center">
-            <Link
-              to="/user/cart/getCartByUser"
-              className="cart-button-link"
-             
-            >
+            <Link to="/user/cart/getCartByUser" className="cart-button-link">
               <div className="cart-button">
                 <FaShoppingCart size={20} />
                 {cartItemCount > 0 && (
