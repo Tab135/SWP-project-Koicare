@@ -28,7 +28,7 @@ const OtpVerify = () => {
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://localhost:8080/auth/otp-verify/${otp}`, null, {
+            const response = await axios.post(`http://170.64.198.85:8080/auth/otp-verify/${otp}`, null, {
                 params: {
                     email: email,
                     name: name,

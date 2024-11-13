@@ -39,7 +39,7 @@ const Statitic = () => {
             const formattedEndDate = end_date.toISOString().split('.')[0];
 
             const response = await axios.get(
-                `http://localhost:8080/user/WaterMonitor/${PondId}/${formattedStartDate}/${formattedEndDate}`,
+                `http://170.64.198.85:8080/user/WaterMonitor/${PondId}/${formattedStartDate}/${formattedEndDate}`,
                 config
             );
             setWaterData(response.data.waterModelList);
@@ -225,7 +225,7 @@ const Statitic = () => {
     
                 try {
                     const config = { headers: { Authorization: `Bearer ${token}` } };
-                    const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
+                    const response = await axios.get(`http://170.64.198.85:8080/user/${koiId}/records`, config);
                     const sortedRecords = response.data.growthRecordList.sort((a, b) => 
                         new Date(a.koiId.date) - new Date(b.koiId.date)
                     );

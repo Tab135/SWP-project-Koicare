@@ -30,7 +30,7 @@ const Saltcal = () => {
             };
 
             const response = await axios.post(
-                `http://localhost:8080/user/saltManage/${pond_id}`,
+                `http://170.64.198.85:8080/user/saltManage/${pond_id}`,
                 payload,
                 config
             );

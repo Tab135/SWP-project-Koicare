@@ -45,7 +45,7 @@ const AddKoiFishPage = () => {
                         Authorization: `Bearer ${token}`
                     }
                 };
-                const response = await axios.get('http://localhost:8080/user/pond', config);
+                const response = await axios.get('http://170.64.198.85:8080/user/pond', config);
                 setPonds(response.data.pondList || []);
             } catch (error) {
                 console.error("Error fetching ponds", error);
@@ -122,7 +122,7 @@ const AddKoiFishPage = () => {
                 },
             };
 
-            const response = await axios.post(`http://localhost:8080/user/${selectedPond}/addKoi`, formData, config);
+            const response = await axios.post(`http://170.64.198.85:8080/user/${selectedPond}/addKoi`, formData, config);
 
             if (response.status === 200) {
                 alert('Koi fish added successfully!');

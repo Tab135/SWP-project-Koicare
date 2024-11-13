@@ -38,7 +38,7 @@ const LoginRegister = () => {
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/auth/login', {
+            const response = await axios.post('http://170.64.198.85:8080/auth/login', {
                 email: userDetails.email,
                 password: userDetails.password
             });
@@ -79,7 +79,7 @@ const LoginRegister = () => {
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/auth/signup', {
+            const response = await axios.post('http://170.64.198.85:8080/auth/signup', {
                 name: userDetails.username,
                 password: userDetails.password,
                 email: userDetails.email

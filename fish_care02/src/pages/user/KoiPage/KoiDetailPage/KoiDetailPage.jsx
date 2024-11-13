@@ -225,10 +225,10 @@ const KoiDetailPage = () => {
 
         try {
             if (editMode) {
-                await axios.put(`http://localhost:8080/user/${koiId}/record/update/${currentRecordDate}`, growthRecord, config);
+                await axios.put(`http://170.64.198.85:8080/user/${koiId}/record/update/${currentRecordDate}`, growthRecord, config);
                 alert('Growth record updated successfully');
             } else {
-                await axios.post(`http://localhost:8080/user/${koiId}/addRecord`, growthRecord, config);
+                await axios.post(`http://170.64.198.85:8080/user/${koiId}/addRecord`, growthRecord, config);
                 alert('Growth record added successfully');
             }
             setShowGrowthModal(false);
@@ -283,9 +283,9 @@ const KoiDetailPage = () => {
         };
 
         try {
-            await axios.delete(`http://localhost:8080/user/${koiId}/record/delete/${record.koiId.date}`, config);
+            await axios.delete(`http://170.64.198.85:8080/user/${koiId}/record/delete/${record.koiId.date}`, config);
             alert('Growth record deleted successfully');
-            const response = await axios.get(`http://localhost:8080/user/${koiId}/records`, config);
+            const response = await axios.get(`http://170.64.198.85:8080/user/${koiId}/records`, config);
             setGrowthRecords(response.data.growthRecordList);
         } catch (error) {
             console.error('Error deleting growth record', error);

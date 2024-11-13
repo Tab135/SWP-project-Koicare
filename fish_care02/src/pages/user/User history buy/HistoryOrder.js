@@ -1,7 +1,7 @@
 import axios from "axios";
 
 class HistoryOrder {
-  static base_url = "http://localhost:8080/user";
+  static base_url = "http://170.64.198.85:8080/user";
 
   // Retrieve the token from localStorage or sessionStorage
   static getToken() {

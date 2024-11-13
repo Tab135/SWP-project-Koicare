@@ -13,7 +13,7 @@ const ForgotPassword = () => {
     const handleSendOtp = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:8080/forgotpassword/verifyMail/${email}`);
+            await axios.post(`http://170.64.198.85:8080/forgotpassword/verifyMail/${email}`);
             setMessage('OTP has been sent to your email.');
             setStep(2); // Move to OTP verification step
         } catch (error) {
@@ -24,7 +24,7 @@ const ForgotPassword = () => {
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:8080/forgotpassword/verifyOTP/${otp}/${email}`);
+            await axios.post(`http://170.64.198.85:8080/forgotpassword/verifyOTP/${otp}/${email}`);
             setMessage('OTP verified. You can now reset your password.');
             setStep(3); // Move to password reset step
         } catch (error) {
@@ -35,7 +35,7 @@ const ForgotPassword = () => {
     const handleChangePassword = async (e) => {
         e.preventDefault();
         try {
-            await axios.post(`http://localhost:8080/forgotpassword/changePassword/${email}`, { password });
+            await axios.post(`http://170.64.198.85:8080/forgotpassword/changePassword/${email}`, { password });
             setMessage('Password changed successfully. You can now log in.');
         } catch (error) {
             setMessage('Error changing password. Please try again.');

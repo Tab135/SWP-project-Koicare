@@ -84,7 +84,7 @@ const AddKoiPondPage = () => {
                 },
             };
 
-            const response = await axios.post('http://localhost:8080/user/createPond', formData, config);
+            const response = await axios.post('http://170.64.198.85:8080/user/createPond', formData, config);
 
             if (response.status === 200) {
                 alert('Pond added successfully!');

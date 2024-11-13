@@ -193,7 +193,7 @@ const getCurrentDateTime = () => {
         alert('Please select a pond first.');
         return;
     }
-    axios.post(`http://localhost:8080/user/WaterMonitor/addWater/${pond_id}`, formData, {
+    axios.post(`http://170.64.198.85:8080/user/WaterMonitor/addWater/${pond_id}`, formData, {
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'

@@ -12,7 +12,7 @@ const KoiDropdown = ({ setSelectedKoiIds }) => {
             try {
                 const token = localStorage.getItem('token') || sessionStorage.getItem('token');
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                const response = await axios.get('http://localhost:8080/user/koi', config);
+                const response = await axios.get('http://170.64.198.85:8080/user/koi', config);
                 setKois(response.data.koiList);
             } catch (error) {
                 console.error('Error fetching kois', error);

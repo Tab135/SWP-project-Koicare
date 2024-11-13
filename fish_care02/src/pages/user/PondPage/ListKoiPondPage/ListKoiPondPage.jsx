@@ -20,7 +20,7 @@ const PondListPage = () => {
                         Authorization: `Bearer ${token}`
                     }
                 };
-                const response = await axios.get('http://localhost:8080/user/pond', config);
+                const response = await axios.get('http://170.64.198.85:8080/user/pond', config);
                 setPonds(response.data.pondList);
             } catch (error) {
                 console.error("Error fetching ponds", error);
@@ -49,7 +49,7 @@ const PondListPage = () => {
                     Authorization: `Bearer ${token}`
                 }
             };
-            const response = await axios.delete(`http://localhost:8080/user/pond/${pondId}`, config);
+            const response = await axios.delete(`http://170.64.198.85:8080/user/pond/${pondId}`, config);
 
             if (response.status === 200) {
                 setPonds(prevPonds => prevPonds.filter(pond => pond.id !== pondId));

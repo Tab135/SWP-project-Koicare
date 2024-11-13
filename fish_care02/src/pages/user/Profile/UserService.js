@@ -1,6 +1,6 @@
 import axios from "axios";
 class UserService {
-  static BASE_URL = "http://localhost:8080";
+  static BASE_URL = "http://170.64.198.85:8080";
   static async getYourProfile(token) {
     try {
       const response = await axios.get(

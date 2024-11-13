@@ -34,7 +34,7 @@ const EditPondPage = () => {
                         Authorization: `Bearer ${token}`
                     }
                 };
-                const response = await axios.get(`http://localhost:8080/user/pond/${pondId}/get`, config);
+                const response = await axios.get(`http://170.64.198.85:8080/user/pond/${pondId}/get`, config);
                 setPond(response.data.pond);
                 setPreviewUrl(response.data.pond.picture);
                 setIsImageUploaded(!!response.data.pond.picture);
@@ -99,7 +99,7 @@ const EditPondPage = () => {
                 formData.append('picture', picture);
             }
 
-            await axios.put(`http://localhost:8080/user/pond/${pondId}/update`, formData, config);
+            await axios.put(`http://170.64.198.85:8080/user/pond/${pondId}/update`, formData, config);
             navigate('/list-ponds');
         } catch (error) {
             setError("Error updating pond. Please try again.");

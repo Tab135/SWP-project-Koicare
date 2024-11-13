@@ -28,7 +28,7 @@ const ListKoiFishPage = () => {
                 const config = {
                     headers: { Authorization: `Bearer ${token}` },
                 };
-                const response = await axios.get('http://localhost:8080/user/pond', config);
+                const response = await axios.get('http://170.64.198.85:8080/user/pond', config);
                 setPonds(response.data.pondList || []);
             } catch (error) {
                 console.error('Error fetching ponds', error);
@@ -54,7 +54,7 @@ const ListKoiFishPage = () => {
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
             };
-            const response = await axios.get('http://localhost:8080/user/koi', config);
+            const response = await axios.get('http://170.64.198.85:8080/user/koi', config);
             const koiList = response.data.koiList || [];
 
             if (koiList.length === 0) {
@@ -83,7 +83,7 @@ const ListKoiFishPage = () => {
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
             };
-            const response = await axios.get(`http://localhost:8080/user/koi/${pondId}`, config);
+            const response = await axios.get(`http://170.64.198.85:8080/user/koi/${pondId}`, config);
             const koiList = response.data.koiList;
 
             if (koiList.length === 0) {
@@ -137,9 +137,9 @@ const ListKoiFishPage = () => {
                 headers: { Authorization: `Bearer ${token}` },
             };
             if (selectedPond) {
-                await axios.delete(`http://localhost:8080/user/${selectedPond}/${koiId}/delete`, config);
+                await axios.delete(`http://170.64.198.85:8080/user/${selectedPond}/${koiId}/delete`, config);
             } else {
-                await axios.delete(`http://localhost:8080/user/delete/${koiId}`, config);
+                await axios.delete(`http://170.64.198.85:8080/user/delete/${koiId}`, config);
             }
 
             alert('Koi fish deleted successfully!');
@@ -185,7 +185,7 @@ const ListKoiFishPage = () => {
             params.append('newPond', newPond);
             selectedKoi.forEach(id => params.append('koiList', id));
 
-            await axios.post('http://localhost:8080/user/pond/moveManyFish', null,
+            await axios.post('http://170.64.198.85:8080/user/pond/moveManyFish', null,
                 {
                     params,
                     headers: config.headers,

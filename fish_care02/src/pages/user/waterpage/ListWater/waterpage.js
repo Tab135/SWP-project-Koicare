@@ -75,7 +75,7 @@ const WaterPage = () => {
                 headers: { Authorization: `Bearer ${token}` }
             };
             const waterId = selectedWater.id;
-            await axios.put(`http://localhost:8080/user/WaterMonitor/updateWater/${waterId}`, updatedDetails,  config);
+            await axios.put(`http://170.64.198.85:8080/user/WaterMonitor/updateWater/${waterId}`, updatedDetails,  config);
             alert('Water details updated successfully');
             closeModal();
         } catch (error) {
@@ -90,7 +90,7 @@ const WaterPage = () => {
             const config = {
                 headers: { Authorization: `Bearer ${token}` }
             };
-            const response = await axios.get(`http://localhost:8080/user/WaterMonitor/WaterDetail/${waterId}`, config);
+            const response = await axios.get(`http://170.64.198.85:8080/user/WaterMonitor/WaterDetail/${waterId}`, config);
             setWaterDetails(response.data.waterModel); 
             setUpdatedDetails(response.data.waterModel);
         } catch (error) {
@@ -113,7 +113,7 @@ const WaterPage = () => {
                                 Authorization: `Bearer ${token}`
                             }
                         };
-                        const response = await axios.get(`http://localhost:8080/user/WaterMonitor/getWater/${pondId}`, config);
+                        const response = await axios.get(`http://170.64.198.85:8080/user/WaterMonitor/getWater/${pondId}`, config);
                         setWater(response.data.waterModelList);
                     } catch (error) {
                         console.error("Error fetching ponds", error);
@@ -137,7 +137,7 @@ const WaterPage = () => {
                             Authorization: `Bearer ${token}`
                         }
                     };
-                    const response = await axios.delete(`http://localhost:8080/user/WaterMonitor/deleteWater/${id}`, config);
+                    const response = await axios.delete(`http://170.64.198.85:8080/user/WaterMonitor/deleteWater/${id}`, config);
         
                     if (response.status === 200) {
                         setWater(prevPonds => prevPonds.filter(water => water.id !== id));

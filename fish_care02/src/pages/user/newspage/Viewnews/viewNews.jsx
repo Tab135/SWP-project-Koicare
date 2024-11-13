@@ -33,7 +33,7 @@ const ViewNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/public/news/${newsId}`);
+        const response = await fetch(`http://170.64.198.85:8080/public/news/${newsId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch news');
         }
