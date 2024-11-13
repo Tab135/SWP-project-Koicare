@@ -22,7 +22,7 @@ const LineShop = () => {
       };
 
       const revenueResponse = await axios.get(
-        `http://localhost:8080/admin/revenue/${startDate.toISOString().split('T')[0]}/${endDate.toISOString().split('T')[0]}`,
+        `http://170.64.198.85:8080/admin/revenue/${startDate.toISOString().split('T')[0]}/${endDate.toISOString().split('T')[0]}`,
         config
       );
       setRevenueData(revenueResponse.data.revenueModelList);
@@ -50,7 +50,7 @@ const LineShop = () => {
         },
       };
 
-      const productResponse = await axios.get(`http://localhost:8080/public/product`, config);
+      const productResponse = await axios.get(`http://170.64.198.85:8080/public/product`, config);
       setProducts(productResponse.data || []);
     } catch (error) {
       console.error("Error fetching product data:", error);
