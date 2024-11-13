@@ -10,6 +10,7 @@ import com.example.demo.Repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
@@ -406,6 +407,46 @@ public class UserManagement {
         } catch (Exception e) {
             resp.setMessage(e.getMessage());
         }
+        return resp;
+    }
+    public ReqResUser changePasswordProfile(int userId, String oldPassword, String newPassword) {
+        ReqResUser resp = new ReqResUser();
+
+        try {
+            UserModel user = userRepo.findById(userId).orElseThrow(() ->
+                    new UsernameNotFoundException("User not found"));
+
+            if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+                resp.setStatusCode(400);
+                resp.setMessage("Current password is incorrect");
+                return resp;
+            }
+
+            if (passwordEncoder.matches(newPassword, user.getPassword())) {
+                resp.setStatusCode(400);
+                resp.setMessage("New password must be different from current password");
+                return resp;
+            }
+
+            String encodedPassword = passwordEncoder.encode(newPassword);
+
+            int rowsAffected = userRepo.updatePassword(user.getEmail(), encodedPassword);
+
+            if (rowsAffected > 0) {
+                resp.setStatusCode(200);
+                resp.setMessage("Password successfully updated");
+            } else {
+                resp.setStatusCode(500);
+                resp.setMessage("Failed to update password");
+            }
+        } catch (UsernameNotFoundException e) {
+            resp.setStatusCode(404);
+            resp.setMessage("User not found");
+        } catch (Exception e) {
+            resp.setStatusCode(500);
+            resp.setMessage("An error occurred: " + e.getMessage());
+        }
+
         return resp;
     }
 

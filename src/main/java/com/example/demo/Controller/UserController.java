@@ -139,4 +139,10 @@ public class UserController {
         return ResponseEntity.ok(userManagement.updatePhone(userId, phone));
     }
 
+    @PostMapping("/adminusershop/changepassword/{oldPassword}/{newPassword}")
+    public ResponseEntity<ReqResUser> changePassword(@RequestHeader("Authorization") String token,@PathVariable String oldPassword, @PathVariable String newPassword){
+        int userId = jwt.extractUserId(token.replace("Bearer ", ""));
+        return  ResponseEntity.ok(userManagement.changePasswordProfile(userId,oldPassword,newPassword));
+    }
+
 }
