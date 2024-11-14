@@ -22,7 +22,7 @@ const UserProfile = ({ setUserId, userId }) => {
     const fetchUserDetails = async (token) => {
       try {
         const response = await fetch(
-          "http://localhost:8080/adminusershop/get-profile",
+          "http://170.64.198.85:8080/adminusershop/get-profile",
           {
             method: "GET",
             headers: {

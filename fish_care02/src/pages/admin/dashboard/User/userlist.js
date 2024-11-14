@@ -17,7 +17,7 @@ const UserDetail = ({ userID, onClose, onDelete }) => {
                         Authorization: `Bearer ${token}`,
                     },
                 };
-                const response = await axios.get(`http://localhost:8080/admin/get-user/${userID}`, config);
+                const response = await axios.get(`http://170.64.198.85:8080/admin/get-user/${userID}`, config);
                 setUser(response.data.users);
             } catch (err) {
                 setError('Failed to fetch user details');
@@ -42,7 +42,7 @@ const UserDetail = ({ userID, onClose, onDelete }) => {
                         Authorization: `Bearer ${token}`, // Send token for authentication
                     },
                 };
-                const response = await axios.delete(`http://localhost:8080/admin/delete/${userID}`, config);
+                const response = await axios.delete(`http://170.64.198.85:8080/admin/delete/${userID}`, config);
                 if (response.status === 200) {
                     alert('User deleted successfully');
                     onDelete(userID); 
@@ -107,7 +107,7 @@ const UserList =() =>{
                         Authorization: `Bearer ${token}`,
                     },
                 };
-                const response = await axios.get('http://localhost:8080/admin/get-all-users', config); 
+                const response = await axios.get('http://170.64.198.85:8080/admin/get-all-users', config);
                 setUsers(response.data.usersList);    
             } catch (err) {
                 setError('Failed to fetch users');

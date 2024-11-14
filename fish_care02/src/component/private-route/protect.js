@@ -33,7 +33,7 @@ const ProtectedRoute = () => {
     const refreshToken = localStorage.getItem('refreshToken');
     if (refreshToken) {
       try {
-            const refreshResponse = await axios.post('http://localhost:8080/auth/refresh-token', {
+            const refreshResponse = await axios.post('http://170.64.198.85:8080/auth/refresh-token', {
           token: refreshToken,
         });
 
@@ -58,7 +58,7 @@ const ProtectedRoute = () => {
   const validateToken = async (token) => {
     try {
       const response = await axios.post(
-        'http://localhost:8080/auth/check-token-expired',
+        'http://170.64.198.85:8080/auth/check-token-expired',
         { token },
         {
           headers: {
