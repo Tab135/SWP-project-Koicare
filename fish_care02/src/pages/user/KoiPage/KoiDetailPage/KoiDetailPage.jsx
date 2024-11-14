@@ -349,9 +349,12 @@ const KoiDetailPage = () => {
                         {growthRecords.length > 0 ? (
                             <ul>
                                 {growthRecords.slice().reverse().map((record, index) => {
+                                    const isNegativeRate = record.weightRate < 0 || record.lengthRate < 0;
 
                                     return (
-                                        <li key={record.koiId.date}>
+                                        <li
+                                            key={record.koiId.date}
+                                            className={isNegativeRate ? "record-negative" : "record-positive"}>
                                             <div>
                                                 <strong>Date:</strong> {new Date(record.koiId.date).toLocaleDateString()}
                                             </div>
@@ -380,6 +383,11 @@ const KoiDetailPage = () => {
                                                         Rate:</strong> {record.lengthRate ? record.lengthRate.toFixed(2) + '%' : '0'}
                                                 </div>
                                             </div>
+
+                                            {isNegativeRate && (
+                                                <p className="warning-message">Your fish is unstable and needs checking.</p>
+                                            )}
+
                                             <div className="button-container">
                                                 <button className="edit-koi-button"
                                                         onClick={() => handleEdit(record)}>Edit
