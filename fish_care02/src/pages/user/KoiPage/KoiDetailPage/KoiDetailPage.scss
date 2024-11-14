@@ -72,6 +72,26 @@ button .Add-Growth {
     width: 8px;
 }
 
+.record-negative {
+    border: 2px solid red;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.record-positive {
+    border: 2px solid green;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.warning-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
 .growth-records::-webkit-scrollbar-thumb {
     background-color: #888;
     border-radius: 4px;
@@ -90,7 +110,6 @@ button .Add-Growth {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #ccc;
     white-space: nowrap;
 }
 
