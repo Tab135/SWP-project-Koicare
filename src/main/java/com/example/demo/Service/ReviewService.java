@@ -35,7 +35,7 @@ public class ReviewService {
         List<OrderItem> orderItems = orderItemRepository.findByProductIdAndUserId(productId, userId);
         boolean hasDeliveredOrder = orderItems.stream().anyMatch(orderItem ->
                 orderItem.getOrder().getOrderTrackingList().stream()
-                        .anyMatch(tracking -> tracking.getStatus() == OrderStatus.DELIVERED)
+                        .anyMatch(tracking -> tracking.getStatus() == OrderStatus.SHIPPED)
         );
         return hasDeliveredOrder;
     }

@@ -68,7 +68,7 @@ const WaterParameterModal = ({ pond_id }) => {
         return '';
     },
     oxygen: (value) => {
-        if (value > 6.5) return 'green';
+        if (value >= 6.5 && value <= 9  ) return 'green';
         if (value > 6 && value <= 6.5) return 'orange';
         if (value <= 6) return 'red';
         return '';

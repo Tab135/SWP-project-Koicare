@@ -156,13 +156,14 @@ const KoiDetailPage = () => {
         }
 
         const formData = new FormData();
+        console.log(koiDetails, "khoaKoi");
         formData.append('koiName', koiEditData.koiName);
         formData.append('variety', koiEditData.variety);
         formData.append('age', koiEditData.age);
         formData.append('sex', koiEditData.sex);
         formData.append('price', koiEditData.price);
         formData.append('origin', koiEditData.origin);
-        formData.append('pondId', koiEditData.pondId);
+        formData.append('pondId', koiEditData.pondId.id);
 
         if (selectedImage) {
             formData.append('image', selectedImage);
@@ -512,17 +513,6 @@ const KoiDetailPage = () => {
                                     Origin:
                                     <input type="text" name="origin" value={koiEditData.origin || ''}
                                            onChange={handleKoiInputChange} required/>
-                                </label>
-                                <label>
-                                    Pond:
-                                    <select value={koiEditData.pondId} onChange={handleSelectPond} required>
-                                        <option value="" disabled>Select a pond</option>
-                                        {ponds.map((pond) => (
-                                            <option key={pond.id} value={pond.id}>
-                                                {pond.pondName}
-                                            </option>
-                                        ))}
-                                    </select>
                                 </label>
                                 <button type="submit">Save Changes</button>
                                 <button type="button" onClick={() => setShowKoiModal(false)}>Cancel</button>
